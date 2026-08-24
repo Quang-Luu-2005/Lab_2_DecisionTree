@@ -38,19 +38,32 @@ def test_notebook_is_valid_and_compilable(notebook_path: Path) -> None:
         assert "model_compute_device" in source
         assert "nvidia-smi" in source
     elif notebook_group == "benchmark_models":
-        assert "letter_recognition" in source
-        assert "handwritten_digits" in source
         assert "training_seconds" in source
         assert "prediction_seconds" in source
         assert "f1_macro" in source
         assert "generalization_gap" in source
         assert "nvidia-smi" in source
+        if notebook_path.name == "07_covertype_four_model_benchmark.ipynb":
+            assert "covertype" in source
+            assert "DecisionTreeClassifier" in source
+            assert "RandomForestClassifier" in source
+            assert "KNeighborsClassifier" in source
+            assert "SVC" in source
+            assert '"dataset_scope": "full"' in source
+            assert "predict_in_batches" in source
+            assert "write_checkpoint" in source
+            assert "total_model_seconds" in source
+        else:
+            assert "letter_recognition" in source
+            assert "handwritten_digits" in source
     elif notebook_group == "model_comparison":
         assert "rf_letter_digits_benchmark.json" in source
         assert "svm_letter_digits_benchmark.json" in source
         assert "knn_letter_digits_benchmark.json" in source
+        assert "covertype_four_model_benchmark.json" in source
         assert "generalization_gap" in source
         assert "best_by_dataset" in source
+        assert "total_model_seconds" in source
 
 
 def test_expected_notebook_suite_exists() -> None:
@@ -62,7 +75,8 @@ def test_expected_notebook_suite_exists() -> None:
         "04_random_forest_letter_digits.ipynb",
         "05_svm_letter_digits.ipynb",
         "06_knn_letter_digits.ipynb",
-        "07_letter_digits_model_comparison.ipynb",
+        "07_covertype_four_model_benchmark.ipynb",
+        "08_three_dataset_model_comparison.ipynb",
     }
 
 
