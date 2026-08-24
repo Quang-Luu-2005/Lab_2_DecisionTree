@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments and local settings
+.venv/
+venv/
+env/
+.env
+
+# Local data and generated artifacts
+data/raw/*
+data/processed/*
+figures/*
+models/*
+results/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!figures/.gitkeep
+!models/.gitkeep
+!results/.gitkeep
+
+# Notebooks
+.ipynb_checkpoints/
