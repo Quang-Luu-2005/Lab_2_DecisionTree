@@ -42,6 +42,19 @@ Quy tắc:
 3. Không chọn hyperparameter bằng test set.
 4. Nếu stratify không dùng được, đặt `stratify=False` và ghi lý do.
 
+### Split chuẩn cho Letter Recognition
+
+Tạo lại dữ liệu sạch và split bằng:
+
+```bash
+python scripts/prepare_letter_recognition.py
+```
+
+Mọi Decision Tree, Random Forest, SVM và KNN trên Letter Recognition phải đọc cùng
+`data/processed/letter_recognition/train.csv` và `test.csv`; không tự gọi lại split
+trong từng experiment. Decision Tree/Random Forest dùng trực tiếp 16 features. Nếu
+SVM/KNN cần scaling, scaler chỉ được fit trên `train.csv` trong pipeline của model.
+
 ## 5. Artifact
 
 | Loại | Vị trí |

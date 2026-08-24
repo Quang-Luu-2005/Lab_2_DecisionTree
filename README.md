@@ -51,6 +51,21 @@ Các thư mục đầu ra đã được tạo sẵn bằng `.gitkeep`; file lớ
 
 Dataset sources and the reproducible download command are documented in [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md).
 
+## Chuẩn bị Letter Recognition (thẻ 02–03)
+
+Sau khi tải dữ liệu, chạy pipeline audit, làm sạch và tạo split dùng chung:
+
+```bash
+python scripts/prepare_letter_recognition.py
+```
+
+Pipeline giữ nguyên `data/raw/`, loại các dòng trùng hoàn toàn, rồi tạo stratified
+train/test split với `test_size=0.20` và `random_state=42`. Các model phải dùng
+`data/processed/letter_recognition/train.csv` và `test.csv` để bảo đảm cùng split.
+
+Thống kê, quyết định preprocessing và mô tả dataset dùng cho report nằm trong
+[docs/LETTER_RECOGNITION_DATASET.md](docs/LETTER_RECOGNITION_DATASET.md).
+
 ## Quy ước dùng chung
 
 - Python: 3.11.x.
