@@ -66,6 +66,16 @@ train/test split với `test_size=0.20` và `random_state=42`. Các model phải
 Thống kê, quyết định preprocessing và mô tả dataset dùng cho report nằm trong
 [docs/LETTER_RECOGNITION_DATASET.md](docs/LETTER_RECOGNITION_DATASET.md).
 
+Tạo figures, bảng EDA và nhận xét dùng cho report/slide:
+
+```bash
+python scripts/run_letter_eda.py
+```
+
+Pipeline tạo class distribution, phân bố 16 features, correlation heatmap và
+class–feature profiles. Phần nhận xét được tổng hợp tại
+[docs/LETTER_RECOGNITION_EDA.md](docs/LETTER_RECOGNITION_EDA.md).
+
 ## Quy ước dùng chung
 
 - Python: 3.11.x.
