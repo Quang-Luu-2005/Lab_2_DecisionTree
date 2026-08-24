@@ -18,14 +18,16 @@ from urllib.error import URLError
 from urllib.request import Request, urlopen
 
 import pandas as pd
-from sklearn.datasets import load_digits
+from sklearn.datasets import fetch_covtype, load_digits
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 LETTER_DIR = RAW_DIR / "letter_recognition"
 DIGITS_DIR = RAW_DIR / "handwritten_digits"
+COVERTYPE_DIR = RAW_DIR / "covertype"
 LETTER_ZIP = LETTER_DIR / "letter+recognition.zip"
 DIGITS_CSV = DIGITS_DIR / "digits.csv"
+COVERTYPE_CSV = COVERTYPE_DIR / "covertype.csv"
 MANIFEST_PATH = RAW_DIR / "dataset_manifest.json"
 
 LETTER_URL = "https://archive.ics.uci.edu/static/public/59/letter+recognition.zip"
@@ -35,6 +37,7 @@ LETTER_MIRROR_PAGE = "https://www.openml.org/d/6"
 DIGITS_SOURCE_PAGE = (
     "https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html"
 )
+COVERTYPE_SOURCE_PAGE = "https://archive.ics.uci.edu/dataset/31/covertype"
 LETTER_COLUMNS = [
     "x_box",
     "y_box",
@@ -183,12 +186,36 @@ def materialize_digits() -> dict[str, object]:
     }
 
 
+def materialize_covertype() -> dict[str, object]:
+    """Download and save UCI Covertype as a portable CSV."""
+
+    COVERTYPE_DIR.mkdir(parents=True, exist_ok=True)
+    dataset = fetch_covtype(as_frame=True, data_home=COVERTYPE_DIR / ".cache")
+    frame = dataset.data.copy()
+    frame["cover_type"] = dataset.target.astype("int64").to_numpy()
+    frame.to_csv(COVERTYPE_CSV, index=False)
+
+    return {
+        "id": "covertype",
+        "role": "scalability",
+        "source": "UCI Machine Learning Repository via sklearn.datasets.fetch_covtype",
+        "source_page": COVERTYPE_SOURCE_PAGE,
+        "materialized_file": str(COVERTYPE_CSV.relative_to(PROJECT_ROOT)),
+        "file_sha256": sha256(COVERTYPE_CSV),
+        "samples": int(frame.shape[0]),
+        "features": int(frame.shape[1] - 1),
+        "target": "cover_type",
+        "classes": int(frame["cover_type"].nunique()),
+        "missing_cells": int(frame.isna().sum().sum()),
+    }
+
+
 def main() -> None:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     manifest = {
         "project": "Lab 2 - Decision Tree Modeling and Improvement",
         "generated_by": "scripts/download_datasets.py",
-        "datasets": [download_letter(), materialize_digits()],
+        "datasets": [download_letter(), materialize_digits(), materialize_covertype()],
     }
     MANIFEST_PATH.write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"

@@ -80,11 +80,15 @@ class–feature profiles. Phần nhận xét được tổng hợp tại
 
 - [Letter Recognition baseline](notebooks/01_letter_decision_tree_baseline.ipynb)
 - [Handwritten Digits baseline](notebooks/02_digits_decision_tree_baseline.ipynb)
+- [Covertype scalability](notebooks/03_covertype_decision_tree_scalability.ipynb)
 
-Cả hai notebook dùng `DecisionTreeClassifier`, cùng protocol `test_size=0.20`,
+Ba notebook dùng `DecisionTreeClassifier`, cùng protocol `test_size=0.20`,
 `random_state=42`, `stratify=True` và tự lưu figures, model, result JSON. Trên Kaggle
-chọn **Accelerator: None (CPU)**; xem hướng dẫn upload và Add Input trong
-[notebooks/README.md](notebooks/README.md).
+CPU là accelerator khuyến nghị. Notebook tự ghi timing và thông tin phần cứng; nếu Kaggle
+được bật GPU thì tên GPU/VRAM/driver cũng được lưu, nhưng Decision Tree vẫn chạy trên CPU.
+Riêng Covertype dùng thêm 5-fold cross-validation để đánh giá độ ổn định, thời gian và
+đánh đổi giữa hiệu năng với độ phức tạp của cây.
+Xem hướng dẫn upload và Add Input trong [notebooks/README.md](notebooks/README.md).
 
 ## Quy ước dùng chung
 
