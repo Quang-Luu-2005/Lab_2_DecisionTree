@@ -13,6 +13,11 @@ venv/
 env/
 .env
 
+# Local assignment attachments and archives
+/Ke_hoach_Do_an_Decision_Tree_2026.docx
+/Lab 2 - Decision Tree.pdf
+*.zip
+
 # Local data and generated artifacts
 data/raw/*
 data/processed/*

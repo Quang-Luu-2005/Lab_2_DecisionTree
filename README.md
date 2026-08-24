@@ -38,6 +38,7 @@ python -c "from decision_tree_lab2.config import RANDOM_STATE; print(RANDOM_STAT
 ├── data/
 │   ├── raw/                 # Dữ liệu gốc, không chỉnh sửa
 │   └── processed/           # Dữ liệu đã tiền xử lý
+├── scripts/                 # Script tải dữ liệu/chạy pipeline
 ├── figures/                 # Hình xuất từ notebook/script
 ├── models/                  # Model đã train, nếu cần lưu
 ├── notebooks/               # Notebook khám phá/phân tích
@@ -47,6 +48,8 @@ python -c "from decision_tree_lab2.config import RANDOM_STATE; print(RANDOM_STAT
 ```
 
 Các thư mục đầu ra đã được tạo sẵn bằng `.gitkeep`; file lớn hoặc dữ liệu riêng không nên commit vào repo.
+
+Dataset sources and the reproducible download command are documented in [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md).
 
 ## Quy ước dùng chung
 
