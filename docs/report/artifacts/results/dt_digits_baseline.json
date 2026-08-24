@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "dt_digits_baseline",
+  "dataset": "handwritten_digits",
+  "model": "DecisionTreeClassifier",
+  "split": {
+    "test_size": 0.2,
+    "random_state": 42,
+    "stratify": true
+  },
+  "metrics": {
+    "train_accuracy": 1.0,
+    "test_accuracy": 0.825,
+    "error_rate": 0.17500000000000004,
+    "precision_macro": 0.8235837701869361,
+    "recall_macro": 0.8242471042471042,
+    "f1_macro": 0.8230493509776784,
+    "data_loading_seconds": 0.0424440090000644,
+    "training_seconds": 0.02385198299998592,
+    "prediction_seconds": 0.0030046890000221538,
+    "tree_depth": 14,
+    "leaf_count": 142,
+    "pipeline_seconds": 5.128202883999961
+  },
+  "hardware": {
+    "environment": "kaggle",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "processor": "x86_64",
+    "logical_cpu_count": 4,
+    "gpu_available": false,
+    "gpus": [],
+    "model_compute_device": "cpu"
+  },
+  "artifacts": {
+    "figure_paths": [
+      "/kaggle/working/figures/dt_digits_baseline__confusion_matrix.png",
+      "/kaggle/working/figures/dt_digits_baseline__misclassified_examples.png",
+      "/kaggle/working/figures/dt_digits_baseline__feature_importance.png",
+      "/kaggle/working/figures/dt_digits_baseline__tree_top_levels.png"
+    ],
+    "model_path": "/kaggle/working/models/dt_digits_baseline.joblib"
+  },
+  "notes": "Kaggle/local hardware recorded; sklearn Decision Tree computed on CPU even if a GPU was visible.",
+  "created_at_utc": "2026-08-24T18:36:41.838563+00:00"
+}

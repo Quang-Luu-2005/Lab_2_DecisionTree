@@ -76,11 +76,15 @@ Pipeline tạo class distribution, phân bố 16 features, correlation heatmap v
 class–feature profiles. Phần nhận xét được tổng hợp tại
 [docs/LETTER_RECOGNITION_EDA.md](docs/LETTER_RECOGNITION_EDA.md).
 
-## Notebook Decision Tree baseline cho Kaggle
+## Notebook thí nghiệm cho Kaggle
 
-- [Letter Recognition baseline](notebooks/01_letter_decision_tree_baseline.ipynb)
-- [Handwritten Digits baseline](notebooks/02_digits_decision_tree_baseline.ipynb)
-- [Covertype scalability](notebooks/03_covertype_decision_tree_scalability.ipynb)
+- [Letter Recognition baseline](notebooks/decision_tree/01_letter_decision_tree_baseline.ipynb)
+- [Handwritten Digits baseline](notebooks/decision_tree/02_digits_decision_tree_baseline.ipynb)
+- [Covertype scalability](notebooks/decision_tree/03_covertype_decision_tree_scalability.ipynb)
+- [Random Forest benchmark](notebooks/benchmark_models/04_random_forest_letter_digits.ipynb)
+- [SVM benchmark](notebooks/benchmark_models/05_svm_letter_digits.ipynb)
+- [KNN benchmark](notebooks/benchmark_models/06_knn_letter_digits.ipynb)
+- [Model comparison](notebooks/model_comparison/07_letter_digits_model_comparison.ipynb)
 
 Ba notebook dùng `DecisionTreeClassifier`, cùng protocol `test_size=0.20`,
 `random_state=42`, `stratify=True` và tự lưu figures, model, result JSON. Trên Kaggle
@@ -88,6 +92,8 @@ CPU là accelerator khuyến nghị. Notebook tự ghi timing và thông tin ph�
 được bật GPU thì tên GPU/VRAM/driver cũng được lưu, nhưng Decision Tree vẫn chạy trên CPU.
 Riêng Covertype dùng thêm 5-fold cross-validation để đánh giá độ ổn định, thời gian và
 đánh đổi giữa hiệu năng với độ phức tạp của cây.
+Ba notebook benchmark chạy Random Forest, SVM và KNN trên cùng Letter/Digits split; notebook
+cuối tổng hợp accuracy, macro-F1, train-test gap và runtime để so sánh công bằng.
 Xem hướng dẫn upload và Add Input trong [notebooks/README.md](notebooks/README.md).
 
 ## Quy ước dùng chung

@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "dt_covertype_scalability",
+  "dataset": "covertype",
+  "model": "DecisionTreeClassifier",
+  "split": {
+    "test_size": 0.2,
+    "random_state": 42,
+    "stratify": true
+  },
+  "metrics": {
+    "test_accuracy": 0.9388656058793663,
+    "error_rate": 0.061134394120633706,
+    "precision_macro": 0.9030992020140152,
+    "recall_macro": 0.9037770101418111,
+    "f1_macro": 0.9034234787324996,
+    "generalization_gap": 0.061134394120633706,
+    "data_loading_seconds": 86.78348954500007,
+    "training_seconds": 10.515070595999987,
+    "fit_seconds": 10.515070595999987,
+    "prediction_seconds": 0.2833640789999663,
+    "predict_seconds": 0.2833640789999663,
+    "tree_depth": 41,
+    "leaf_count": 23956,
+    "dataset_memory_mb": 243.80246353149414,
+    "pipeline_seconds": 162.07172018199992
+  },
+  "hardware": {
+    "environment": "kaggle",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "processor": "x86_64",
+    "logical_cpu_count": 4,
+    "gpu_available": false,
+    "gpus": [],
+    "model_compute_device": "cpu"
+  },
+  "evaluation": {
+    "selection_metric": "training-only cross-validation macro-F1",
+    "cv_folds": 5,
+    "best_model": "baseline",
+    "model_specs": {
+      "baseline": {
+        "criterion": "gini",
+        "random_state": 42
+      },
+      "regularized": {
+        "criterion": "gini",
+        "max_depth": 20,
+        "min_samples_leaf": 5,
+        "random_state": 42
+      }
+    },
+    "holdout_comparison": [
+      {
+        "model": "baseline",
+        "train_accuracy": 1.0,
+        "test_accuracy": 0.9388656058793663,
+        "error_rate": 0.061134394120633706,
+        "precision_macro": 0.9030992020140152,
+        "recall_macro": 0.9037770101418111,
+        "f1_macro": 0.9034234787324996,
+        "f1_weighted": 0.9388607014886393,
+        "generalization_gap": 0.061134394120633706,
+        "fit_seconds": 10.515070595999987,
+        "predict_seconds": 0.2833640789999663,
+        "tree_depth": 41,
+        "leaf_count": 23956
+      },
+      {
+        "model": "regularized",
+        "train_accuracy": 0.9267505577559815,
+        "test_accuracy": 0.8988408216655336,
+        "error_rate": 0.10115917833446642,
+        "precision_macro": 0.8734310434024862,
+        "recall_macro": 0.8191775078663792,
+        "f1_macro": 0.8431948203346925,
+        "f1_weighted": 0.8980772406981956,
+        "generalization_gap": 0.02790973609044789,
+        "fit_seconds": 8.975092216000121,
+        "predict_seconds": 0.23671660600007272,
+        "tree_depth": 20,
+        "leaf_count": 9679
+      }
+    ],
+    "cross_validation": [
+      {
+        "model": "baseline",
+        "cv_folds": 5,
+        "train_accuracy_mean": 1.0,
+        "train_accuracy_std": 0.0,
+        "test_accuracy_mean": 0.9329746174780178,
+        "test_accuracy_std": 0.0011155024099552355,
+        "test_f1_macro_mean": 0.8922752843140781,
+        "test_f1_macro_std": 0.0011404992933363313,
+        "fit_seconds_mean": 8.67094988822937,
+        "fit_seconds_std": 0.08517211134770475,
+        "score_seconds_mean": 0.06016936302185059,
+        "score_seconds_std": 0.000763546949162278
+      },
+      {
+        "model": "regularized",
+        "cv_folds": 5,
+        "train_accuracy_mean": 0.9274395516171831,
+        "train_accuracy_std": 0.0018024903061157522,
+        "test_accuracy_mean": 0.8966155938817757,
+        "test_accuracy_std": 0.0018965471358163496,
+        "test_f1_macro_mean": 0.8387784898339856,
+        "test_f1_macro_std": 0.0028231959915873276,
+        "fit_seconds_mean": 7.42130298614502,
+        "fit_seconds_std": 0.13922652278232,
+        "score_seconds_mean": 0.05466337203979492,
+        "score_seconds_std": 0.007114615928618876
+      }
+    ]
+  },
+  "artifacts": {
+    "figure_paths": [
+      "/kaggle/working/figures/dt_covertype_scalability__class_distribution.png",
+      "/kaggle/working/figures/dt_covertype_scalability__model_comparison.png",
+      "/kaggle/working/figures/dt_covertype_scalability__confusion_matrix.png",
+      "/kaggle/working/figures/dt_covertype_scalability__feature_importance.png"
+    ],
+    "model_path": "/kaggle/working/models/dt_covertype_scalability__baseline.joblib"
+  },
+  "notes": "Scalability experiment; GPU may be visible but sklearn Decision Tree computes on CPU.",
+  "created_at_utc": "2026-08-24T18:42:21.119259+00:00"
+}

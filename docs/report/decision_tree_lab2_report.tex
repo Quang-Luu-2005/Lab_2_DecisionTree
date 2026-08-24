@@ -1,0 +1,76 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[vietnamese]{babel}
+\usepackage{lmodern}
+\usepackage[left=2.5cm,right=2.2cm,top=2.2cm,bottom=2.2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+
+\graphicspath{{artifacts/figures/}}
+\setlength{\parindent}{1.2cm}
+\setlength{\parskip}{0.25em}
+\setlist[itemize]{leftmargin=1.8em,itemsep=0.25em}
+\renewcommand{\arraystretch}{1.18}
+\captionsetup{font=small,labelfont=bf}
+
+\definecolor{labblue}{RGB}{20,63,107}
+\hypersetup{colorlinks=true,linkcolor=labblue,urlcolor=labblue}
+
+\pagestyle{fancy}
+\setlength{\headheight}{14.5pt}
+\fancyhf{}
+\fancyhead[L]{Lab 2 - Decision Tree Modeling and Improvement}
+\fancyhead[R]{Kết quả thực nghiệm}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+    \centering
+    {\large\bfseries ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH\par}
+    \vspace{0.25cm}
+    {\large\bfseries TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN\par}
+    \vspace{2.6cm}
+    {\color{labblue}\rule{0.82\textwidth}{1.2pt}\par}
+    \vspace{0.7cm}
+    {\Huge\bfseries LAB 2\par}
+    \vspace{0.35cm}
+    {\LARGE\bfseries DECISION TREE MODELING\par}
+    \vspace{0.15cm}
+    {\LARGE\bfseries AND IMPROVEMENT\par}
+    \vspace{0.7cm}
+    {\color{labblue}\rule{0.82\textwidth}{1.2pt}\par}
+    \vfill
+    \begin{tabular}{@{}ll@{}}
+        \textbf{Giảng viên:} & [GIẢNG VIÊN] \\
+        \textbf{Sinh viên:} & [HỌ TÊN - MSSV] \\
+                            & [HỌ TÊN - MSSV] \\
+                            & [HỌ TÊN - MSSV] \\
+                            & [HỌ TÊN - MSSV] \\
+    \end{tabular}
+    \vfill
+    {Thành phố Hồ Chí Minh, tháng 8 năm 2026\par}
+\end{titlepage}
+
+\hypersetup{pageanchor=true}
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\input{sections/experimental_results}
+
+\end{document}

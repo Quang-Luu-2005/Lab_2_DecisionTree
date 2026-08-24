@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "dt_letter_baseline",
+  "dataset": "letter_recognition",
+  "model": "DecisionTreeClassifier",
+  "split": {
+    "test_size": 0.2,
+    "random_state": 42,
+    "stratify": true
+  },
+  "metrics": {
+    "train_accuracy": 1.0,
+    "test_accuracy": 0.8677021960364221,
+    "error_rate": 0.13229780396357793,
+    "precision_macro": 0.8689333069847098,
+    "recall_macro": 0.8671734824736936,
+    "f1_macro": 0.8676944398593799,
+    "data_loading_seconds": 0.04190924200020163,
+    "training_seconds": 0.1263901749998695,
+    "prediction_seconds": 0.008761370000229363,
+    "tree_depth": 31,
+    "leaf_count": 1965,
+    "pipeline_seconds": 6.391631821999908
+  },
+  "hardware": {
+    "environment": "kaggle",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "processor": "x86_64",
+    "logical_cpu_count": 4,
+    "gpu_available": false,
+    "gpus": [],
+    "model_compute_device": "cpu"
+  },
+  "artifacts": {
+    "figure_paths": [
+      "/kaggle/working/figures/dt_letter_baseline__confusion_matrix.png",
+      "/kaggle/working/figures/dt_letter_baseline__feature_importance.png",
+      "/kaggle/working/figures/dt_letter_baseline__tree_top_levels.png"
+    ],
+    "model_path": "/kaggle/working/models/dt_letter_baseline.joblib"
+  },
+  "notes": "Kaggle/local hardware recorded; sklearn Decision Tree computed on CPU even if a GPU was visible.",
+  "created_at_utc": "2026-08-24T18:34:36.385864+00:00"
+}
