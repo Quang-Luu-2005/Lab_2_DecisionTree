@@ -76,6 +76,16 @@ Pipeline tạo class distribution, phân bố 16 features, correlation heatmap v
 class–feature profiles. Phần nhận xét được tổng hợp tại
 [docs/LETTER_RECOGNITION_EDA.md](docs/LETTER_RECOGNITION_EDA.md).
 
+## Notebook Decision Tree baseline cho Kaggle
+
+- [Letter Recognition baseline](notebooks/01_letter_decision_tree_baseline.ipynb)
+- [Handwritten Digits baseline](notebooks/02_digits_decision_tree_baseline.ipynb)
+
+Cả hai notebook dùng `DecisionTreeClassifier`, cùng protocol `test_size=0.20`,
+`random_state=42`, `stratify=True` và tự lưu figures, model, result JSON. Trên Kaggle
+chọn **Accelerator: None (CPU)**; xem hướng dẫn upload và Add Input trong
+[notebooks/README.md](notebooks/README.md).
+
 ## Quy ước dùng chung
 
 - Python: 3.11.x.
