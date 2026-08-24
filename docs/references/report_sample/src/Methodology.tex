@@ -1,0 +1,109 @@
+\chapter{Phương pháp nghiên cứu}
+
+\section{Phương pháp đề xuất}
+
+\paragraph{} Counterfactual Explanation Tree (CET) là một framework mới để gán hành động (actions) cho nhiều instances đồng thời bằng cách sử dụng cây quyết định. Khác với các phương pháp Counterfactual Explanation (CE) truyền thống chỉ tập trung vào việc cung cấp hành động cho một instance đơn lẻ, CET được thiết kế để xử lý trường hợp cần gán hành động cho nhiều instances một cách minh bạch (transparent) và nhất quán (consistent).
+
+\paragraph{} CET là một phương pháp mới, kết hợp giữa giải thích phản thực và cây quyết định, nhằm cung cấp hành động khả thi cho nhiều instance cùng lúc một cách minh bạch và nhất quán. Các kết quả thực nghiệm và khảo sát người dùng cho thấy CET vượt trội so với các phương pháp hiện có về cả hiệu quả và khả năng giải thích.
+
+\paragraph{} Một thuật toán ngây thơ là chiến lược phân hoạch tham lam từ trên xuống như CART \parencite{breiman1984cart}, trong đó đệ quy xác định luật phân nhánh của mỗi nút trong để cải thiện nhiều nhất giá trị mục tiêu sau khi tách. Tuy nhiên, để xác định luật phân nhánh của mỗi nút trong, chúng ta cần giải Bài toán 1 cho số lượng luật phân nhánh ứng viên, điều này là không khả thi về mặt tính toán. Trong các thí nghiệm sơ bộ, các quan sát cho thấy rằng phương pháp này không tạo ra một cây quyết định có chất lượng tốt xét theo điểm số không hợp lệ \(i_r\). Nguyên nhân là do phương pháp này thường chọn một luật phân nhánh không phù hợp ở một nút gần gốc và do đó không phân tách được các mẫu đầu vào \(X\) theo cách mà chúng được gán một hành động hiệu quả trong mỗi nút lá mà chúng đi đến.  
+
+\paragraph{} Từ những quan sát trên, nghiên cứu này đề xuất một thuật toán dựa trên tìm kiếm cục bộ ngẫu nhiên (stochastic local search) cho Bài toán 2. Tìm kiếm cục bộ ngẫu nhiên đã được chứng minh là phù hợp cho việc học các mô hình quy tắc phi chuẩn \parencite{wang2019gainingfreelowcosttransparency, pan2020interpretablecompanionsblackboxmodels}. Thuật toán bao gồm hai bước: xác định luật phân nhánh của các nút trong bằng cách sử dụng tìm kiếm cục bộ ngẫu nhiên, và tối ưu hóa một hành động được gán cho mỗi nút lá bằng cách giải Bài toán 1 độc lập.
+
+\section{Mô tả thuật toán}
+
+\begin{algorithm}[H]
+\caption{Tìm kiếm cục bộ ngẫu nhiên cho CET}
+\begin{algorithmic}[1]
+\Statex \hspace*{-\algorithmicindent}\textbf{Đầu vào:} tập các mẫu $X$, tham số cân bằng $\gamma, \lambda$, tập các luật phân nhánh ứng viên $\mathcal{R}$, số vòng lặp tối đa $T$, và điều kiện chấp nhận $\textsc{Accept}$.
+\Statex \hspace*{-\algorithmicindent}\textbf{Đầu ra:} CET $h^*$.
+\State $h^{(0)} \gets$ Sinh ngẫu nhiên một nghiệm khởi tạo;
+\State $h^* \gets h^{(0)}$;
+\For{$t = 1,2,\dots,T$}
+    \State $\delta \sim \textsc{Random}()$;
+    \If{$\delta \le 1/3$ \textbf{và} $|\mathcal{L}(h^{(t-1)})| < (\gamma+\lambda)/\lambda$}
+        \State $h^{(t)} \gets$ Chèn ngẫu nhiên một nút với một luật $r \in \mathcal{R}$ vào $h^{(t-1)}$;
+    \ElsIf{$\delta \le 2/3$}
+        \State $h^{(t)} \gets$ Xóa ngẫu nhiên một nút từ $h^{(t-1)}$;
+    \Else
+        \State $h^{(t)} \gets$ Thay thế ngẫu nhiên luật của một nút trong $h^{(t-1)}$ bằng một luật khác $r \in \mathcal{R}$;
+    \EndIf
+    \For{$\ell \in \mathcal{L}(h^{(t)})$}
+        \State $a_\ell^{(t)} \gets \displaystyle \text{argmin}_{a \in A(X_\ell^{(t)})} g_\gamma\!\left(a \mid X_\ell^{(t)}\right)$;
+    \EndFor
+    \If{$\textsc{Accept}(t,h^{(t-1)},h^{(t)})$ là False}
+        \State $h^{(t)} \gets h^{(t-1)}$;
+    \EndIf
+    \State $h^* \gets \text{argmin}_{h \in \{h^*,h^{(t)}\}} o_{\gamma,\lambda}(h \mid X)$;
+\EndFor
+\State \Return $h^*$;
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{} Nghiên cứu này chỉ ra một cận trên của kích thước lá \(|\mathcal{L}(h^*)|\) của một CET tối ưu \(h^*\) như sau.
+
+\renewcommand\thetheorem{1}
+\begin{theorem}[Giới hạn kích thước lá]
+Gọi $h^*$ là nghiệm tối ưu cho Bài toán 2, tức là
+\[
+h^* = \text{argmin}_{h \in \mathcal{H}} o_{\gamma, \lambda}(h \mid X).
+\]
+Khi đó, ta có:
+\[
+|\mathcal{L}(h^*)| \leq \frac{\gamma + \lambda}{\lambda}.
+\]
+\end{theorem}
+
+\paragraph{} Định lý 1 chỉ ra rằng kích thước lá tối ưu $|\mathcal{L}(h^*)|$ bị chặn trên bởi một hằng số được xác định bởi các tham số cân bằng $\gamma$ và $\lambda$. Nó cũng gợi ý cho chúng ta cách xác định các tham số cân bằng $\gamma$ và $\lambda$, $\lambda$ càng lớn thì cây càng nhỏ.
+
+
+\paragraph{} Trong Thuật toán 1, đầu tiên cần sinh ngẫu nhiên một nghiệm khởi tạo \(h^{(0)}\), sau đó tuần tự cập nhật nó cho đến khi số vòng lặp đạt đến một số nguyên \(T \in \mathbb{N}\). Mỗi vòng lặp \(t \in [T]\) gồm hai bước cập nhật.
+
+\paragraph{} Trước hết, cập nhật nghiệm trước đó \(h^{(t-1)}\) thành \(h^{(t)}\) bằng chiến lược tìm kiếm cục bộ ngẫu nhiên. Việc cập nhật được thực hiện bằng ba phép chỉnh sửa với xác suất xấp xỉ bằng nhau:
+
+\begin{enumerate}
+  \item \textbf{Chèn} một nút trong với luật ngẫu nhiên \(r \in \mathcal{R}\) vào một vị trí ngẫu nhiên của \(h^{(t-1)}\),  
+  \item \textbf{Xóa} ngẫu nhiên một nút của \(h^{(t-1)}\),  
+  \item \textbf{Thay thế} ngẫu nhiên luật của một nút ngẫu nhiên của \(h^{(t-1)}\) bằng một luật khác \(r \in \mathcal{R}\).  
+\end{enumerate}
+
+\noindent
+Lưu ý rằng việc cắt tỉa không gian tìm kiếm được thực hiện bằng cách loại bỏ thao tác chèn khi kích thước lá \(|\mathcal{L}(h^{(t-1)})|\) vượt quá cận trên của Định lý 1.  
+
+\paragraph{} Thứ hai, tối ưu một hành động \(a^{(t)}_l\) của mỗi lá \(l \in \mathcal{L}(h^{(t)})\) bằng cách giải Bài toán 1 cho các mẫu \(X^{(t)}_l\) đi đến lá đó. Trong mỗi vòng lặp, thao tác cập nhật được chấp nhận phụ thuộc vào một điều kiện chấp nhận nhất định \(\text{ACCEPT}(t, h^{(t-1)}, h^{(t)})\). Theo các nghiên cứu trước \parencite{wang2019gainingfreelowcosttransparency, pan2020interpretablecompanionsblackboxmodels}, nghiên cứu này chấp nhận nó với xác suất:  
+
+\[
+p(t) = \exp \left( \frac{o_{\gamma, \lambda}(h^{(t-1)}) - o_{\gamma, \lambda}(h^{(t)})}{C_0^{1-\frac{t}{T}}} \right),
+\]
+
+\noindent
+trong đó \(C_0\) là nhiệt độ cơ bản của thuật toán mô phỏng quá trình tôi luyện (simulated annealing). Xác suất \(p(t)\) sẽ giảm dần theo số vòng lặp \(t\).
+
+\section{Phân tích lý thuyết}
+
+\paragraph{} Nghiên cứu này trình bày một thuật toán cho Bài toán 2 dựa trên tìm kiếm cục bộ ngẫu nhiên. Giả sử một tập hợp các luật phân nhánh ứng viên \(\mathcal{R}\). Một phần tử \(r \in \mathcal{R}\) là một mệnh đề liên quan đến một mẫu \(x\), ví dụ \(x_d \leq b\) cho đặc trưng liên tục hoặc \(x_d = b\) cho đặc trưng rời rạc, trong đó \(d \in [D]\) và \(b \in \mathbb{R}\). Chúng ta có thể thu được \(\mathcal{R}\) bằng một số kỹ thuật rời rạc hóa, như trong các nghiên cứu gần đây về cây quyết định \parencite{hu2019optimal, aglin2020learning}.
+
+\paragraph{} Với một CET \(h \in \mathcal{H}\), đặt \(X_l = \{x \in X \mid x \in r_l\}\) là tập các mẫu đi đến lá \(l \in \mathcal{L}(h)\). Vì \(\{r_l \mid l \in \mathcal{L}(h)\}\) là một phân hoạch của không gian đầu vào \(X\), nên nó cũng phân hoạch \(X\); tức là, \(\bigcup_{l \in \mathcal{L}(h)} X_l = X\) và \(X_l \cap X_{l'} = \emptyset\) với mọi \(l, l' \in \mathcal{L}(h)\). Do đó, chúng ta có thể viết lại mục tiêu học \(o_{\gamma, \lambda}(h)\) như sau:
+
+\[
+o_{\gamma, \lambda}(h) = \frac{1}{N} \sum_{l \in \mathcal{L}(h)} g_{\gamma}(a_l \mid X_l) + \lambda \cdot |\mathcal{L}(h)|.
+\]
+
+\paragraph{} Điều này cho thấy rằng nếu các luật phân nhánh của các nút trong ở trong \(h\), tức là một phân hoạch của \(X\), đã được xác định, thì ta có thể tối ưu hóa một hành động \(a_l \in \mathcal{A}(X_l)\) gán cho mỗi lá \(l \in \mathcal{L}(h)\) bằng cách giải Bài toán 1 một cách độc lập.
+
+\section{Các khía cạnh đổi mới}
+
+\begin{enumerate}
+    \item \textbf{Tính minh bạch và nhất quán:}
+    \begin{itemize}
+        \item CET đảm bảo mỗi instance nhận được một hành động duy nhất kèm luật giải thích rõ ràng.
+        \item Khắc phục nhược điểm của các phương pháp dựa trên luật (như AReS) có thể gán nhiều hành động hoặc không gán được hành động nào.
+    \end{itemize}
+    \item \textbf{Cân bằng hiệu quả và giải thích được:} Tham số $\lambda$ cho phép điều chỉnh số lượng hành động, cân bằng giữa độ chính xác và độ phức tạp của mô hình.
+    \item \textbf{Khả năng tổng quát hóa:} CET có thể áp dụng cho nhiều loại mô hình phân lớp (linear, tree ensemble, neural network) và hàm chi phí khác nhau.
+    \item \textbf{Hiệu quả tính toán:}
+    \begin{itemize}
+        \item Sử dụng MILO để giải bài toán tối ưu cho từng nhóm instance.
+        \item Thuật toán stochastic local search kết hợp với ràng buộc lý thuyết giúp giảm không gian tìm kiếm.
+    \end{itemize}
+\end{enumerate}

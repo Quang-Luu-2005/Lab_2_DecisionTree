@@ -1,0 +1,137 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[english,vietnamese]{babel}
+\usepackage{ragged2e}
+\usepackage{enumitem}
+
+% Essential packages only
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Comment out bibliography for now
+% \usepackage{bibentry}
+\usepackage[backend=bibtex,style=ieee, citestyle=authoryear,uniquename=full]{biblatex}
+% \renewcommand*{\nameyeardelim}{\addcomma\addspace}
+\bibliography{refs.bib}
+
+% Color scheme
+\definecolor{primaryblue}{HTML}{0065BD}
+\definecolor{secondaryblue}{HTML}{4A90E2}
+\definecolor{accentorange}{HTML}{FF6B35}
+\definecolor{darkgray}{HTML}{2C3E50}
+\definecolor{lightgray}{HTML}{ECF0F1}
+\definecolor{successgreen}{HTML}{27AE60}
+\definecolor{warningred}{HTML}{E74C3C}
+
+% Beamer theme
+\mode<presentation>{
+    \usetheme{default}
+    \useinnertheme{circles}
+    \setbeamercovered{transparent}
+}
+
+% Custom colors
+\setbeamercolor{structure}{fg=primaryblue}
+\setbeamercolor{frametitle}{bg=primaryblue,fg=white}
+\setbeamercolor{title}{fg=primaryblue}
+
+% Utility commands
+\newcommand{\highlight}[1]{\textcolor{orange}{\textbf{#1}}}
+\renewcommand{\alert}[1]{\textcolor{warningred}{\textbf{#1}}}
+\newcommand{\emphasis}[1]{\textcolor{primaryblue}{\textbf{#1}}}
+
+% Simplified custom box
+\definecolor{boxframe}{HTML}{009688}
+\definecolor{boxtext}{HTML}{FF6B35}
+
+\tcbset{
+    custombox/.style={
+        colframe=boxframe,
+        colback=white,
+        coltext=boxtext,
+        boxrule=2pt,
+        arc=5mm,
+        left=2mm,
+        right=2mm,
+        top=2mm,
+        bottom=2mm,
+        width=\textwidth
+    }
+}
+
+% Simplified highlight formula box
+\newtcolorbox{highlightformula}[1][]{
+    colback=primaryblue!5,
+    colframe=primaryblue,
+    sharp corners,
+    boxrule=1pt,
+    left=2pt,
+    right=2pt,
+    top=1mm,
+    bottom=1mm,
+    title=#1,
+    before skip=2mm,
+    after skip=2mm,
+    hbox
+}
+
+% Define custom commands for title page information
+\newcommand{\university}[1]{\def\insertuniversity{#1}}
+\newcommand{\school}[1]{\def\insertschool{#1}}
+\newcommand{\faculty}[1]{\def\insertfaculty{#1}}
+\newcommand{\presenters}[1]{\def\insertpresenters{#1}}
+
+% Initialize commands
+\newcommand{\insertuniversity}{}
+\newcommand{\insertschool}{}
+\newcommand{\insertfaculty}{}
+\newcommand{\insertpresenters}{}
+
+\title{Decision Tree Modeling and Improvement}
+\subtitle{Lab 2 - Introduction to Artificial Intelligence}
+
+\university{ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH}
+\school{TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN}
+\faculty{KHOA CÔNG NGHỆ THÔNG TIN}
+\presenters{
+    HỌ TÊN -- MSSV \\
+    HỌ TÊN -- MSSV \\
+    HỌ TÊN -- MSSV \\
+    HỌ TÊN -- MSSV
+}
+
+\setbeamertemplate{footline}{
+    \leavevmode%
+    \hfill%
+    \usebeamerfont{footline}\insertframenumber/\inserttotalframenumber\hspace{2mm}\vspace{1mm}
+}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{title page}
+{
+    \begin{centering}
+        {\large\bfseries
+            \insertuniversity\par
+            \insertschool\par
+            \insertfaculty\par
+        }
+        \vskip1em%
+        
+        {\large\bfseries\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}
+        \vskip0.5em%
+        
+        {\large\bfseries\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+        \vskip1em%
+        
+        \vskip1.5em%
+        {\usebeamerfont{author}\insertpresenters\par}
+        \vfill
+        {\usebeamerfont{date}\insertdate\par}
+    \end{centering}
+}
+
+\newcommand{\labelitemi}{\textbullet}

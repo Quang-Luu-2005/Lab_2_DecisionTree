@@ -6,6 +6,7 @@ __pycache__/
 .ruff_cache/
 .coverage
 htmlcov/
+.tmp/
 
 # Virtual environments and local settings
 .venv/
@@ -16,6 +17,7 @@ env/
 # Local assignment attachments and archives
 /Ke_hoach_Do_an_Decision_Tree_2026.docx
 /Lab 2 - Decision Tree.pdf
+/Decision_Tree_Improvement_Hierarchical_Shrinkage.docx
 *.zip
 
 # Local data and generated artifacts
@@ -32,3 +34,36 @@ results/*
 
 # Notebooks
 .ipynb_checkpoints/
+
+# Binary assets extracted from local report/slide references
+docs/references/**/figures/
+docs/references/**/assets/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.dvi
+*.fdb_latexmk
+*.fls
+*.glg
+*.glo
+*.gls
+*.idx
+*.ilg
+*.ind
+*.ist
+*.loa
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.xdv
+main.pdf

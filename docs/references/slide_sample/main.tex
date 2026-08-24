@@ -1,0 +1,464 @@
+\documentclass[notheorems, aspectratio=149]{beamer}
+
+
+\input{preamble}
+
+
+\begin{document}
+
+\begin{frame}[t]
+    \small
+    \titlepage
+\end{frame}
+
+\AtBeginSection[]{
+  \begin{frame}{Nội dung}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\section{Nền tảng: Giải thích phản thực (CE)}
+
+\begin{frame}
+    \frametitle{Nền tảng: Giải thích phản thực (CE)}
+    \begin{tcolorbox}[custombox]
+        \bfseries Giải thích "hành động" để đạt được kết quả dự đoán mong muốn
+    \end{tcolorbox}
+
+Phương pháp giải thích hậu nghiệm để đưa ra các \highlight{giải thích cục bộ} cho một bộ phân loại.
+
+\highlight{Giải thích phản thực}: Đối với mỗi trường hợp $x \in \mathcal{X}$, CE tìm một \highlight{hành động $a^*$} sao cho kết quả dự đoán của \emphasis{bộ phân loại $f: \mathcal{X} \to \mathcal{Y}$ thay đổi thành nhãn mục tiêu $y^* \in \mathcal{Y}$}, đồng thời tối thiểu hóa chi phí thực hiện hành động:
+
+\definecolor{lightpink}{rgb}{0.98, 0.9, 0.85}
+\definecolor{teal}{rgb}{0.1, 0.7, 0.6}
+
+\begin{equation*}
+\colorbox{lightpink}{
+    $a^* = \arg\min_{a \in \mathcal{A}}$
+    \fcolorbox{teal}{white}{
+        $c(a | x)$
+    }
+    \text{ với điều kiện } $f(x+a) = y^*$
+}
+\end{equation*}
+
+\begin{center}
+\color{teal}
+hàm chi phí \\
+\small{(Max Percentile Shift \parencite{Ustun2019})}
+\end{center}
+\end{frame}
+
+\section{Mục tiêu nghiên cứu}
+\begin{frame}
+    \frametitle{Mục tiêu nghiên cứu: Giải thích phản thực cho ``nhiều'' trường hợp}
+
+    \begin{tcolorbox}[custombox]
+        \bfseries Gán hành động cho nhiều trường hợp $X \subset \mathcal{X}$ đồng thời
+    \end{tcolorbox}
+
+    Các hành động $a$ tối ưu cho từng cá thể $x$ \textbf{không nhất thiết} do chính cá thể đó thực hiện \parencite{karimi2021surveyalgorithmicrecoursedefinitions}.
+        
+    \textbf{Ví dụ:} \textit{Dự đoán nguy cơ nghỉ việc}.
+    Một công ty gán các hành động cho nhân viên để giảm nguy cơ nghỉ việc.
+
+    Một hành động $a$ cho một cá thể $x$ (ví dụ: tăng lương) \textbf{có thể ảnh hưởng đến các cá thể khác} 
+    (ví dụ: thay đổi hệ thống lương trong công ty).
+        
+    $\implies$ \textcolor{red}{Trong trường hợp này, việc tối ưu hành động riêng lẻ cho từng cá thể là chưa đủ.}
+        
+\end{frame}
+
+\section{Tổng quan đóng góp}
+
+\begin{frame}
+    \frametitle{Tổng quan đóng góp}
+
+    \begin{tcolorbox}[custombox]
+        \bfseries Một framework CE mới có khả năng gán hành động cho nhiều trường hợp
+    \end{tcolorbox}
+
+    \vspace{0.3cm}
+    Nghiên cứu đề xuất \highlight{Cây Giải thích phản thực (CET)}, 
+    có khả năng gán hành động cho các trường hợp đầu vào bằng \emphasis{cây quyết định}.
+
+    \vspace{0.3cm}
+    \textbf{Đặc tính:}
+    \begin{itemize}
+        % \renewcommand{\labelitemi}{\textbullet}
+        \item \emphasis{Tính minh bạch:} Giải thích được hành động áp dụng cho tất cả các trường hợp trong không gian đầu vào.
+        \item \emphasis{Tính nhất quán:} Không tồn tại xung đột trong lý do gán hành động giữa các trường hợp.
+    \end{itemize}
+\end{frame}
+
+\section{Đề xuất: Counterfactual Explanation Tree (CET)}
+
+\begin{frame}
+    \frametitle{Định nghĩa và Ưu điểm của CET}
+
+    \begin{tcolorbox}[custombox]
+        \centering
+        \textbf{\textcolor{orange}{CET: Cây quyết định gán hành động hiệu quả trên toàn bộ không gian đầu vào}}
+    \end{tcolorbox}
+
+    \textbf{Định nghĩa:}  
+    Với một tập hành động khả thi $\mathcal{A}$,  
+    \highlight{Counterfactual Explanation Tree (CET)} là cây quyết định $h: \mathcal{X} \to \mathcal{A}$  
+    gán hành động cho mỗi trường hợp $x \in \mathcal{X}$.
+
+    \vspace{0.3cm}
+    \textbf{Ưu điểm:}
+    \begin{itemize}
+        % \renewcommand{\labelitemi}{\textbullet}
+        \item Giải thích mỗi hành động dưới dạng \textit{quy tắc} (minh bạch).
+        \item Gán duy nhất một cặp \textit{(hành động, quy tắc)} cho mỗi trường hợp (nhất quán).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Xây dựng Counterfactual Explanation Tree (CET)}
+
+    \begin{tcolorbox}[custombox]
+        \centering
+        \textbf{\textcolor{orange}{CET từ điểm không hợp lệ (Invalidity score)}}  
+    \end{tcolorbox}
+
+    \begin{center}
+    \begin{highlightformula}
+        $\displaystyle i_{\gamma}(a \mid x) := c(a \mid x) + \gamma \cdot \ell(f(x+a), y^*)$
+    \end{highlightformula}
+    \end{center}
+
+    \textbf{Trong đó:}
+    \begin{itemize}
+        \item $c(a \mid x)$: \highlight{Chi phí} thực hiện hành động $a$.  
+        \item $\ell(f(x+a), y^*)$: \highlight{Hàm mất mát} liên quan đến ràng buộc $f(x+a) = y^*$.  
+        \item Hành động $a = h(x)$ được coi là \textit{hiệu quả} nếu chi phí thấp và đạt kết quả mong muốn.
+    \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+    \frametitle{Thuật toán và Chi phí CET}
+
+    \begin{tcolorbox}[custombox]
+        \centering
+        \textbf{\textcolor{orange}{Tối ưu CET qua \textit{stochastic local search}}}  
+    \end{tcolorbox}
+
+    \textbf{Hàm chi phí tổng quát:}
+    \begin{center}
+    \begin{highlightformula}
+        $o_{\gamma, \lambda}(h \mid X) := 
+        \dfrac{1}{|X|} \sum_{x \in X} i_\gamma(h(x) \mid x) + \lambda |\mathcal{L}(h)|$
+    \end{highlightformula}
+    \end{center}
+
+    \textbf{Trong đó:}
+    \begin{itemize}
+        \item $i_\gamma(a \mid x) = c(a \mid x) + \gamma \ell(f(x+a), y^*)$ là \highlight{invalidity score}.
+        \item $|\mathcal{L}(h)|$: số lá trong CET (số hành động được gán).
+        \item $\lambda$: điều chỉnh \highlight{độ phức tạp của cây} và \highlight{trade-off} giữa hiệu quả hành động và tính diễn giải.
+        \item Tối ưu: $h^* = \arg\min_{h \in \mathcal{H}} o_{\gamma, \lambda}(h \mid X)$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Định lý 1: Giới hạn số lá của CET}
+
+    \begin{tcolorbox}[custombox]
+        \centering
+        \textbf{\textcolor{orange}{Kích thước cây tối ưu bị chặn trên bởi tham số $\gamma, \lambda$}}
+    \end{tcolorbox}
+
+    \begin{center}
+    \begin{highlightformula}
+    $\displaystyle |\mathcal{L}(h^*)| \leq \dfrac{\gamma + \lambda}{\lambda}$
+    \end{highlightformula}
+    \end{center}
+    
+    \vspace{0.3cm}
+    \textbf{Ý nghĩa:}
+    \begin{itemize}
+        % \renewcommand{\labelitemi}{\textbullet}
+        \item Số lá của CET tối ưu $h^*$ luôn bị chặn trên bởi $\dfrac{\gamma + \lambda}{\lambda}$.
+        \item Cho thấy sự phụ thuộc trực tiếp giữa độ phức tạp của cây và tham số trade-off.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Định lý 2: Tính tối ưu cục bộ trong các lá CET}
+
+    \begin{tcolorbox}[custombox]
+        Mỗi lá trong CET chứa hành động tối ưu với chi phí và invalidity thấp nhất cho các trường hợp thuộc lá đó.
+    \end{tcolorbox}
+
+    \begin{center}       
+    \begin{highlightformula}    
+        $\displaystyle a_\ell^* = \arg\min_{a \in \mathcal{A}(X_\ell)} \sum_{x \in X_\ell} i_\gamma(a \mid x)$
+    \end{highlightformula}
+    \end{center}
+
+    \textbf{Ý nghĩa:}
+    \begin{itemize}
+        \item Tối ưu cục bộ đảm bảo hành động tại mỗi lá vừa hiệu quả vừa thỏa ràng buộc CE.
+        \item Giúp cây giữ tính minh bạch, vì mỗi lá áp dụng một quy tắc rõ ràng.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Định lý 3: Tính phân rã hợp lý của CET}
+
+    \begin{tcolorbox}[custombox]
+        CET có thể được phân rã thành các lá không giao nhau, đảm bảo các quy tắc hành động không xung đột.
+    \end{tcolorbox}
+
+    \begin{center}    
+    \begin{highlightformula}
+        $X = \bigcup_{\ell \in \mathcal{L}(h)} X_\ell, \quad X_\ell \cap X_{\ell'} = \emptyset \;\; \forall \ell \neq \ell'$
+    \end{highlightformula}
+    \end{center}
+    
+    \textbf{Ý nghĩa:}
+    \begin{itemize}
+        \item Mỗi cá thể $x \in X$ chỉ thuộc một lá duy nhất.
+        \item Giúp tránh xung đột hành động và đảm bảo tính nhất quán.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Thuật toán: Stochastic Local Search}
+
+    \textbf{Ý tưởng:}  
+    Cập nhật các quy tắc phân nhánh trong cây CET hiện tại $h^{(t)}$  
+    bằng một số thao tác ngẫu nhiên.
+
+    \textbf{Các thao tác chỉnh sửa:}
+    \begin{itemize}
+        % \renewcommand{\labelitemi}{\textbullet}
+        \item \textit{insert}: chèn thêm một nút phân nhánh
+        \item \textit{delete}: xoá một nút phân nhánh
+        \item \textit{replace}: thay thế quy tắc tại một nút
+    \end{itemize}
+
+    \textbf{Bước con (subroutine):}  
+    Hành động gán cho các lá được tối ưu bằng cách giải MILO mở rộng \parencite{Ustun2019, Kanamori:AISTATS2022}.
+
+    \vspace{0.2cm}
+    \textbf{Tham khảo:}  
+    \cite{wang2019gainingfreelowcosttransparency, pan2020interpretablecompanionsblackboxmodels}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+    \frametitle{Mã giả Tìm kiếm cục bộ ngẫu nhiên}
+
+\begin{algorithmic}[1]
+\Require Tập các mẫu $X$, tham số cân bằng $\gamma,\lambda$, tập các luật phân nhánh ứng viên $\mathcal{R}$, số vòng lặp tối đa $T$, và điều kiện chấp nhận $\textsc{Accept}$
+\Ensure CET $h^*$
+
+\State $h^{(0)} \gets$ Sinh ngẫu nhiên một nghiệm khởi tạo
+\State $h^* \gets h^{(0)}$
+
+\For{$t = 1,2,\dots,T$}
+    \State $\delta \sim \textsc{Random}()$
+    
+    \If{$\delta \le 1/3$ \textbf{và} $|\mathcal{L}(h^{(t-1)})| < (\gamma+\lambda)/\lambda$}
+        \State $h^{(t)} \gets$ Chèn ngẫu nhiên một nút với một luật $r \in \mathcal{R}$ vào $h^{(t-1)}$
+    \ElsIf{$\delta \le 2/3$}
+        \State $h^{(t)} \gets$ Xóa ngẫu nhiên một nút từ $h^{(t-1)}$
+    \Else
+        \State $h^{(t)} \gets$ Thay thế ngẫu nhiên luật của một nút trong $h^{(t-1)}$ bằng một luật khác $r \in \mathcal{R}$
+    \EndIf
+    
+    \For{$\ell \in \mathcal{L}(h^{(t)})$}
+        \State $a_\ell^{(t)} \gets \displaystyle \arg\min_{a \in A(X_\ell^{(t)})} g_\gamma\!\left(a \mid X_\ell^{(t)}\right)$
+    \EndFor
+    
+    \If{$\textsc{Accept}(t,h^{(t-1)},h^{(t)})$ là False}
+        \State $h^{(t)} \gets h^{(t-1)}$
+    \EndIf
+    
+    \State $h^* \gets \arg\min_{h \in \{h^*,h^{(t)}\}} o_{\gamma,\lambda}(h \mid X)$
+\EndFor
+
+\State \Return $h^*$
+
+\end{algorithmic}
+\end{frame}
+
+
+\section{Thực nghiệm và kết quả}
+\begin{frame}
+    \frametitle{Thực nghiệm (IBM Attrition dataset)}
+
+    \begin{tcolorbox}[custombox]
+        \centering
+        \textbf{\textcolor{orange}{CET có thể gán hành động hiệu quả theo cách dễ diễn giải}}
+    \end{tcolorbox}
+
+    \textbf{So sánh với AReS \parencite{rawal2020ares}} dựa trên \emphasis{rule set}:
+    \begin{itemize}
+        % \renewcommand{\labelitemi}{\textbullet}
+        \item \textbf{Định lượng:} hiệu quả của hành động (cost, loss, invalidity).
+        \item \textbf{Định tính:} mức độ dễ diễn giải với người dùng (user study).
+    \end{itemize}
+
+    \vspace{0.2cm}
+    \textbf{Kết quả:}
+    \begin{itemize}
+        % \renewcommand{\labelitemi}{\textbullet}
+        \item CET gán hành động \emphasis{hiệu quả hơn} AReS về chi phí, mất mát và invalidity, đồng thời vẫn đảm bảo minh bạch và nhất quán.
+        \item Hành vi của CET dễ dàng được người dùng hiểu.
+        \item \emphasis{CET đạt được hành động hiệu quả và có thể diễn giải!}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Minh họa khả năng diễn giải}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth]{figures/userstudy_CET.jpeg}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Minh họa khả năng diễn giải}
+
+    \begin{minipage}{0.45\linewidth}
+        \centering
+        \includegraphics[width=0.38\linewidth]{figures/userstudy_AReS.jpeg}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{0.45\linewidth}
+        \centering
+        \includegraphics[width=0.75\linewidth]{figures/userstudy_clustering.png}
+    \end{minipage}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Minh họa khả năng diễn giải}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth]{figures/sensitivity.pdf}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Kết quả thực nghiệm chi tiết}
+
+    \scriptsize
+    \textbf{So sánh Cost, Loss, Invalidity:}
+    \vspace{0.2cm}
+
+    \begin{tabular}{l|c|c|c|c}
+        Dataset & Method & Cost & Loss & Invalidity \\
+        \hline
+        Train & AReS & 0.436 ± 0.06 & 0.435 ± 0.07 & 0.871 ± 0.04 \\
+              & CET  & \textbf{0.349 ± 0.1} & \textbf{0.4 ± 0.11} & \textbf{0.749 ± 0.05} \\
+        \hline
+        Test  & AReS & 0.45 ± 0.08 & 0.298 ± 0.09 & 0.748 ± 0.09 \\
+              & CET  & \textbf{0.383 ± 0.12} & \textbf{0.318 ± 0.09} & \textbf{0.701 ± 0.12} \\
+    \end{tabular}
+
+    \vspace{0.6cm}
+    \textbf{So sánh User Accuracy và Thời gian:}
+    \vspace{0.2cm}
+
+    \begin{tabular}{c|c|c}
+        Method & User Acc. & Time [s] \\
+        \hline
+        AReS & 95.12\% & 784.8 ± 202 \\
+        CET  & \textbf{100.0\%} & \textbf{674.0 ± 392} \\
+    \end{tabular}
+    \\
+    
+    \textbf{Kết luận:} Kết quả thực nghiệm khác với công bố gốc, chủ yếu do nhóm giảm bớt các tham số và hạn chế về cấu hình máy. Tuy nhiên, kết quả vẫn phản ánh đúng xu hướng phương pháp và cần được kiểm chứng thêm với điều kiện tối ưu hơn.    
+\end{frame}
+
+\begin{frame}
+    \frametitle{Thực nghiệm (IBM Attrition dataset) – AReS \parencite{rawal2020ares}}
+
+    \scriptsize
+    \begin{tabular}{|p{3.5cm}|p{5.5cm}|}
+        \hline
+        \textbf{Rule} & \textbf{Action} \\
+        \hline
+        If OverTime=True AND Performance=False & OverTime=False \\
+        \hline
+        If BusinessTravel=1 AND OverTime=False & BusinessTravel<1 AND OverTime=False \\
+        \hline
+        If JobLevel<2 AND MonthlyIncome<2275 & MonthlyIncome$\geq$15170 AND OverTime=False \\
+        \hline
+        If OverTime=True AND $2 \leq$ YearsInCurrentRole < 3 & MonthlyIncome$\geq$15170 AND OverTime=False \\
+        \hline
+        Default & MonthlyIncome$\geq$15170 AND OverTime=False \\
+        \hline
+    \end{tabular}
+
+    \vspace{0.5cm}
+    \textcolor{red}{\textbf{Cost: 47.0\%}} \\
+    \textcolor{red}{\textbf{Loss: 8.7\%}} \\
+    \textcolor{red}{\textbf{User Acc.: 95.1\%}} \\
+    \textcolor{red}{\textbf{Time: 784.8 sec.}}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Thực nghiệm (IBM Attrition dataset) – CET (Ours)}
+
+    \scriptsize
+    \begin{tabular}{|p{3.5cm}|p{5.5cm}|}
+        \hline
+        \textbf{Rule} & \textbf{Action} \\
+        \hline
+        If OverTime=True & OverTime=False \\
+        \hline
+        If YearsInCurrentRole < 1 & BusinessTravel=-1,\; MonthlyIncome+=8502 \\
+        \hline
+        If OverTime=False AND YearsInCurrentRole$\geq$1 & MonthlyIncome+=2276,\; OverTime=False \\
+        \hline
+        If OverTime=True AND YearsInCurrentRole$\geq$1 & BusinessTravel=-1,\; MonthlyIncome+=2231 \\
+        \hline
+        Else & OverTime=False,\; PercentSalaryHike+=1 \\
+        \hline
+    \end{tabular}
+
+    \vspace{0.5cm}
+    \textcolor{blue}{\textbf{Cost: 41.0\%}} \\
+    \textcolor{blue}{\textbf{Loss: 4.3\%}} \\
+    \textcolor{blue}{\textbf{User Acc.: 100\%}} \\
+    \textcolor{blue}{\textbf{Time: 674.0 sec.}}
+
+
+\end{frame}
+
+\section{Kết luận}
+
+\begin{frame}
+    \frametitle{Kết luận}
+    
+    \begin{tcolorbox}[custombox]
+        \centering
+        \textbf{\textcolor{orange}{CET: Framework hiệu quả cho giải thích phản thực toàn cục}}
+    \end{tcolorbox}
+
+    \begin{itemize}
+        % \renewcommand{\labelitemi}{\textbullet}
+        \item Đề xuất CET như một giải pháp cho vấn đề CE đa trường hợp
+        \item Đảm bảo tính minh bạch, nhất quán và phủ toàn cục
+        \item Thuật toán hiệu quả dựa trên stochastic local search
+        \item Thực nghiệm cho thấy hiệu quả vượt trội so với AReS
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+\frametitle{Tài liệu tham khảo}
+\small      
+\raggedright 
+\printbibliography
+\end{frame}
+
+\end{document}

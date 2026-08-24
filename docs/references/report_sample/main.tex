@@ -1,0 +1,176 @@
+\documentclass[14pt, a4paper]{report}
+\usepackage[right=1.5cm, left=1.5cm, top=1.5cm, bottom=1.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[sc]{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{newunicodechar}
+\newunicodechar{́}{\'}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\newtheorem{problem}{Bài toán}
+\newtheorem{proposition}{Mệnh đề}
+\newtheorem{theorem}{Định lý}
+\renewcommand{\figureautorefname}{Hình}
+\renewcommand{\tableautorefname}{Bảng}
+\renewcommand{\equationautorefname}{Phương trình}
+
+\providecommand*{\problemautorefname}{Bài toán}
+\providecommand*{\propositionautorefname}{Mệnh đề}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max} % optional
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{calc, angles}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr, lastpage}
+\usepackage[skip=5pt]{parskip}
+\usepackage[
+  backend=bibtex,
+  style=ieee, 
+  citestyle=authoryear,
+  maxcitenames=2,
+  mincitenames=1,
+  maxbibnames=99,
+  giveninits=true,   % abbreviate given names
+  uniquename=init,   % disambiguate using initials, not full names
+  url=true,
+  doi=true
+]{biblatex}
+\addbibresource{references.bib}
+
+\setlength{\bibhang}{1.5em}
+\setlength\bibitemsep{0.7\baselineskip} 
+
+\usepackage[vietnamese]{babel}
+
+\DeclareLanguageMapping{vietnamese}{english}
+\DefineBibliographyStrings{vietnamese}{
+  bibliography = {Tài liệu tham khảo},
+  andothers   = {và cộng sự}
+}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{cellspace}
+\setlength{\cellspacetoplimit}{6pt}
+\setlength{\cellspacebottomlimit}{6pt}
+
+\usepackage{listings}
+% Define VS Code-like dark theme for shell
+\definecolor{terminalbg}{RGB}{30,30,30}
+\definecolor{terminaltext}{RGB}{230,230,230}
+\definecolor{keywordcolor}{RGB}{255,130,70}
+\definecolor{stringcolor}{RGB}{255,180,80}
+
+\lstdefinelanguage{shell}{
+  morekeywords={sudo, pip, cd, ls, python, python3},
+  sensitive=true,
+  morecomment=[l]{\#},
+  morestring=[b]"
+}
+
+\lstset{
+    language=shell,
+    backgroundcolor=\color{terminalbg},
+    basicstyle=\ttfamily\small\color{terminaltext},
+    keywordstyle=\color{keywordcolor},
+    stringstyle=\color{stringcolor},
+    commentstyle=\color{gray},
+    frame=single,
+    showstringspaces=false,
+    rulecolor=\color{terminaltext},
+    breaklines=true
+}
+
+\usepackage{xcolor}
+\definecolor{backcolor}{rgb}{0.95,0.95,0.92}
+\usepackage{minted}
+\setminted
+{
+frame=single,
+framesep=2mm,
+baselinestretch=1.0,
+fontsize=\small,
+mathescape
+}
+\usemintedstyle{emacs}
+
+\usepackage{fancyhdr, lastpage}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{CSC14003 $-$ Cơ sở trí tuệ nhân tạo}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+\usepackage{tcolorbox}
+\definecolor{lightgray}{rgb}{0.9, 0.9, 0.9}
+\tcbset{
+    colback=lightgray,
+    colframe=lightgray,
+    boxsep=1pt,
+    left=1pt,
+    right=1pt,
+    top=1pt,
+    bottom=1pt,
+    tcbox raise base,
+    nobeforeafter
+}
+
+\titleformat
+{\chapter}
+[display]
+{\bfseries\huge}
+{Chương \thechapter}
+{-0.5ex}
+{
+    \rule{\textwidth}{1.5pt}
+    \vspace{-1.5ex}
+    \centering
+}
+[
+    \vspace{-0.2ex}
+    \rule{\textwidth}{1.5pt}
+]
+
+\titlespacing{\chapter}{0pc}{1.5ex plus .1ex minus .2ex}{0.5pc}
+\titlespacing{\section}{0pc}{1.5ex plus .1ex minus .2ex}{0.5pc}
+\titlespacing{\subsection}{0pc}{1.5ex plus .1ex minus .2ex}{0.5pc}
+\titlespacing{\subsubsection}{0pc}{1.5ex plus .1ex minus .2ex}{0.5pc}
+
+\def\UrlBreaks{\do\/\do-}
+\begin{document}
+
+\input{TitlePage}
+
+\tableofcontents
+\newpage
+
+\input{src/Information}
+\newpage
+\input{src/Introduction}
+\newpage
+\input{src/RelatedWorks}
+\newpage
+\input{src/BackgroundKnowledge}
+\newpage
+\input{src/Methodology}
+\newpage
+\input{src/Exp&ResultsAnalysis}
+\newpage
+\input{src/Conclusion}
+
+\begingroup
+\sloppy
+\printbibliography
+\endgroup
+
+\end{document}
