@@ -82,8 +82,7 @@ class–feature profiles. Phần nhận xét được tổng hợp tại
 - [Handwritten Digits baseline](notebooks/decision_tree/02_digits_decision_tree_baseline.ipynb)
 - [Covertype scalability](notebooks/decision_tree/03_covertype_decision_tree_scalability.ipynb)
 - [Hierarchical Shrinkage benchmark](notebooks/decision_tree/04_hierarchical_shrinkage_three_dataset_benchmark.ipynb)
-- [Three-dataset three-model benchmark](notebooks/benchmark_models/05_three_dataset_three_model_benchmark.ipynb)
-- [Three-dataset model comparison](notebooks/model_comparison/06_three_dataset_model_comparison.ipynb)
+- [Three-dataset four-model benchmark and comparison](notebooks/benchmark_models/05_three_dataset_three_model_benchmark.ipynb)
 
 Bốn notebook dùng `DecisionTreeClassifier`, cùng protocol `test_size=0.20`,
 `random_state=42`, `stratify=True` và tự lưu figures, model, result JSON. Decision Tree exact
@@ -92,11 +91,12 @@ Covertype dùng thêm 5-fold cross-validation để đánh giá độ ổn đị
 hiệu năng với độ phức tạp của cây. Notebook Hierarchical Shrinkage dùng CV trên train để chọn
 cấu hình giữa pre-pruning, cost-complexity pruning và prediction shrinkage; test chỉ dùng để
 báo cáo.
-Notebook `05_three_dataset_three_model_benchmark.ipynb` là bản GPU-only: Random Forest, SVM
-và KNN chạy trực tiếp bằng RAPIDS/cuML trên cả ba dataset; Covertype dùng toàn bộ 581.012 mẫu.
-Notebook kiểm tra GPU/cuML và dừng nếu Kaggle chưa bật GPU, đồng thời đo riêng data transfer,
-fit và prediction. Decision Tree vẫn có baseline riêng trong `decision_tree/`. Notebook cuối
-tổng hợp accuracy, macro-F1, train-test gap và runtime trên cả ba dataset.
+Notebook `05_three_dataset_three_model_benchmark.ipynb` chạy một lần trên cả ba dataset và
+đo luôn bốn model: Decision Tree exact (CPU) cùng Random Forest, SVM và KNN trực tiếp bằng
+RAPIDS/cuML (GPU); Covertype dùng toàn bộ 581.012 mẫu. Notebook kiểm tra GPU/cuML và dừng nếu
+Kaggle chưa bật GPU, đồng thời đo riêng fit/prediction, accuracy, macro-F1, train-test gap và
+runtime rồi đóng toàn bộ kết quả so sánh vào một ZIP. Các notebook `01`–`04` vẫn giữ các thí
+nghiệm Decision Tree/Hierarchical Shrinkage chi tiết.
 Xem hướng dẫn upload và Add Input trong [notebooks/README.md](notebooks/README.md).
 
 ## Quy ước dùng chung

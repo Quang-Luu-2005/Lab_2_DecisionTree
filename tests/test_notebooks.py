@@ -56,6 +56,7 @@ def test_notebook_is_valid_and_compilable(notebook_path: Path) -> None:
         assert "generalization_gap" in source
         if notebook_path.name == "05_three_dataset_three_model_benchmark.ipynb":
             assert "covertype" in source
+            assert "DecisionTreeClassifier" in source
             assert "RandomForestClassifier" in source
             assert "KNeighborsClassifier" in source
             assert "SVC" in source
@@ -68,12 +69,6 @@ def test_notebook_is_valid_and_compilable(notebook_path: Path) -> None:
             assert "nvidia-smi" in source
             assert "letter_recognition" in source
             assert "handwritten_digits" in source
-    elif notebook_group == "model_comparison":
-        assert "dt_covertype_scalability.json" in source
-        assert "gpu_three_dataset_three_model_benchmark.json" in source
-        assert "generalization_gap" in source
-        assert "best_by_dataset" in source
-        assert "total_model_seconds" in source
 
 
 def test_expected_notebook_suite_exists() -> None:
@@ -84,7 +79,6 @@ def test_expected_notebook_suite_exists() -> None:
         "03_covertype_decision_tree_scalability.ipynb",
         "04_hierarchical_shrinkage_three_dataset_benchmark.ipynb",
         "05_three_dataset_three_model_benchmark.ipynb",
-        "06_three_dataset_model_comparison.ipynb",
     }
 
 

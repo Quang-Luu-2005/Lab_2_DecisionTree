@@ -1,4 +1,4 @@
-"""Generate the GPU-only Kaggle benchmark notebook."""
+"""Generate the Kaggle benchmark notebook with one CPU baseline and three GPU models."""
 
 from __future__ import annotations
 
@@ -87,6 +87,7 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeClassifier
 
 try:
     from IPython.display import FileLink, display
@@ -101,7 +102,7 @@ RANDOM_STATE = 42
 TEST_SIZE = 0.20
 PREDICTION_BATCH_SIZE = int(os.getenv("GPU_PREDICTION_BATCH_SIZE", "4096"))
 TRAIN_DIAGNOSTIC_SIZE = int(os.getenv("GPU_TRAIN_DIAGNOSTIC_SIZE", "10000"))
-EXPERIMENT_ID = "gpu_three_dataset_three_model_benchmark"
+EXPERIMENT_ID = "gpu_three_dataset_four_model_comparison"
 PIPELINE_STARTED = time.perf_counter()
 KAGGLE_WORKING = Path("/kaggle/working")
 RUN_ROOT = KAGGLE_WORKING if KAGGLE_WORKING.exists() else Path.cwd()
@@ -119,13 +120,14 @@ if isinstance(GPU_DEVICE, bytes):
 GPU_MEMORY_MB = int(cp.cuda.runtime.memGetInfo()[1] / 1024**2)
 print({"python": platform.python_version(), "sklearn": sklearn.__version__})
 print({"cuda_device": GPU_DEVICE, "free_gpu_memory_mb": GPU_MEMORY_MB})
-print("All model fit/predict operations in this notebook use cuML on GPU.")
+print("Decision Tree runs on CPU; Random Forest, SVM and KNN run on GPU via cuML.")
 
 LETTER_FEATURES = [
     "x_box", "y_box", "width", "high", "onpix", "x_bar", "y_bar", "x2bar",
     "y2bar", "xybar", "x2ybr", "xy2br", "x_ege", "xegvy", "y_ege", "yegvx",
 ]
 MODEL_NAMES = ["Random Forest", "SVM (RBF)", "KNN"]
+ALL_MODEL_NAMES = ["Decision Tree", *MODEL_NAMES]
 
 
 def sync_gpu():
@@ -323,6 +325,51 @@ def calculate_metrics(y_train, train_prediction, y_test, test_prediction):
     }
 
 
+def evaluate_decision_tree(dataset_name, parts):
+    encoder = LabelEncoder().fit(parts["y_train"])
+    y_train_encoded = encoder.transform(parts["y_train"])
+    y_test_encoded = encoder.transform(parts["y_test"])
+    estimator = DecisionTreeClassifier(criterion="gini", random_state=RANDOM_STATE)
+    fit_started = time.perf_counter()
+    estimator.fit(parts["X_train"], y_train_encoded)
+    training_seconds = time.perf_counter() - fit_started
+    diagnostic_size = min(TRAIN_DIAGNOSTIC_SIZE, len(parts["X_train"]))
+    diagnostic_started = time.perf_counter()
+    train_prediction_encoded = estimator.predict(parts["X_train"][:diagnostic_size])
+    diagnostic_prediction_seconds = time.perf_counter() - diagnostic_started
+    prediction_started = time.perf_counter()
+    test_prediction_encoded = estimator.predict(parts["X_test"])
+    prediction_seconds = time.perf_counter() - prediction_started
+    train_prediction = encoder.inverse_transform(train_prediction_encoded.astype(int))
+    test_prediction = encoder.inverse_transform(test_prediction_encoded.astype(int))
+    metrics = calculate_metrics(
+        parts["y_train"][:diagnostic_size],
+        train_prediction,
+        parts["y_test"],
+        test_prediction,
+    )
+    metrics.update(
+        {
+            "status": "completed",
+            "dataset": dataset_name,
+            "model": "Decision Tree",
+            "compute_device": "CPU",
+            "gpu_name": None,
+            "learning_strategy": "eager",
+            "train_accuracy_sample_size": int(diagnostic_size),
+            "training_seconds": float(training_seconds),
+            "prediction_seconds": float(prediction_seconds),
+            "diagnostic_prediction_seconds": float(diagnostic_prediction_seconds),
+            "total_model_seconds": float(training_seconds + prediction_seconds),
+            "train_samples": int(len(parts["X_train"])),
+            "test_samples": int(len(parts["X_test"])),
+            "features": int(parts["X_train"].shape[1]),
+            "dataset_scope": parts["scope"],
+        }
+    )
+    return metrics, test_prediction, encoder.classes_
+
+
 def evaluate_model(dataset_name, parts, model_name):
     X_train, y_train_gpu, X_test, y_train, y_test, encoder = prepare_dataset(parts)
     estimator, scaling = make_estimator(model_name)
@@ -374,8 +421,11 @@ evaluations = []
 figure_paths = []
 for dataset_name, parts in datasets.items():
     print(f"\n===== {dataset_name} =====")
-    for model_name in MODEL_NAMES:
-        metrics, prediction, labels = evaluate_model(dataset_name, parts, model_name)
+    for model_name in ALL_MODEL_NAMES:
+        if model_name == "Decision Tree":
+            metrics, prediction, labels = evaluate_decision_tree(dataset_name, parts)
+        else:
+            metrics, prediction, labels = evaluate_model(dataset_name, parts, model_name)
         evaluations.append(metrics)
         print(
             model_name,
@@ -419,7 +469,7 @@ for ax, (dataset_name, frame) in zip(axes[0], summary.groupby("dataset"), strict
     sns.barplot(data=plot_frame, x="model", y="score", hue="metric", ax=ax)
     ax.set(title=dataset_name.replace("_", " ").title(), xlabel="", ylabel="Score", ylim=(0, 1))
     ax.tick_params(axis="x", rotation=30)
-fig.suptitle("GPU benchmark: Random Forest, SVM and KNN on three datasets")
+fig.suptitle("Four-model comparison: Decision Tree (CPU) and three GPU models")
 fig.tight_layout()
 performance_path = FIGURES_DIR / f"{EXPERIMENT_ID}__performance.png"
 fig.savefig(performance_path, dpi=200, bbox_inches="tight")
@@ -432,7 +482,7 @@ sns.barplot(data=summary, x="dataset", y="generalization_gap", hue="model", erro
 axes[0].set(title="Generalization gap", xlabel="", ylabel="Train accuracy - test accuracy")
 axes[0].tick_params(axis="x", rotation=20)
 sns.barplot(data=summary, x="dataset", y="total_model_seconds", hue="model", errorbar=None, ax=axes[1])
-axes[1].set(title="GPU fit + full-test prediction", xlabel="", ylabel="Seconds", yscale="log")
+axes[1].set(title="Fit + full-test prediction", xlabel="", ylabel="Seconds", yscale="log")
 axes[1].tick_params(axis="x", rotation=20)
 fig.tight_layout()
 runtime_path = FIGURES_DIR / f"{EXPERIMENT_ID}__gap_and_runtime.png"
@@ -447,10 +497,25 @@ pipeline_seconds = time.perf_counter() - PIPELINE_STARTED
 dataset_results = {dataset_name: {} for dataset_name in datasets}
 for record in evaluations:
     dataset_results[record["dataset"]][record["model"]] = record
+best_by_dataset = {}
+for dataset_name, frame in summary.groupby("dataset"):
+    best_f1 = frame.loc[frame["f1_macro"].idxmax()]
+    fastest_total = frame.loc[frame["total_model_seconds"].idxmin()]
+    fastest_eager = frame.loc[
+        frame.loc[frame["learning_strategy"] == "eager", "training_seconds"].idxmin()
+    ]
+    best_by_dataset[dataset_name] = {
+        "best_by_f1_macro": best_f1["model"],
+        "best_f1_macro": float(best_f1["f1_macro"]),
+        "fastest_total": fastest_total["model"],
+        "fastest_total_seconds": float(fastest_total["total_model_seconds"]),
+        "fastest_eager_fit": fastest_eager["model"],
+        "fastest_eager_fit_seconds": float(fastest_eager["training_seconds"]),
+    }
 result = {
     "schema_version": "1.0",
     "experiment_id": EXPERIMENT_ID,
-    "model": "cuML Random Forest, SVM (RBF), KNN",
+    "model": "Decision Tree + cuML Random Forest, SVM (RBF), KNN",
     "dataset": "multiple",
     "datasets": dataset_results,
     "dataset_names": list(datasets),
@@ -459,7 +524,9 @@ result = {
     "data_loading_seconds": float(data_loading_seconds),
     "pipeline_seconds": float(pipeline_seconds),
     "hardware": {
-        "compute_device": "GPU",
+        "compute_device": "mixed",
+        "decision_tree_compute_device": "CPU",
+        "gpu_models_compute_device": "GPU",
         "gpu_name": GPU_DEVICE,
         "free_gpu_memory_at_start_mb": GPU_MEMORY_MB,
         "cuda_runtime": str(cp.cuda.runtime.runtimeGetVersion()),
@@ -469,10 +536,12 @@ result = {
         "table_paths": [str(summary_path.relative_to(RUN_ROOT))],
     },
     "notes": (
-        "GPU-only benchmark using direct cuML estimators. Data transfer, fit and prediction are "
-        "timed separately at the model boundary; Covertype train accuracy uses a fixed diagnostic "
-        "sample because full KNN train prediction is unnecessarily expensive. No CPU fallback is allowed."
+        "Decision Tree is the exact CPU baseline. Random Forest, SVM and KNN use direct cuML "
+        "estimators on GPU with no CPU fallback; data transfer, fit and prediction are timed "
+        "separately at the model boundary. Covertype train accuracy uses a fixed diagnostic "
+        "sample because full KNN train prediction is unnecessarily expensive."
     ),
+    "best_by_dataset": best_by_dataset,
     "created_at_utc": datetime.now(UTC).isoformat(),
 }
 result_path = RESULTS_DIR / f"{EXPERIMENT_ID}.json"
@@ -494,12 +563,12 @@ def make_notebook() -> dict[str, object]:
         [
             markdown(
                 """
-                # GPU benchmark — three datasets, three models
+                # Four-model comparison — three datasets
 
-                Notebook này dành cho **Kaggle GPU**, không chạy CPU fallback. Random Forest,
-                SVM (RBF) và KNN đều dùng trực tiếp RAPIDS/cuML; các vòng lặp batch chỉ điều phối
-                các kernel GPU. Nếu không thấy CUDA hoặc cuML, notebook dừng ngay để tránh báo sai
-                runtime GPU.
+                Notebook này dành cho **Kaggle GPU**. Nó đo Decision Tree exact trên CPU và ba
+                model Random Forest, SVM (RBF), KNN trực tiếp bằng RAPIDS/cuML trên GPU; các vòng
+                lặp batch chỉ điều phối kernel GPU. Nếu không thấy CUDA hoặc cuML, notebook dừng
+                ngay để tránh báo sai runtime GPU.
 
                 Dataset selection giữ nguyên: Letter dùng canonical `train.csv`/`test.csv`, Digits
                 dùng `load_digits()`, Covertype dùng toàn bộ dữ liệu. Cùng `test_size=0.20`,
@@ -507,18 +576,18 @@ def make_notebook() -> dict[str, object]:
 
                 **Kaggle setup:** chọn GPU Accelerator (T4/P100 tuỳ quota), giữ Internet off nếu
                 RAPIDS đã có trong image. Kết quả cuối được đóng thành
-                `gpu_three_dataset_three_model_benchmark__outputs.zip`.
+                `gpu_three_dataset_four_model_comparison__outputs.zip`.
                 """
             ),
             code(GPU_CODE),
             markdown(
                 """
-                ## Lưu ý về Decision Tree exact
+                ## Protocol so sánh
 
-                Notebook này tăng tốc phần benchmark model khác. `DecisionTreeClassifier` đơn và
-                Hierarchical Shrinkage exact vẫn có notebook riêng vì RAPIDS hiện không cung cấp
-                backend GPU tương đương cho chúng; không thay chúng bằng một model khác trong
-                nghiên cứu chính.
+                Bốn model dùng cùng train/test split, `test_size=0.20`, `random_state=42` và
+                stratification. Decision Tree được ghi `compute_device=CPU`; ba model còn lại
+                được ghi `compute_device=GPU`. Notebook tự vẽ accuracy, macro-F1, generalization
+                gap, runtime và đóng tất cả JSON/CSV/figures vào ZIP cuối cùng.
                 """
             ),
         ]
