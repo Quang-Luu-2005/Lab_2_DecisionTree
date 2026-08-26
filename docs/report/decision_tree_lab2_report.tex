@@ -23,6 +23,9 @@
 \setlist[itemize]{leftmargin=1.8em,itemsep=0.25em}
 \renewcommand{\arraystretch}{1.18}
 \captionsetup{font=small,labelfont=bf}
+\makeatletter
+\renewcommand{\@seccntformat}[1]{\csname the#1\endcsname\hspace{0.35em}}
+\makeatother
 
 \definecolor{labblue}{RGB}{20,63,107}
 \hypersetup{colorlinks=true,linkcolor=labblue,urlcolor=labblue}

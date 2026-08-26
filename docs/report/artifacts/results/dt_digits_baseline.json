@@ -15,20 +15,26 @@
     "precision_macro": 0.8235837701869361,
     "recall_macro": 0.8242471042471042,
     "f1_macro": 0.8230493509776784,
-    "data_loading_seconds": 0.0424440090000644,
-    "training_seconds": 0.02385198299998592,
-    "prediction_seconds": 0.0030046890000221538,
+    "data_loading_seconds": 0.033192993000000115,
+    "training_seconds": 0.024294574999998986,
+    "prediction_seconds": 0.002937884999994367,
     "tree_depth": 14,
     "leaf_count": 142,
-    "pipeline_seconds": 5.128202883999961
+    "pipeline_seconds": 4.858282045999999
   },
   "hardware": {
     "environment": "kaggle",
     "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
     "processor": "x86_64",
     "logical_cpu_count": 4,
-    "gpu_available": false,
-    "gpus": [],
+    "gpu_available": true,
+    "gpus": [
+      {
+        "name": "Tesla P100-PCIE-16GB",
+        "memory_mb": 16384,
+        "driver_version": "580.159.04"
+      }
+    ],
     "model_compute_device": "cpu"
   },
   "artifacts": {
@@ -41,5 +47,5 @@
     "model_path": "/kaggle/working/models/dt_digits_baseline.joblib"
   },
   "notes": "Kaggle/local hardware recorded; sklearn Decision Tree computed on CPU even if a GPU was visible.",
-  "created_at_utc": "2026-08-24T18:36:41.838563+00:00"
+  "created_at_utc": "2026-08-26T19:50:07.871547+00:00"
 }

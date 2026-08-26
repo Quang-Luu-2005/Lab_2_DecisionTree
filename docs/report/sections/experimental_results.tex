@@ -2,15 +2,27 @@
 
 \section{Mục tiêu và thiết lập thực nghiệm}
 
-Ba bộ dữ liệu được dùng với ba vai trò khác nhau. Letter Recognition là bộ dữ liệu chính
-để đánh giá cây quyết định trên đặc trưng đã được trích xuất; Handwritten Digits kiểm tra
-khả năng áp dụng trên biểu diễn điểm ảnh; Covertype kiểm tra khả năng mở rộng trên dữ liệu
-lớn. Cách tổ chức này giúp tránh kết luận dựa trên một dạng dữ liệu duy nhất.
+Thực nghiệm được thiết kế để trả lời ba câu hỏi: Decision Tree đơn hoạt động thế nào trên
+các dạng dữ liệu khác nhau, các mô hình ensemble/kernel/neighborhood có cải thiện chất
+lượng dự đoán không, và Hierarchical Shrinkage có giúp giảm overfitting mà vẫn giữ cấu trúc
+cây hay không. Ba bộ dữ liệu có đặc điểm khác nhau: Letter Recognition là dữ liệu đặc trưng
+đã trích xuất, Handwritten Digits là biểu diễn điểm ảnh $8\times8$, còn Covertype là bộ dữ
+liệu lớn dùng để đánh giá khả năng mở rộng.
 
-Các notebook được chạy trên Kaggle với Linux, 4 CPU logic và không bật GPU. Mô hình
-\texttt{DecisionTreeClassifier} của scikit-learn huấn luyện và suy luận trên CPU. Mọi thí
-nghiệm dùng \texttt{random\_state=42}, \texttt{test\_size=0.20} và phân tầng theo nhãn.
-Không dùng tập test để chọn mô hình hoặc siêu tham số.
+Các notebook được chạy trên Kaggle. Theo cấu hình phiên chạy, môi trường được đặt ở chế độ
+Kaggle GPU x2 với 4 CPU logic. Tuy nhiên, metadata trong các artifact ghi nhận từng thiết
+bị thực tế như sau: các notebook Decision Tree và Hierarchical Shrinkage nhìn thấy Tesla
+P100-PCIE-16GB nhưng mô hình scikit-learn/imodels chạy trên CPU; notebook benchmark tổng
+hợp ghi nhận Tesla T4 với 14.911 MB bộ nhớ trống đầu phiên và CUDA runtime 12.090. Ba mô
+hình Random Forest, SVM và KNN trong notebook tổng hợp chạy bằng cuML trên GPU, còn
+Decision Tree exact vẫn chạy CPU. Artifact không ghi nhận việc phân bổ hai GPU song song,
+do đó báo cáo không quy toàn bộ thời gian cho hai GPU.
+
+Tất cả benchmark trong notebook tổng hợp dùng cùng một train/test split cho từng bộ dữ liệu,
+\texttt{test\_size=0.20}, \texttt{random\_state=42} và phân tầng theo nhãn. Letter dùng
+canonical split đã tiền xử lý gồm 14.934 mẫu train và 3.734 mẫu test. Digits và Covertype
+được chia lại theo protocol trên; Covertype dùng toàn bộ 581.012 mẫu. Tập test chỉ được
+dùng để báo cáo cuối cùng, không dùng để chọn siêu tham số.
 
 \begin{table}[H]
     \centering
@@ -21,157 +33,186 @@ Không dùng tập test để chọn mô hình hoặc siêu tham số.
         \toprule
         \textbf{Bộ dữ liệu} & \textbf{Vai trò} & \textbf{Số mẫu} & \textbf{Đặc trưng} & \textbf{Số lớp} \\
         \midrule
-        Letter Recognition & Bộ dữ liệu chính; đã loại trùng chính xác & 18.668 & 16 & 26 \\
-        Handwritten Digits & So sánh chéo trên điểm ảnh $8\times8$ & 1.797 & 64 & 10 \\
-        Covertype & Kiểm tra khả năng mở rộng & 581.012 & 54 & 7 \\
+        Letter Recognition & Đặc trưng hình học chữ cái; split canonical & 18.668 & 16 & 26 \\
+        Handwritten Digits & Điểm ảnh $8\times8$; kiểm tra khả năng khái quát & 1.797 & 64 & 10 \\
+        Covertype & Dữ liệu lớn; kiểm tra khả năng mở rộng & 581.012 & 54 & 7 \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Letter Recognition được loại 1.332 dòng trùng chính xác trước khi chia dữ liệu, còn 18.668
+Letter Recognition đã loại 1.332 dòng trùng chính xác trước khi chia dữ liệu, còn 18.668
 mẫu. Các giá trị bị quy tắc IQR đánh dấu vẫn được giữ vì chúng nằm trong miền hợp lệ 0--15
-của bộ dữ liệu. Decision Tree không yêu cầu chuẩn hóa thang đo hay one-hot encoding bổ sung
-cho ba bộ dữ liệu đã được chuẩn bị.
+của bộ dữ liệu. Decision Tree và Random Forest không cần chuẩn hóa; SVM và KNN dùng
+\texttt{StandardScaler} chỉ fit trên tập train.
 
-\section{Chỉ số đánh giá}
+\section{Chỉ số đánh giá và các notebook}
 
-Kết quả được đánh giá bằng accuracy, error rate và macro-F1. Macro-F1 được ưu tiên khi
-phân bố lớp không cân bằng vì mỗi lớp đóng góp như nhau vào trung bình. Độ chênh giữa
-accuracy trên train và test được dùng như dấu hiệu overfitting. Độ sâu và số lá phản ánh
-độ phức tạp, trong khi thời gian nạp dữ liệu, huấn luyện, dự đoán và toàn pipeline phản ánh
-chi phí tính toán.
+Chất lượng dự đoán được đánh giá bằng accuracy, error rate và macro-F1. Macro-F1 được
+ưu tiên khi phân bố lớp không cân bằng vì mỗi lớp đóng góp như nhau vào giá trị trung bình.
+Khoảng cách giữa accuracy train và test được dùng làm dấu hiệu overfitting. Độ sâu và số
+lá phản ánh độ phức tạp của cây; thời gian nạp dữ liệu, fit, dự đoán và toàn pipeline phản
+ánh chi phí tính toán.
 
-Với Covertype, hai cấu hình được so sánh: cây baseline dùng Gini không giới hạn độ sâu và
-cây regularized với \texttt{max\_depth=20}, \texttt{min\_samples\_leaf=5}. Việc chọn mô
-hình dựa trên macro-F1 trung bình của 5-fold cross-validation chỉ trên tập train. Kết quả CV
-được trình bày dưới dạng trung bình $\pm$ độ lệch chuẩn.
+Notebook 01 và 02 đánh giá Decision Tree baseline trên Letter Recognition và Digits.
+Notebook 03 tập trung vào khả năng mở rộng của Decision Tree trên Covertype, gồm hold-out
+và 5-fold cross-validation. Notebook 04 so sánh E0 baseline, E1 pre-pruning, E2
+cost-complexity pruning, E3 Hierarchical Shrinkage trên baseline và E4 kết hợp CCP với HS.
+Notebook 05 chạy trong một lần cả Decision Tree exact và ba mô hình GPU trên cả ba bộ dữ
+liệu, sau đó sinh bảng và biểu đồ so sánh.
 
-\section{Kết quả tổng hợp trên tập test}
+\section{Kết quả so sánh bốn mô hình}
+
+Bảng \ref{tab:all-models} tóm tắt kết quả test của notebook 05. Accuracy train của Letter
+và Covertype được tính trên một mẫu chẩn đoán cố định 10.000 mẫu để tránh chi phí dự đoán
+toàn bộ tập train cho KNN; Digits dùng toàn bộ 1.437 mẫu train. Quy ước này được áp dụng
+cho cả bốn mô hình trong notebook 05.
 
 \begin{table}[H]
     \centering
-    \caption{Kết quả baseline trên tập test Kaggle}
-    \label{tab:baseline-results}
-    \small
-    \begin{tabular}{@{}lrrrrr@{}}
+    \caption{So sánh bốn mô hình trên ba bộ dữ liệu}
+    \label{tab:all-models}
+    \scriptsize
+    \begin{tabular}{@{}llrrrrr@{}}
         \toprule
-        \textbf{Bộ dữ liệu} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Error} & \textbf{Độ sâu} & \textbf{Số lá} \\
+        \textbf{Dataset} & \textbf{Model/device} & \textbf{Accuracy} & \textbf{Macro-F1} &
+        \textbf{Gap} & \textbf{Fit (s)} & \textbf{Predict (s)} \\
         \midrule
-        Letter Recognition & 0,8677 & 0,8677 & 0,1323 & 31 & 1.965 \\
-        Handwritten Digits & 0,8250 & 0,8230 & 0,1750 & 14 & 142 \\
-        Covertype & \textbf{0,9389} & \textbf{0,9034} & \textbf{0,0611} & 41 & 23.956 \\
+        Letter & Decision Tree / CPU & 0,8677 & 0,8677 & 0,1323 & 0,0835 & 0,0009 \\
+        Letter & Random Forest / GPU & \textbf{0,9513} & \textbf{0,9512} & 0,0449 & 3,0939 & 0,0026 \\
+        Letter & SVM (RBF) / GPU & 0,9231 & 0,9232 & 0,0253 & 3,6594 & 0,0473 \\
+        Letter & KNN / GPU & 0,9408 & 0,9408 & 0,0286 & 0,0017 & 0,0037 \\
+        \midrule
+        Digits & Decision Tree / CPU & 0,8250 & 0,8230 & 0,1750 & 0,0205 & 0,0003 \\
+        Digits & Random Forest / GPU & 0,9694 & 0,9689 & 0,0306 & 0,6274 & 0,0009 \\
+        Digits & SVM (RBF) / GPU & \textbf{0,9722} & \textbf{0,9718} & 0,0243 & 0,7066 & 0,0117 \\
+        Digits & KNN / GPU & 0,9639 & 0,9634 & 0,0201 & 0,0015 & 0,0015 \\
+        \midrule
+        Covertype & Decision Tree / CPU & \textbf{0,9389} & \textbf{0,9034} & 0,0611 & 7,3728 & 0,0361 \\
+        Covertype & Random Forest / GPU & 0,7957 & 0,6586 & 0,0096 & 2,9540 & 0,0412 \\
+        Covertype & SVM (RBF) / GPU & 0,7907 & 0,6378 & -0,0031 & 110,4438 & 15,1030 \\
+        Covertype & KNN / GPU & 0,9284 & 0,8732 & 0,0283 & 0,0050 & 5,7506 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-Ba cây baseline đều đạt accuracy train bằng 1,0. Điều này cho thấy cây không cắt tỉa có
-khả năng ghi nhớ hoàn toàn tập huấn luyện. Khoảng cách train-test lần lượt là 0,1323 trên
-Letter Recognition, 0,1750 trên Digits và 0,0611 trên Covertype. Vì vậy, kết quả test phải
-được đọc cùng độ phức tạp của cây thay vì chỉ nhìn vào accuracy train.
+Trên Letter Recognition, Random Forest đạt kết quả tốt nhất với accuracy 0,9513 và
+macro-F1 0,9512, cao hơn Decision Tree lần lượt 0,0836 và 0,0836. Trên Digits, SVM đạt
+macro-F1 cao nhất là 0,9718, chỉ nhỉnh hơn Random Forest 0,0029 điểm. Kết quả này cho thấy
+ensemble và kernel phù hợp hơn cây đơn khi biểu diễn dữ liệu là các đặc trưng điểm ảnh.
 
-\subsection{Letter Recognition}
-
-Baseline đạt accuracy 0,8677 và macro-F1 0,8677 trên 3.734 mẫu test. Hai giá trị gần nhau
-cho thấy chất lượng tương đối đồng đều giữa 26 lớp. Tuy nhiên, độ sâu 31 và 1.965 lá cùng
-accuracy train 1,0 cho thấy mô hình vẫn overfit; đây là cơ sở để thử pruning hoặc điều chỉnh
-\texttt{max\_depth}, \texttt{min\_samples\_leaf} ở giai đoạn cải tiến.
+Covertype cho kết quả khác: Decision Tree có macro-F1 cao nhất trong bốn mô hình ở notebook
+05 với 0,9034, còn KNN đạt 0,8732. Random Forest và SVM có khoảng cách train-test nhỏ
+nhưng chất lượng test thấp hơn nhiều; vì vậy gap nhỏ không đồng nghĩa với mô hình tốt hơn.
+KNN có thời gian fit gần như bằng 0 vì là lazy learner, nhưng thời gian dự đoán trên
+Covertype là 5,7506 giây. SVM là mô hình chậm nhất với tổng fit và predict khoảng 125,55
+giây.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.78\textwidth]{dt_letter_baseline__confusion_matrix.png}
-    \caption{Ma trận nhầm lẫn của Decision Tree baseline trên Letter Recognition.}
-    \label{fig:letter-confusion}
+    \includegraphics[width=\textwidth]{gpu_three_dataset_four_model_comparison__performance.png}
+    \caption{Accuracy và macro-F1 của bốn mô hình trên ba bộ dữ liệu.}
+    \label{fig:all-model-performance}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.92\textwidth]{dt_letter_baseline__feature_importance.png}
-    \caption{Mức quan trọng của các đặc trưng trên Letter Recognition.}
-    \label{fig:letter-importance}
+    \includegraphics[width=\textwidth]{gpu_three_dataset_four_model_comparison__gap_and_runtime.png}
+    \caption{Generalization gap và thời gian fit cộng dự đoán trên notebook benchmark.}
+    \label{fig:all-model-runtime}
 \end{figure}
 
-\subsection{Handwritten Digits}
+\section{Kết quả Hierarchical Shrinkage}
 
-Digits đạt accuracy 0,8250 và macro-F1 0,8230. Đây là kết quả thấp nhất trong ba bộ dữ
-liệu và có train-test gap lớn nhất. Một cây đơn lẻ phải chia không gian 64 chiều dựa trên
-từng điểm ảnh, nên nhạy với biến thiên nét viết và không khai thác được cấu trúc không gian
-tốt như các mô hình chuyên cho ảnh.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.76\textwidth]{dt_digits_baseline__confusion_matrix.png}
-    \caption{Ma trận nhầm lẫn của Decision Tree baseline trên Handwritten Digits.}
-    \label{fig:digits-confusion}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.98\textwidth]{dt_digits_baseline__misclassified_examples.png}
-    \caption{Một số chữ số bị phân loại sai trên tập test.}
-    \label{fig:digits-errors}
-\end{figure}
-
-\subsection{Covertype và đánh đổi hiệu năng - độ phức tạp}
-
-Covertype có phân bố lớp lệch mạnh: lớp 1 và 2 chiếm đa số, còn lớp 4 có ít mẫu nhất. Vì
-vậy macro-F1 0,9034 được dùng cùng accuracy 0,9389 để tránh đánh giá quá lạc quan dựa trên
-hai lớp lớn. Mô hình baseline được chọn bởi 5-fold CV và đạt kết quả test tốt nhất, nhưng
-cây sâu 41 với 23.956 lá.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{dt_covertype_scalability__class_distribution.png}
-    \caption{Phân bố bảy lớp của bộ dữ liệu Covertype.}
-    \label{fig:covertype-distribution}
-\end{figure}
+Notebook 04 chọn cấu hình bằng 3-fold cross-validation trên train. E0 là cây baseline, E1
+giới hạn trước bằng pre-pruning, E2 dùng cost-complexity pruning, E3 áp dụng HS lên cây
+baseline và E4 áp dụng HS lên cây CCP. Lambda được chọn theo macro-F1 CV; tập test chỉ
+dùng cho đánh giá cuối.
 
 \begin{table}[H]
     \centering
-    \caption{So sánh hold-out giữa hai cấu hình trên Covertype}
-    \label{tab:covertype-holdout}
+    \caption{Hierarchical Shrinkage trên Letter Recognition}
+    \label{tab:hs-letter}
     \small
     \begin{tabular}{@{}lrrrrr@{}}
         \toprule
-        \textbf{Mô hình} & \textbf{Train acc.} & \textbf{Test acc.} & \textbf{Macro-F1} & \textbf{Độ sâu} & \textbf{Số lá} \\
+        \textbf{Cấu hình} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Gap} & \textbf{Độ sâu} & \textbf{Lá} \\
         \midrule
-        Baseline & 1,0000 & \textbf{0,9389} & \textbf{0,9034} & 41 & 23.956 \\
-        Regularized & 0,9268 & 0,8988 & 0,8432 & \textbf{20} & \textbf{9.679} \\
+        E0 Baseline & 0,8677 & 0,8677 & 0,1323 & 31 & 1.965 \\
+        E1 Pre-pruned & 0,8321 & 0,8348 & 0,0886 & 16 & 1.284 \\
+        E2 CCP-pruned & 0,8677 & 0,8677 & 0,1323 & 31 & 1.965 \\
+        E3 HS-DT ($\lambda=10$) & \textbf{0,8688} & \textbf{0,8688} & 0,1263 & 31 & 1.965 \\
+        E4 CCP+HS ($\lambda=10$) & \textbf{0,8688} & \textbf{0,8688} & 0,1263 & 31 & 1.965 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-Cấu hình regularized giảm 59,6\% số lá và giảm train-test gap từ 0,0611 xuống 0,0279,
-nhưng accuracy test giảm 0,0400 và macro-F1 giảm 0,0602. Với hai cấu hình hiện tại,
-baseline vẫn là lựa chọn tốt hơn theo macro-F1; regularized minh họa rõ cái giá phải trả khi
-giảm mạnh độ phức tạp. Các thí nghiệm tiếp theo nên tìm vùng trung gian thay vì kết luận
-rằng mọi hình thức regularization đều làm mô hình kém hơn.
-
-\begin{figure}[H]
+\begin{table}[H]
     \centering
-    \includegraphics[width=\textwidth]{dt_covertype_scalability__model_comparison.png}
-    \caption{Đánh đổi giữa hiệu năng hold-out và độ phức tạp trên Covertype.}
-    \label{fig:covertype-comparison}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.78\textwidth]{dt_covertype_scalability__confusion_matrix.png}
-    \caption{Ma trận nhầm lẫn của mô hình Covertype được chọn bằng cross-validation.}
-    \label{fig:covertype-confusion}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.94\textwidth]{dt_covertype_scalability__feature_importance.png}
-    \caption{Hai mươi đặc trưng quan trọng nhất của cây Covertype baseline.}
-    \label{fig:covertype-importance}
-\end{figure}
-
-\section{Độ ổn định qua cross-validation}
+    \caption{Hierarchical Shrinkage trên Handwritten Digits}
+    \label{tab:hs-digits}
+    \small
+    \begin{tabular}{@{}lrrrrr@{}}
+        \toprule
+        \textbf{Cấu hình} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Gap} & \textbf{Độ sâu} & \textbf{Lá} \\
+        \midrule
+        E0 Baseline & 0,8250 & 0,8230 & 0,1750 & 14 & 142 \\
+        E1 Pre-pruned & 0,8083 & 0,8072 & 0,1304 & 8 & 81 \\
+        E2 CCP-pruned & 0,8139 & 0,8133 & 0,1235 & 10 & 64 \\
+        E3 HS-DT ($\lambda=10$) & 0,8222 & 0,8206 & 0,1750 & 14 & 142 \\
+        E4 CCP+HS ($\lambda=0$) & 0,8167 & 0,8159 & 0,1207 & 10 & 64 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \begin{table}[H]
     \centering
-    \caption{Kết quả 5-fold cross-validation trên tập train Covertype}
+    \caption{Hierarchical Shrinkage trên Covertype}
+    \label{tab:hs-covertype}
+    \small
+    \begin{tabular}{@{}lrrrrr@{}}
+        \toprule
+        \textbf{Cấu hình} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Gap} & \textbf{Độ sâu} & \textbf{Lá} \\
+        \midrule
+        E0 Baseline & 0,9389 & 0,9034 & 0,0611 & 41 & 23.956 \\
+        E1 Pre-pruned & 0,9297 & 0,8885 & 0,0410 & 40 & 16.637 \\
+        E2 CCP-pruned & 0,9392 & 0,9045 & 0,0507 & 39 & 16.361 \\
+        E3 HS-DT ($\lambda=10$) & \textbf{0,9397} & 0,9048 & 0,0570 & 41 & 23.956 \\
+        E4 CCP+HS ($\lambda=10$) & 0,9393 & \textbf{0,9053} & 0,0504 & 39 & 16.361 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+HS cải thiện nhẹ trên Letter: E3/E4 tăng macro-F1 từ 0,8677 lên 0,8688. Trên Digits,
+HS không cải thiện baseline; E3 đạt 0,8206 và E4 đạt 0,8159 macro-F1. Trên Covertype,
+E4 đạt macro-F1 cao nhất 0,9053, tăng 0,0019 so với E0, đồng thời giữ cây ở 16.361 lá
+thay vì 23.956 lá, giảm khoảng 31,7\%. E3 đạt accuracy cao nhất 0,9397 nhưng không giảm
+độ phức tạp. Các kiểm tra trong notebook cho thấy cấu trúc underlying tree của E3/E4
+không đổi sau bước shrinkage; cải thiện đến từ việc điều chỉnh giá trị dự đoán tại nút,
+không phải từ việc thêm nhánh.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{dt_hierarchical_shrinkage__performance_by_dataset.png}
+    \caption{So sánh hiệu năng các cấu hình Decision Tree và Hierarchical Shrinkage.}
+    \label{fig:hs-performance}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{dt_hierarchical_shrinkage__performance_vs_complexity.png}
+    \caption{Quan hệ giữa macro-F1, độ phức tạp cây và generalization gap.}
+    \label{fig:hs-complexity}
+\end{figure}
+
+\section{Độ ổn định và khả năng mở rộng trên Covertype}
+
+Notebook 03 dùng 5-fold cross-validation trên tập train để kiểm tra độ ổn định của
+baseline và cấu hình regularized. Kết quả được trình bày dưới dạng trung bình $\pm$ độ
+lệch chuẩn.
+
+\begin{table}[H]
+    \centering
+    \caption{Kết quả 5-fold cross-validation trên Covertype}
     \label{tab:covertype-cv}
     \small
     \begin{tabular}{@{}lccc@{}}
@@ -185,40 +226,59 @@ rằng mọi hình thức regularization đều làm mô hình kém hơn.
 \end{table}
 
 Độ lệch chuẩn nhỏ cho thấy kết quả ổn định giữa các fold. Baseline cao hơn regularized
-0,0364 điểm accuracy và 0,0535 điểm macro-F1, trong khi thời gian fit trung bình chỉ tăng
-khoảng 1,25 giây mỗi fold. Do đó, tiêu chí macro-F1 chọn baseline là hợp lý trong phạm vi
-hai cấu hình đã thử.
+0,0364 điểm accuracy và 0,0535 điểm macro-F1, trong khi fit time trung bình chỉ tăng
+khoảng 1,25 giây mỗi fold. Kết quả này phù hợp với hold-out: cắt tỉa mạnh làm cây gọn hơn
+nhưng mất chất lượng dự đoán.
 
-\section{Thời gian chạy trên Kaggle}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{dt_covertype_scalability__model_comparison.png}
+    \caption{Đánh đổi giữa hiệu năng hold-out và độ phức tạp trên Covertype.}
+    \label{fig:covertype-comparison}
+\end{figure}
+
+\section{Thời gian chạy và nhận xét về GPU}
+
+Notebook 05 có tổng thời gian pipeline 173,38 giây, trong đó nạp dữ liệu mất 4,26 giây.
+Trên Covertype, Random Forest GPU hoàn tất fit và dự đoán trong khoảng 3,00 giây, nhanh
+hơn Decision Tree CPU khoảng 2,5 lần trong phạm vi benchmark này. Tuy nhiên, đây là so
+sánh giữa hai backend và hai kiểu triển khai khác nhau, không phải phép đo speedup thuần
+do GPU; vì vậy kết luận chính là GPU giúp các model cuML chạy được trong thời gian ngắn
+trên bộ dữ liệu lớn, còn chất lượng phải được xem đồng thời.
 
 \begin{table}[H]
     \centering
-    \caption{Thời gian của các pipeline Kaggle, đơn vị giây}
-    \label{tab:runtime}
+    \caption{Thời gian của các mô hình trên Covertype trong notebook 05}
+    \label{tab:covertype-runtime}
     \small
     \begin{tabular}{@{}lrrrr@{}}
         \toprule
-        \textbf{Bộ dữ liệu} & \textbf{Nạp dữ liệu} & \textbf{Huấn luyện} & \textbf{Dự đoán} & \textbf{Toàn pipeline} \\
+        \textbf{Mô hình} & \textbf{Thiết bị} & \textbf{Fit (s)} & \textbf{Predict (s)} & \textbf{Tổng (s)} \\
         \midrule
-        Letter Recognition & 0,0419 & 0,1264 & 0,0088 & 6,3916 \\
-        Handwritten Digits & 0,0424 & 0,0239 & 0,0030 & 5,1282 \\
-        Covertype & 86,7835 & 10,5151 & 0,2834 & 162,0717 \\
+        Decision Tree & CPU & 7,3728 & 0,0361 & 7,4089 \\
+        Random Forest & GPU/Tesla T4 & 2,9540 & 0,0412 & \textbf{2,9952} \\
+        SVM (RBF) & GPU/Tesla T4 & 110,4438 & 15,1030 & 125,5468 \\
+        KNN & GPU/Tesla T4 & 0,0050 & 5,7506 & 5,7556 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-Hai bộ dữ liệu nhỏ hoàn tất trong vài giây. Với Covertype, thời gian nạp dữ liệu chiếm
-53,6\% toàn pipeline và lớn hơn thời gian huấn luyện cây. Tổng thời gian còn bao gồm hai
-mô hình hold-out, 5-fold CV, sinh biểu đồ và đóng gói artifact. Điều này cho thấy nút thắt
-trong notebook hiện tại không chỉ nằm ở thuật toán Decision Tree mà còn ở I/O và quy trình
-đánh giá. GPU không giúp cải thiện bước huấn luyện vì estimator này chạy trên CPU.
+KNN minh họa rõ sự khác biệt giữa eager learner và lazy learner: fit gần như không tốn
+thời gian nhưng prediction tăng theo số điểm train và số điểm test. SVM RBF có chất lượng
+thấp nhất trên Covertype trong benchmark này và cũng là mô hình tốn thời gian nhất. Do
+đó, khi chọn mô hình cho dữ liệu lớn không nên chỉ nhìn vào khả năng sử dụng GPU; cần
+đánh giá cả macro-F1, thời gian suy luận và mức cân bằng giữa train-test.
 
 \section{Kết luận thực nghiệm}
 
-Kết quả từ ba bộ dữ liệu xác nhận Decision Tree là baseline nhanh, dễ diễn giải và có thể
-chạy trên dữ liệu hơn nửa triệu mẫu. Tuy nhiên, accuracy train bằng 1,0 trên cả ba baseline
-cho thấy nguy cơ overfitting rõ ràng. Covertype đạt hiệu năng test cao nhất và ổn định qua
-5-fold CV, nhưng cây rất lớn. Regularization mạnh làm cây gọn hơn đáng kể nhưng giảm chất
-lượng dự đoán. Vì vậy, bước cải tiến nên tìm mức cắt tỉa trung gian bằng cross-validation,
-đồng thời tiếp tục theo dõi macro-F1, train-test gap, số lá và thời gian thay vì tối ưu duy
-nhất accuracy.
+Decision Tree là baseline dễ diễn giải và có thời gian fit ngắn, nhưng có xu hướng
+overfit rõ trên Letter và Digits. Random Forest là lựa chọn tốt nhất trên Letter, SVM
+đạt kết quả tốt nhất trên Digits, còn Decision Tree và các biến thể HS vẫn cạnh tranh
+trên Covertype. Với mục tiêu cân bằng chất lượng và độ phức tạp trên Covertype, E4
+CCP+HS là cấu hình đáng chú ý: macro-F1 0,9053 cao hơn E0 và số lá giảm khoảng 31,7\%.
+
+GPU của Kaggle được sử dụng hiệu quả cho Random Forest, SVM và KNN thông qua cuML; Decision
+Tree exact và Hierarchical Shrinkage vẫn được ghi nhận là CPU để không thay đổi thuật toán
+nghiên cứu. Kết quả cho thấy lựa chọn mô hình phụ thuộc mạnh vào dạng dữ liệu: không có
+một mô hình duy nhất tốt nhất trên cả ba bộ dữ liệu. Vì vậy, kết luận cuối cần dựa trên
+macro-F1, generalization gap, runtime và độ phức tạp cùng lúc thay vì chỉ tối ưu accuracy.
