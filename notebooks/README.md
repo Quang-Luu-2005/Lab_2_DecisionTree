@@ -7,7 +7,8 @@ notebooks/
 ├── decision_tree/
 │   ├── 01_letter_decision_tree_baseline.ipynb
 │   ├── 02_digits_decision_tree_baseline.ipynb
-│   └── 03_covertype_decision_tree_scalability.ipynb
+│   ├── 03_covertype_decision_tree_scalability.ipynb
+│   └── 04_letter_decision_tree_improvements.ipynb
 ├── benchmark_models/
 │   └── 07_three_dataset_three_model_benchmark.ipynb
 └── model_comparison/
@@ -16,7 +17,7 @@ notebooks/
 
 ## Thứ tự chạy
 
-1. Chạy ba notebook trong `decision_tree/`.
+1. Chạy bốn notebook trong `decision_tree/`.
 2. Chạy `07_three_dataset_three_model_benchmark.ipynb` để benchmark đủ ba model Random Forest,
    SVM và KNN trên cả ba dataset. Covertype dùng toàn bộ 581.012 mẫu. Notebook lưu checkpoint
    sau mỗi model; KNN/SVM có thể chạy rất lâu.
@@ -54,6 +55,11 @@ Các notebook Decision Tree tạo:
 
 Notebook benchmark không lưu `.joblib` vì Random Forest/KNN trên toàn bộ dữ liệu có thể làm
 output rất lớn; ZIP vẫn có đủ confusion matrices, metrics, timing và metadata phần cứng.
+
+Notebook `04_letter_decision_tree_improvements.ipynb` thử 36 candidate qua ba nhánh
+`max_depth`, `min_samples_split`/`min_samples_leaf` và `ccp_alpha`; cấu hình cuối được chọn
+bằng 5-fold CV trên train. ZIP của notebook chứa curves, heatmap, pruning path, rules và cây
+được chọn.
 
 Notebook so sánh tạo bảng tổng hợp bốn model trên ba dataset, biểu đồ accuracy/macro-F1,
 train-test gap, runtime và `three_dataset_model_comparison__outputs.zip`. Với KNN cần đọc cả

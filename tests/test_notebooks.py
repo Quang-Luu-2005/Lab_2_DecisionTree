@@ -37,6 +37,12 @@ def test_notebook_is_valid_and_compilable(notebook_path: Path) -> None:
         assert "pipeline_seconds" in source
         assert "model_compute_device" in source
         assert "nvidia-smi" in source
+        if notebook_path.name == "04_letter_decision_tree_improvements.ipynb":
+            assert "max_depth" in source
+            assert "min_samples_split" in source
+            assert "ccp_alpha" in source
+            assert "cross_validate" in source
+            assert "export_text" in source
     elif notebook_group == "benchmark_models":
         assert "training_seconds" in source
         assert "prediction_seconds" in source
@@ -69,6 +75,7 @@ def test_expected_notebook_suite_exists() -> None:
         "01_letter_decision_tree_baseline.ipynb",
         "02_digits_decision_tree_baseline.ipynb",
         "03_covertype_decision_tree_scalability.ipynb",
+        "04_letter_decision_tree_improvements.ipynb",
         "07_three_dataset_three_model_benchmark.ipynb",
         "08_three_dataset_model_comparison.ipynb",
     }

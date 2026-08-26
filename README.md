@@ -81,15 +81,17 @@ class–feature profiles. Phần nhận xét được tổng hợp tại
 - [Letter Recognition baseline](notebooks/decision_tree/01_letter_decision_tree_baseline.ipynb)
 - [Handwritten Digits baseline](notebooks/decision_tree/02_digits_decision_tree_baseline.ipynb)
 - [Covertype scalability](notebooks/decision_tree/03_covertype_decision_tree_scalability.ipynb)
+- [Decision Tree improvements](notebooks/decision_tree/04_letter_decision_tree_improvements.ipynb)
 - [Three-dataset three-model benchmark](notebooks/benchmark_models/07_three_dataset_three_model_benchmark.ipynb)
 - [Three-dataset model comparison](notebooks/model_comparison/08_three_dataset_model_comparison.ipynb)
 
-Ba notebook dùng `DecisionTreeClassifier`, cùng protocol `test_size=0.20`,
+Bốn notebook dùng `DecisionTreeClassifier`, cùng protocol `test_size=0.20`,
 `random_state=42`, `stratify=True` và tự lưu figures, model, result JSON. Trên Kaggle
 CPU là accelerator khuyến nghị. Notebook tự ghi timing và thông tin phần cứng; nếu Kaggle
 được bật GPU thì tên GPU/VRAM/driver cũng được lưu, nhưng Decision Tree vẫn chạy trên CPU.
 Riêng Covertype dùng thêm 5-fold cross-validation để đánh giá độ ổn định, thời gian và
-đánh đổi giữa hiệu năng với độ phức tạp của cây.
+đánh đổi giữa hiệu năng với độ phức tạp của cây. Notebook improvements dùng 5-fold CV trên
+train để chọn cấu hình giữa depth, min-samples và pruning; test chỉ dùng để báo cáo.
 Notebook benchmark mới chạy đúng ba model Random Forest, SVM và KNN trên cả ba dataset; với
 Covertype dùng toàn bộ 581.012 mẫu, lưu checkpoint sau từng model và đo riêng fit/prediction.
 Decision Tree vẫn có baseline riêng trong `decision_tree/`. Notebook cuối tổng hợp accuracy,
