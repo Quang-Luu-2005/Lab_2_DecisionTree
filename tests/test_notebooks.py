@@ -12,8 +12,14 @@ def test_notebook_is_valid_and_compilable(notebook_path: Path) -> None:
     notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
 
     assert notebook["nbformat"] == 4
-    assert notebook["metadata"]["kaggle"]["accelerator"] == "none"
-    assert notebook["metadata"]["kaggle"]["isGpuEnabled"] is False
+    is_gpu_benchmark = notebook_path.name == "05_three_dataset_three_model_benchmark.ipynb"
+    kaggle_metadata = notebook["metadata"]["kaggle"]
+    if is_gpu_benchmark:
+        assert kaggle_metadata["accelerator"] in {"nvidiaTeslaT4", "nvidiaTeslaP100"}
+        assert kaggle_metadata["isGpuEnabled"] is True
+    else:
+        assert kaggle_metadata["accelerator"] == "none"
+        assert kaggle_metadata["isGpuEnabled"] is False
 
     code_cells = [cell for cell in notebook["cells"] if cell["cell_type"] == "code"]
     assert code_cells
@@ -37,33 +43,34 @@ def test_notebook_is_valid_and_compilable(notebook_path: Path) -> None:
         assert "pipeline_seconds" in source
         assert "model_compute_device" in source
         assert "nvidia-smi" in source
-        if notebook_path.name == "04_letter_decision_tree_improvements.ipynb":
-            assert "max_depth" in source
-            assert "min_samples_split" in source
-            assert "ccp_alpha" in source
-            assert "cross_validate" in source
-            assert "export_text" in source
+        if notebook_path.name == "04_hierarchical_shrinkage_three_dataset_benchmark.ipynb":
+            assert "HSTreeClassifier" in source
+            assert "HS_LAMBDA_VALUES" in source
+            assert "E4 CCP+HS" in source
+            assert "structure_unchanged_after_hs" in source
+            assert "HS_DATASET" in source
     elif notebook_group == "benchmark_models":
         assert "training_seconds" in source
         assert "prediction_seconds" in source
         assert "f1_macro" in source
         assert "generalization_gap" in source
-        assert "nvidia-smi" in source
-        if notebook_path.name == "07_three_dataset_three_model_benchmark.ipynb":
+        if notebook_path.name == "05_three_dataset_three_model_benchmark.ipynb":
             assert "covertype" in source
             assert "RandomForestClassifier" in source
             assert "KNeighborsClassifier" in source
             assert "SVC" in source
-            assert '"scope": "full_dataset_split"' in source
+            assert "cupy" in source
+            assert "cuml" in source
+            assert '"compute_device": "GPU"' in source
             assert "predict_in_batches" in source
-            assert "write_checkpoint" in source
             assert "total_model_seconds" in source
         else:
+            assert "nvidia-smi" in source
             assert "letter_recognition" in source
             assert "handwritten_digits" in source
     elif notebook_group == "model_comparison":
         assert "dt_covertype_scalability.json" in source
-        assert "three_dataset_three_model_benchmark.json" in source
+        assert "gpu_three_dataset_three_model_benchmark.json" in source
         assert "generalization_gap" in source
         assert "best_by_dataset" in source
         assert "total_model_seconds" in source
@@ -75,9 +82,9 @@ def test_expected_notebook_suite_exists() -> None:
         "01_letter_decision_tree_baseline.ipynb",
         "02_digits_decision_tree_baseline.ipynb",
         "03_covertype_decision_tree_scalability.ipynb",
-        "04_letter_decision_tree_improvements.ipynb",
-        "07_three_dataset_three_model_benchmark.ipynb",
-        "08_three_dataset_model_comparison.ipynb",
+        "04_hierarchical_shrinkage_three_dataset_benchmark.ipynb",
+        "05_three_dataset_three_model_benchmark.ipynb",
+        "06_three_dataset_model_comparison.ipynb",
     }
 
 

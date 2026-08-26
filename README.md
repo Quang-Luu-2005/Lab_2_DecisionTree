@@ -81,21 +81,22 @@ class–feature profiles. Phần nhận xét được tổng hợp tại
 - [Letter Recognition baseline](notebooks/decision_tree/01_letter_decision_tree_baseline.ipynb)
 - [Handwritten Digits baseline](notebooks/decision_tree/02_digits_decision_tree_baseline.ipynb)
 - [Covertype scalability](notebooks/decision_tree/03_covertype_decision_tree_scalability.ipynb)
-- [Decision Tree improvements](notebooks/decision_tree/04_letter_decision_tree_improvements.ipynb)
-- [Three-dataset three-model benchmark](notebooks/benchmark_models/07_three_dataset_three_model_benchmark.ipynb)
-- [Three-dataset model comparison](notebooks/model_comparison/08_three_dataset_model_comparison.ipynb)
+- [Hierarchical Shrinkage benchmark](notebooks/decision_tree/04_hierarchical_shrinkage_three_dataset_benchmark.ipynb)
+- [Three-dataset three-model benchmark](notebooks/benchmark_models/05_three_dataset_three_model_benchmark.ipynb)
+- [Three-dataset model comparison](notebooks/model_comparison/06_three_dataset_model_comparison.ipynb)
 
 Bốn notebook dùng `DecisionTreeClassifier`, cùng protocol `test_size=0.20`,
-`random_state=42`, `stratify=True` và tự lưu figures, model, result JSON. Trên Kaggle
-CPU là accelerator khuyến nghị. Notebook tự ghi timing và thông tin phần cứng; nếu Kaggle
-được bật GPU thì tên GPU/VRAM/driver cũng được lưu, nhưng Decision Tree vẫn chạy trên CPU.
-Riêng Covertype dùng thêm 5-fold cross-validation để đánh giá độ ổn định, thời gian và
-đánh đổi giữa hiệu năng với độ phức tạp của cây. Notebook improvements dùng 5-fold CV trên
-train để chọn cấu hình giữa depth, min-samples và pruning; test chỉ dùng để báo cáo.
-Notebook benchmark mới chạy đúng ba model Random Forest, SVM và KNN trên cả ba dataset; với
-Covertype dùng toàn bộ 581.012 mẫu, lưu checkpoint sau từng model và đo riêng fit/prediction.
-Decision Tree vẫn có baseline riêng trong `decision_tree/`. Notebook cuối tổng hợp accuracy,
-macro-F1, train-test gap và runtime trên cả ba dataset.
+`random_state=42`, `stratify=True` và tự lưu figures, model, result JSON. Decision Tree exact
+và Hierarchical Shrinkage giữ accelerator CPU để bảo toàn đúng thuật toán nghiên cứu. Riêng
+Covertype dùng thêm 5-fold cross-validation để đánh giá độ ổn định, thời gian và đánh đổi giữa
+hiệu năng với độ phức tạp của cây. Notebook Hierarchical Shrinkage dùng CV trên train để chọn
+cấu hình giữa pre-pruning, cost-complexity pruning và prediction shrinkage; test chỉ dùng để
+báo cáo.
+Notebook `05_three_dataset_three_model_benchmark.ipynb` là bản GPU-only: Random Forest, SVM
+và KNN chạy trực tiếp bằng RAPIDS/cuML trên cả ba dataset; Covertype dùng toàn bộ 581.012 mẫu.
+Notebook kiểm tra GPU/cuML và dừng nếu Kaggle chưa bật GPU, đồng thời đo riêng data transfer,
+fit và prediction. Decision Tree vẫn có baseline riêng trong `decision_tree/`. Notebook cuối
+tổng hợp accuracy, macro-F1, train-test gap và runtime trên cả ba dataset.
 Xem hướng dẫn upload và Add Input trong [notebooks/README.md](notebooks/README.md).
 
 ## Quy ước dùng chung

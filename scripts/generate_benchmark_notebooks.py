@@ -1588,7 +1588,7 @@ EXPECTED_RESULTS = {
     "dt_letter_baseline.json",
     "dt_digits_baseline.json",
     "dt_covertype_scalability.json",
-    "three_dataset_three_model_benchmark.json",
+    "gpu_three_dataset_three_model_benchmark.json",
 }
 
 
@@ -1624,7 +1624,7 @@ def read_result_json(filename):
 loaded = {name: read_result_json(name) for name in EXPECTED_RESULTS}
 
 three_model_required = {"Random Forest", "KNN", "SVM (RBF)"}
-three_model_result = loaded["three_dataset_three_model_benchmark.json"]
+three_model_result = loaded["gpu_three_dataset_three_model_benchmark.json"]
 three_model_missing = []
 for dataset_name in ("letter_recognition", "handwritten_digits", "covertype"):
     available_models = set(three_model_result.get("datasets", {}).get(dataset_name, {}))
@@ -1637,7 +1637,7 @@ if three_model_missing:
     raise ValueError(
         "Three-dataset benchmark is incomplete. Missing completed models: "
         + ", ".join(three_model_missing)
-        + ". Re-run notebook 07 and use its final output ZIP."
+        + ". Re-run notebook 05 and use its final output ZIP."
     )
 """
 
@@ -1666,7 +1666,7 @@ for filename, result in loaded.items():
                 "learning_strategy": "eager",
             }
         )
-    elif filename == "three_dataset_three_model_benchmark.json":
+    elif filename == "gpu_three_dataset_three_model_benchmark.json":
         for dataset_name, model_results in result["datasets"].items():
             for model_name, metrics in model_results.items():
                 records.append(
@@ -1860,20 +1860,17 @@ def comparison_notebook() -> dict[str, object]:
 
 
 def main() -> None:
+    from generate_gpu_benchmark_notebook import main as generate_gpu_benchmark_notebook
+
     BENCHMARK_DIR.mkdir(parents=True, exist_ok=True)
     COMPARISON_DIR.mkdir(parents=True, exist_ok=True)
-    benchmark_path = BENCHMARK_DIR / "07_three_dataset_three_model_benchmark.ipynb"
-    benchmark_path.write_text(
-        json.dumps(three_dataset_three_model_notebook(), ensure_ascii=False, indent=1) + "\n",
-        encoding="utf-8",
-    )
-    print(f"Wrote {benchmark_path.relative_to(PROJECT_ROOT)}")
+    generate_gpu_benchmark_notebook()
 
     old_covertype_path = BENCHMARK_DIR / "07_covertype_four_model_benchmark.ipynb"
     if old_covertype_path.exists():
         old_covertype_path.unlink()
 
-    comparison_path = COMPARISON_DIR / "08_three_dataset_model_comparison.ipynb"
+    comparison_path = COMPARISON_DIR / "06_three_dataset_model_comparison.ipynb"
     comparison_path.write_text(
         json.dumps(comparison_notebook(), ensure_ascii=False, indent=1) + "\n",
         encoding="utf-8",
