@@ -81,10 +81,7 @@ class–feature profiles. Phần nhận xét được tổng hợp tại
 - [Letter Recognition baseline](notebooks/decision_tree/01_letter_decision_tree_baseline.ipynb)
 - [Handwritten Digits baseline](notebooks/decision_tree/02_digits_decision_tree_baseline.ipynb)
 - [Covertype scalability](notebooks/decision_tree/03_covertype_decision_tree_scalability.ipynb)
-- [Random Forest benchmark](notebooks/benchmark_models/04_random_forest_letter_digits.ipynb)
-- [SVM benchmark](notebooks/benchmark_models/05_svm_letter_digits.ipynb)
-- [KNN benchmark](notebooks/benchmark_models/06_knn_letter_digits.ipynb)
-- [Covertype four-model benchmark](notebooks/benchmark_models/07_covertype_four_model_benchmark.ipynb)
+- [Three-dataset three-model benchmark](notebooks/benchmark_models/07_three_dataset_three_model_benchmark.ipynb)
 - [Three-dataset model comparison](notebooks/model_comparison/08_three_dataset_model_comparison.ipynb)
 
 Ba notebook dùng `DecisionTreeClassifier`, cùng protocol `test_size=0.20`,
@@ -93,10 +90,10 @@ CPU là accelerator khuyến nghị. Notebook tự ghi timing và thông tin ph�
 được bật GPU thì tên GPU/VRAM/driver cũng được lưu, nhưng Decision Tree vẫn chạy trên CPU.
 Riêng Covertype dùng thêm 5-fold cross-validation để đánh giá độ ổn định, thời gian và
 đánh đổi giữa hiệu năng với độ phức tạp của cây.
-Ba notebook benchmark đầu chạy Random Forest, SVM và KNN trên cùng Letter/Digits split.
-Notebook Covertype tiếp theo chạy đủ Decision Tree, Random Forest, KNN và SVM trên toàn bộ
-581.012 mẫu, lưu checkpoint sau từng model và đo riêng fit/prediction. Notebook cuối tổng hợp
-accuracy, macro-F1, train-test gap và runtime của cả bốn model trên cả ba dataset.
+Notebook benchmark mới chạy đúng ba model Random Forest, SVM và KNN trên cả ba dataset; với
+Covertype dùng toàn bộ 581.012 mẫu, lưu checkpoint sau từng model và đo riêng fit/prediction.
+Decision Tree vẫn có baseline riêng trong `decision_tree/`. Notebook cuối tổng hợp accuracy,
+macro-F1, train-test gap và runtime trên cả ba dataset.
 Xem hướng dẫn upload và Add Input trong [notebooks/README.md](notebooks/README.md).
 
 ## Quy ước dùng chung

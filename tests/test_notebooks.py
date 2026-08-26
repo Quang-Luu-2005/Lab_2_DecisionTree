@@ -43,13 +43,12 @@ def test_notebook_is_valid_and_compilable(notebook_path: Path) -> None:
         assert "f1_macro" in source
         assert "generalization_gap" in source
         assert "nvidia-smi" in source
-        if notebook_path.name == "07_covertype_four_model_benchmark.ipynb":
+        if notebook_path.name == "07_three_dataset_three_model_benchmark.ipynb":
             assert "covertype" in source
-            assert "DecisionTreeClassifier" in source
             assert "RandomForestClassifier" in source
             assert "KNeighborsClassifier" in source
             assert "SVC" in source
-            assert '"dataset_scope": "full"' in source
+            assert '"scope": "full_dataset_split"' in source
             assert "predict_in_batches" in source
             assert "write_checkpoint" in source
             assert "total_model_seconds" in source
@@ -57,10 +56,8 @@ def test_notebook_is_valid_and_compilable(notebook_path: Path) -> None:
             assert "letter_recognition" in source
             assert "handwritten_digits" in source
     elif notebook_group == "model_comparison":
-        assert "rf_letter_digits_benchmark.json" in source
-        assert "svm_letter_digits_benchmark.json" in source
-        assert "knn_letter_digits_benchmark.json" in source
-        assert "covertype_four_model_benchmark.json" in source
+        assert "dt_covertype_scalability.json" in source
+        assert "three_dataset_three_model_benchmark.json" in source
         assert "generalization_gap" in source
         assert "best_by_dataset" in source
         assert "total_model_seconds" in source
@@ -72,10 +69,7 @@ def test_expected_notebook_suite_exists() -> None:
         "01_letter_decision_tree_baseline.ipynb",
         "02_digits_decision_tree_baseline.ipynb",
         "03_covertype_decision_tree_scalability.ipynb",
-        "04_random_forest_letter_digits.ipynb",
-        "05_svm_letter_digits.ipynb",
-        "06_knn_letter_digits.ipynb",
-        "07_covertype_four_model_benchmark.ipynb",
+        "07_three_dataset_three_model_benchmark.ipynb",
         "08_three_dataset_model_comparison.ipynb",
     }
 

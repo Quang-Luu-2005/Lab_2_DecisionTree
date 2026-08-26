@@ -351,6 +351,653 @@ if FileLink is not None:
     )
 
 
+THREE_DATASET_IMPORTS = r"""
+import gc
+import json
+import os
+import platform
+import subprocess
+import time
+from datetime import UTC, datetime
+from pathlib import Path
+from zipfile import ZIP_DEFLATED, ZipFile
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import sklearn
+from sklearn.datasets import fetch_covtype, load_digits
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    accuracy_score,
+    f1_score,
+    precision_score,
+    recall_score,
+)
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+
+try:
+    from IPython.display import FileLink, display
+except ImportError:
+    FileLink = None
+
+    def display(value):
+        print(value)
+
+sns.set_theme(style="whitegrid")
+"""
+
+
+THREE_DATASET_SETUP = r"""
+PIPELINE_STARTED = time.perf_counter()
+RANDOM_STATE = 42
+TEST_SIZE = 0.20
+EXPERIMENT_ID = "three_dataset_three_model_benchmark"
+TARGET = "cover_type"
+PREDICTION_BATCH_SIZE = int(os.getenv("PREDICTION_BATCH_SIZE", "2000"))
+TRAIN_DIAGNOSTIC_SIZE = int(os.getenv("TRAIN_DIAGNOSTIC_SIZE", "10000"))
+
+KAGGLE_WORKING = Path("/kaggle/working")
+RUN_ROOT = KAGGLE_WORKING if KAGGLE_WORKING.exists() else Path.cwd()
+FIGURES_DIR = RUN_ROOT / "figures"
+RESULTS_DIR = RUN_ROOT / "results"
+for directory in (FIGURES_DIR, RESULTS_DIR):
+    directory.mkdir(parents=True, exist_ok=True)
+
+
+def detect_hardware():
+    hardware = {
+        "environment": "kaggle" if KAGGLE_WORKING.exists() else "local",
+        "platform": platform.platform(),
+        "processor": platform.processor() or platform.machine(),
+        "logical_cpu_count": os.cpu_count(),
+        "gpu_available": False,
+        "gpus": [],
+        "model_compute_device": "cpu",
+    }
+    try:
+        output = subprocess.run(
+            [
+                "nvidia-smi",
+                "--query-gpu=name,memory.total,driver_version",
+                "--format=csv,noheader,nounits",
+            ],
+            capture_output=True,
+            check=True,
+            text=True,
+            timeout=10,
+        ).stdout.strip()
+        for line in output.splitlines():
+            name, memory_mb, driver = [part.strip() for part in line.split(",", maxsplit=2)]
+            hardware["gpus"].append(
+                {"name": name, "memory_mb": int(float(memory_mb)), "driver_version": driver}
+            )
+        hardware["gpu_available"] = bool(hardware["gpus"])
+    except (FileNotFoundError, subprocess.SubprocessError, ValueError):
+        pass
+    return hardware
+
+
+hardware = detect_hardware()
+print({"python": platform.python_version(), "sklearn": sklearn.__version__})
+print("Hardware:", hardware)
+print("Compute device used by all three sklearn estimators: CPU")
+"""
+
+
+THREE_DATASET_DATA = r"""
+data_started = time.perf_counter()
+LETTER_FEATURES = [
+    "x_box", "y_box", "width", "high", "onpix", "x_bar", "y_bar", "x2bar",
+    "y2bar", "xybar", "x2ybr", "xy2br", "x_ege", "xegvy", "y_ege", "yegvx",
+]
+
+
+def find_letter_split():
+    roots = [Path("/kaggle/input"), Path.cwd(), Path.cwd().parent]
+    for root in roots:
+        if not root.exists():
+            continue
+        for train_path in sorted(root.rglob("train.csv")):
+            test_path = train_path.with_name("test.csv")
+            if not test_path.exists():
+                continue
+            try:
+                train_columns = set(pd.read_csv(train_path, nrows=2).columns)
+                test_columns = set(pd.read_csv(test_path, nrows=2).columns)
+            except (OSError, pd.errors.ParserError):
+                continue
+            required = set(LETTER_FEATURES + ["letter"])
+            if required.issubset(train_columns) and required.issubset(test_columns):
+                return train_path, test_path
+    raise FileNotFoundError(
+        "Missing canonical Letter train.csv/test.csv. Add the processed dataset to Kaggle."
+    )
+
+
+def find_covertype_csv():
+    roots = [Path("/kaggle/input"), Path.cwd(), Path.cwd().parent]
+    for root in roots:
+        if not root.exists():
+            continue
+        for name in ("covertype.csv", "covtype.csv"):
+            matches = sorted(root.rglob(name))
+            if matches:
+                return matches[0]
+    return None
+
+
+def normalize_target(frame):
+    target_candidates = {"cover_type", "covertype", "cover type", "target"}
+    for column in frame.columns:
+        if str(column).strip().lower() in target_candidates:
+            return frame.rename(columns={column: TARGET})
+    raise ValueError("Covertype CSV must contain a cover_type or target column")
+
+
+letter_train_path, letter_test_path = find_letter_split()
+letter_train = pd.read_csv(letter_train_path)
+letter_test = pd.read_csv(letter_test_path)
+
+digits = load_digits(as_frame=True)
+digits_frame = digits.frame.rename(columns={"target": "label"})
+digits_train, digits_test = train_test_split(
+    digits_frame,
+    test_size=TEST_SIZE,
+    random_state=RANDOM_STATE,
+    stratify=digits_frame["label"],
+)
+
+covertype_path = find_covertype_csv()
+if covertype_path is None:
+    bundle = fetch_covtype(
+        as_frame=True,
+        data_home=RUN_ROOT / ".cache" / "scikit_learn_data",
+    )
+    covertype_frame = bundle.data.copy()
+    covertype_frame[TARGET] = bundle.target.astype("int64").to_numpy()
+    covertype_source = "sklearn.datasets.fetch_covtype() / UCI Covertype"
+else:
+    covertype_frame = normalize_target(pd.read_csv(covertype_path))
+    covertype_source = str(covertype_path)
+
+covertype_frame[TARGET] = pd.to_numeric(
+    covertype_frame[TARGET], errors="raise"
+).astype("int64")
+assert covertype_frame.shape[1] == 55
+assert covertype_frame[TARGET].nunique() == 7
+assert not covertype_frame.isna().any().any()
+
+covertype_features = [column for column in covertype_frame.columns if column != TARGET]
+covertype_X = covertype_frame[covertype_features]
+covertype_y = covertype_frame[TARGET]
+covertype_X_train, covertype_X_test, covertype_y_train, covertype_y_test = train_test_split(
+    covertype_X,
+    covertype_y,
+    test_size=TEST_SIZE,
+    random_state=RANDOM_STATE,
+    stratify=covertype_y,
+)
+
+datasets = {
+    "letter_recognition": {
+        "X_train": letter_train[LETTER_FEATURES],
+        "y_train": letter_train["letter"],
+        "X_test": letter_test[LETTER_FEATURES],
+        "y_test": letter_test["letter"],
+        "source": str(letter_train_path.parent),
+        "scope": "full_canonical_split",
+    },
+    "handwritten_digits": {
+        "X_train": digits_train.drop(columns="label"),
+        "y_train": digits_train["label"].astype("int64"),
+        "X_test": digits_test.drop(columns="label"),
+        "y_test": digits_test["label"].astype("int64"),
+        "source": "sklearn.datasets.load_digits",
+        "scope": "full_dataset_split",
+    },
+    "covertype": {
+        "X_train": covertype_X_train,
+        "y_train": covertype_y_train,
+        "X_test": covertype_X_test,
+        "y_test": covertype_y_test,
+        "source": covertype_source,
+        "scope": "full_dataset_split",
+    },
+}
+
+for dataset_name, parts in datasets.items():
+    diagnostic_size = min(TRAIN_DIAGNOSTIC_SIZE, len(parts["X_train"]))
+    if diagnostic_size == len(parts["X_train"]):
+        diagnostic_X = parts["X_train"]
+        diagnostic_y = parts["y_train"]
+    else:
+        diagnostic_X, _, diagnostic_y, _ = train_test_split(
+            parts["X_train"],
+            parts["y_train"],
+            train_size=diagnostic_size,
+            random_state=RANDOM_STATE,
+            stratify=parts["y_train"],
+        )
+    parts["X_train_diagnostic"] = diagnostic_X
+    parts["y_train_diagnostic"] = diagnostic_y
+
+data_loading_seconds = time.perf_counter() - data_started
+print("Data loading:", round(data_loading_seconds, 2), "seconds")
+for dataset_name, parts in datasets.items():
+    print(
+        dataset_name,
+        "train/test:",
+        parts["X_train"].shape,
+        parts["X_test"].shape,
+        "diagnostic train:",
+        parts["X_train_diagnostic"].shape,
+    )
+"""
+
+
+THREE_DATASET_BENCHMARK = r"""
+MODEL_CONFIGS = {
+    "Random Forest": {
+        "n_estimators": 100,
+        "criterion": "gini",
+        "random_state": RANDOM_STATE,
+        "n_jobs": -1,
+        "learning_strategy": "eager",
+    },
+    "SVM (RBF)": {
+        "pipeline": "StandardScaler -> SVC",
+        "C": 1.0,
+        "kernel": "rbf",
+        "gamma": "scale",
+        "cache_size_mb": 4096,
+        "learning_strategy": "eager",
+    },
+    "KNN": {
+        "pipeline": "StandardScaler -> KNeighborsClassifier",
+        "n_neighbors": 5,
+        "weights": "uniform",
+        "algorithm": "brute",
+        "n_jobs": -1,
+        "learning_strategy": "lazy",
+    },
+}
+
+MODEL_SLUGS = {
+    "Random Forest": "random_forest",
+    "SVM (RBF)": "svm_rbf",
+    "KNN": "knn",
+}
+
+
+def make_estimator(model_name):
+    if model_name == "Random Forest":
+        return RandomForestClassifier(
+            n_estimators=100,
+            criterion="gini",
+            random_state=RANDOM_STATE,
+            n_jobs=-1,
+        )
+    if model_name == "SVM (RBF)":
+        return Pipeline(
+            [
+                ("scaler", StandardScaler()),
+                ("model", SVC(C=1.0, kernel="rbf", gamma="scale", cache_size=4096)),
+            ]
+        )
+    if model_name == "KNN":
+        return Pipeline(
+            [
+                ("scaler", StandardScaler()),
+                (
+                    "model",
+                    KNeighborsClassifier(
+                        n_neighbors=5,
+                        weights="uniform",
+                        algorithm="brute",
+                        n_jobs=-1,
+                    ),
+                ),
+            ]
+        )
+    raise KeyError(model_name)
+
+
+def predict_in_batches(estimator, frame, dataset_name, model_name, stage):
+    predictions = []
+    total_batches = (len(frame) + PREDICTION_BATCH_SIZE - 1) // PREDICTION_BATCH_SIZE
+    started = time.perf_counter()
+    for batch_number, start in enumerate(
+        range(0, len(frame), PREDICTION_BATCH_SIZE),
+        start=1,
+    ):
+        stop = min(start + PREDICTION_BATCH_SIZE, len(frame))
+        predictions.append(estimator.predict(frame.iloc[start:stop]))
+        if batch_number == 1 or batch_number % 10 == 0 or batch_number == total_batches:
+            elapsed = time.perf_counter() - started
+            print(
+                f"{dataset_name}/{model_name} {stage}: "
+                f"batch {batch_number}/{total_batches}; elapsed={elapsed:.1f}s"
+            )
+    return np.concatenate(predictions), time.perf_counter() - started
+
+
+evaluations = {dataset_name: {} for dataset_name in datasets}
+failures = []
+
+
+def write_checkpoint():
+    result = {
+        "schema_version": "1.0",
+        "experiment_id": EXPERIMENT_ID,
+        "models": list(MODEL_CONFIGS),
+        "datasets": evaluations,
+        "failures": failures,
+        "split": {
+            "test_size": TEST_SIZE,
+            "random_state": RANDOM_STATE,
+            "stratify": True,
+        },
+        "data_loading_seconds": data_loading_seconds,
+        "hardware": hardware,
+        "notes": (
+            "All three models run on full datasets and CPU. KNN is a lazy learner, so its "
+            "fit time is not directly comparable to eager learners. Covertype train accuracy "
+            "uses a fixed stratified diagnostic sample; test metrics use the entire test set."
+        ),
+        "updated_at_utc": datetime.now(UTC).isoformat(),
+    }
+    result_path = RESULTS_DIR / f"{EXPERIMENT_ID}.json"
+    result_path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+    rows = []
+    for dataset_name, model_results in evaluations.items():
+        for model_name, metrics in model_results.items():
+            rows.append({"dataset": dataset_name, "model": model_name, **metrics})
+    if rows:
+        pd.DataFrame(rows).to_csv(
+            RESULTS_DIR / f"{EXPERIMENT_ID}__summary.csv",
+            index=False,
+        )
+    return result_path
+
+
+def evaluate_model(dataset_name, model_name):
+    parts = datasets[dataset_name]
+    estimator = make_estimator(model_name)
+    fit_started = time.perf_counter()
+    estimator.fit(parts["X_train"], parts["y_train"])
+    training_seconds = time.perf_counter() - fit_started
+    print(f"{dataset_name}/{model_name} fit complete: {training_seconds:.2f}s")
+
+    test_prediction, prediction_seconds = predict_in_batches(
+        estimator,
+        parts["X_test"],
+        dataset_name,
+        model_name,
+        "test prediction",
+    )
+    train_prediction, diagnostic_prediction_seconds = predict_in_batches(
+        estimator,
+        parts["X_train_diagnostic"],
+        dataset_name,
+        model_name,
+        "train diagnostic prediction",
+    )
+    train_accuracy = accuracy_score(parts["y_train_diagnostic"], train_prediction)
+    test_accuracy = accuracy_score(parts["y_test"], test_prediction)
+    metrics = {
+        "status": "completed",
+        "learning_strategy": MODEL_CONFIGS[model_name]["learning_strategy"],
+        "train_accuracy": float(train_accuracy),
+        "train_accuracy_sample_size": len(parts["X_train_diagnostic"]),
+        "test_accuracy": float(test_accuracy),
+        "error_rate": float(1.0 - test_accuracy),
+        "precision_macro": float(
+            precision_score(parts["y_test"], test_prediction, average="macro", zero_division=0)
+        ),
+        "recall_macro": float(
+            recall_score(parts["y_test"], test_prediction, average="macro", zero_division=0)
+        ),
+        "f1_macro": float(f1_score(parts["y_test"], test_prediction, average="macro")),
+        "generalization_gap": float(train_accuracy - test_accuracy),
+        "training_seconds": float(training_seconds),
+        "prediction_seconds": float(prediction_seconds),
+        "diagnostic_prediction_seconds": float(diagnostic_prediction_seconds),
+        "total_model_seconds": float(training_seconds + prediction_seconds),
+        "train_samples": len(parts["X_train"]),
+        "test_samples": len(parts["X_test"]),
+        "features": parts["X_train"].shape[1],
+        "dataset_scope": parts["scope"],
+    }
+
+    fig, ax = plt.subplots(figsize=(8, 7))
+    ConfusionMatrixDisplay.from_predictions(
+        parts["y_test"],
+        test_prediction,
+        labels=np.sort(parts["y_test"].unique()),
+        cmap="Blues",
+        colorbar=False,
+        values_format="d",
+        ax=ax,
+    )
+    ax.set_title(f"{dataset_name.replace('_', ' ').title()} - {model_name}")
+    fig.tight_layout()
+    figure_path = FIGURES_DIR / (
+        f"{EXPERIMENT_ID}__{dataset_name}__{MODEL_SLUGS[model_name]}__confusion_matrix.png"
+    )
+    fig.savefig(figure_path, dpi=200, bbox_inches="tight")
+    plt.show()
+    plt.close(fig)
+    del estimator, test_prediction, train_prediction
+    gc.collect()
+    return metrics
+
+
+def run_and_checkpoint(dataset_name, model_name):
+    print(f"\n===== {dataset_name} / {model_name} =====")
+    started = time.perf_counter()
+    try:
+        evaluations[dataset_name][model_name] = evaluate_model(dataset_name, model_name)
+    except (MemoryError, OSError, RuntimeError, ValueError) as error:
+        failures.append(
+            {
+                "dataset": dataset_name,
+                "model": model_name,
+                "error_type": type(error).__name__,
+                "message": str(error),
+                "elapsed_seconds": time.perf_counter() - started,
+            }
+        )
+        print(f"{dataset_name}/{model_name} failed: {type(error).__name__}: {error}")
+    result_path = write_checkpoint()
+    print("Checkpoint:", result_path)
+"""
+
+
+THREE_DATASET_SUMMARY = r"""
+rows = []
+for dataset_name, model_results in evaluations.items():
+    for model_name, metrics in model_results.items():
+        rows.append({"dataset": dataset_name, "model": model_name, **metrics})
+if not rows:
+    raise RuntimeError("No model completed; inspect the checkpoint JSON.")
+
+summary = pd.DataFrame(rows).sort_values(["dataset", "f1_macro"], ascending=[True, False])
+display(summary.round(4))
+
+artifact_paths = list(FIGURES_DIR.glob(f"{EXPERIMENT_ID}__*.png"))
+fig, axes = plt.subplots(1, 3, figsize=(20, 5), sharey=True)
+performance_long = summary.melt(
+    id_vars=["dataset", "model"],
+    value_vars=["test_accuracy", "f1_macro"],
+    var_name="metric",
+    value_name="score",
+)
+for ax, (dataset_name, frame) in zip(
+    axes,
+    performance_long.groupby("dataset"),
+    strict=True,
+):
+    sns.barplot(data=frame, x="model", y="score", hue="metric", ax=ax)
+    ax.set(
+        title=dataset_name.replace("_", " ").title(),
+        xlabel="",
+        ylabel="Score",
+        ylim=(0, 1),
+    )
+    ax.tick_params(axis="x", rotation=20)
+fig.suptitle("Three-model performance on three full datasets")
+fig.tight_layout()
+performance_path = FIGURES_DIR / f"{EXPERIMENT_ID}__performance.png"
+fig.savefig(performance_path, dpi=200, bbox_inches="tight")
+plt.show()
+plt.close(fig)
+artifact_paths.append(performance_path)
+
+fig, axes = plt.subplots(1, 2, figsize=(16, 5))
+sns.barplot(
+    data=summary,
+    x="dataset",
+    y="generalization_gap",
+    hue="model",
+    errorbar=None,
+    ax=axes[0],
+)
+axes[0].set(title="Generalization gap", xlabel="", ylabel="Train accuracy - test accuracy")
+axes[0].tick_params(axis="x", rotation=15)
+sns.barplot(
+    data=summary,
+    x="dataset",
+    y="total_model_seconds",
+    hue="model",
+    errorbar=None,
+    ax=axes[1],
+)
+axes[1].set(
+    title="Fit + full-test prediction (log scale)",
+    xlabel="",
+    ylabel="Seconds",
+    yscale="log",
+)
+axes[1].tick_params(axis="x", rotation=15)
+fig.tight_layout()
+runtime_path = FIGURES_DIR / f"{EXPERIMENT_ID}__gap_and_runtime.png"
+fig.savefig(runtime_path, dpi=200, bbox_inches="tight")
+plt.show()
+plt.close(fig)
+artifact_paths.append(runtime_path)
+
+best_by_dataset = (
+    summary.loc[summary.groupby("dataset")["f1_macro"].idxmax()]
+    .set_index("dataset")[["model", "test_accuracy", "f1_macro"]]
+    .to_dict(orient="index")
+)
+print("Best by macro-F1:", best_by_dataset)
+for dataset_name, frame in summary.groupby("dataset"):
+    fastest_fit = frame.loc[frame["training_seconds"].idxmin()]
+    fastest_prediction = frame.loc[frame["prediction_seconds"].idxmin()]
+    fastest_total = frame.loc[frame["total_model_seconds"].idxmin()]
+    eager = frame.loc[frame["learning_strategy"] == "eager"]
+    fastest_eager_fit = eager.loc[eager["training_seconds"].idxmin()]
+    print(
+        dataset_name,
+        "fastest raw fit=",
+        fastest_fit["model"],
+        "; fastest eager fit=",
+        fastest_eager_fit["model"],
+        "; fastest prediction=",
+        fastest_prediction["model"],
+        "; fastest total=",
+        fastest_total["model"],
+    )
+
+pipeline_seconds = time.perf_counter() - PIPELINE_STARTED
+result_path = write_checkpoint()
+result = json.loads(result_path.read_text(encoding="utf-8"))
+result["pipeline_seconds"] = pipeline_seconds
+result["best_by_dataset"] = best_by_dataset
+result["created_at_utc"] = datetime.now(UTC).isoformat()
+result_path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+summary_path = RESULTS_DIR / f"{EXPERIMENT_ID}__summary.csv"
+artifact_paths.extend([summary_path, result_path])
+
+archive_path = RUN_ROOT / f"{EXPERIMENT_ID}__outputs.zip"
+with ZipFile(archive_path, "w", compression=ZIP_DEFLATED) as archive:
+    for artifact_path in sorted(set(artifact_paths)):
+        archive.write(artifact_path, artifact_path.relative_to(RUN_ROOT))
+print(f"Pipeline: {pipeline_seconds:.2f}s")
+print(f"Created ZIP ({archive_path.stat().st_size / 1024**2:.1f} MB): {archive_path}")
+if FileLink is not None:
+    display(FileLink(str(archive_path)))
+"""
+
+
+def three_dataset_three_model_notebook() -> dict[str, object]:
+    model_names = [
+        "Random Forest",
+        "SVM (RBF)",
+        "KNN",
+    ]
+    cells = [
+        markdown(
+            r"""
+            # Three datasets × three models
+
+            Notebook benchmark đúng ba model `Random Forest`, `SVM (RBF)` và `KNN` trên cả
+            `Letter Recognition`, `Handwritten Digits` và `Covertype`. Mỗi dataset có split
+            riêng nhưng ba model của dataset đó dùng cùng train/test indices (`test_size=0.20`,
+            `random_state=42`, stratification). Covertype dùng toàn bộ 581.012 mẫu.
+
+            Chọn **Accelerator: None (CPU)**. Các estimator scikit-learn này không dùng GPU.
+            KNN/SVM trên Covertype có thể mất rất lâu; notebook lưu checkpoint sau từng model,
+            dự đoán theo batch và đặt KNN/SVM của Covertype ở cuối quy trình.
+            """
+        ),
+        code(THREE_DATASET_IMPORTS),
+        code(THREE_DATASET_SETUP),
+        code(THREE_DATASET_DATA),
+        markdown(
+            r"""
+            ## Model protocol
+
+            Random Forest không scaling. SVM và KNN dùng `StandardScaler` trong pipeline, fit
+            trên train only. Test metrics dùng toàn bộ test set; với Covertype, train accuracy
+            và generalization gap dùng diagnostic sample stratified 10.000 dòng để tránh thêm
+            một lượt inference 464.809 dòng cho KNN/SVM. File JSON ghi rõ phạm vi này.
+            """
+        ),
+        code(THREE_DATASET_BENCHMARK),
+    ]
+    for dataset_name in ("letter_recognition", "handwritten_digits", "covertype"):
+        for model_name in model_names:
+            cells.extend(
+                [
+                    markdown(f"## {dataset_name.replace('_', ' ').title()} — {model_name}"),
+                    code(f'run_and_checkpoint("{dataset_name}", "{model_name}")'),
+                ]
+            )
+    cells.extend(
+        [
+            markdown(
+                r"""
+                ## Tổng hợp và tải output
+
+                Khi phân tích tốc độ, đọc cả fit, prediction và tổng thời gian. KNN là lazy
+                learner nên thời gian fit rất ngắn không có nghĩa là pipeline end-to-end nhanh.
+                """
+            ),
+            code(THREE_DATASET_SUMMARY),
+        ]
+    )
+    return notebook(cells)
+
+
 COVERTYPE_IMPORTS = r"""
 import gc
 import json
@@ -940,10 +1587,8 @@ EXPERIMENT_ID = "three_dataset_model_comparison"
 EXPECTED_RESULTS = {
     "dt_letter_baseline.json",
     "dt_digits_baseline.json",
-    "rf_letter_digits_benchmark.json",
-    "svm_letter_digits_benchmark.json",
-    "knn_letter_digits_benchmark.json",
-    "covertype_four_model_benchmark.json",
+    "dt_covertype_scalability.json",
+    "three_dataset_three_model_benchmark.json",
 }
 
 
@@ -972,20 +1617,26 @@ def read_result_json(filename):
             except (OSError, ValueError):
                 continue
     raise FileNotFoundError(
-        f"Missing {filename}. Add Input chứa sáu output ZIP/JSON trước khi Run All."
+        f"Missing {filename}. Add Input chứa bốn output ZIP/JSON trước khi Run All."
     )
 
 
 loaded = {name: read_result_json(name) for name in EXPECTED_RESULTS}
 
-covertype_required_models = {"Decision Tree", "Random Forest", "KNN", "SVM (RBF)"}
-covertype_result = loaded["covertype_four_model_benchmark.json"]
-covertype_completed_models = set(covertype_result.get("models", {}))
-covertype_missing_models = covertype_required_models - covertype_completed_models
-if covertype_missing_models:
+three_model_required = {"Random Forest", "KNN", "SVM (RBF)"}
+three_model_result = loaded["three_dataset_three_model_benchmark.json"]
+three_model_missing = []
+for dataset_name in ("letter_recognition", "handwritten_digits", "covertype"):
+    available_models = set(three_model_result.get("datasets", {}).get(dataset_name, {}))
+    missing_models = three_model_required - available_models
+    if missing_models:
+        three_model_missing.extend(
+            f"{dataset_name}: {model_name}" for model_name in sorted(missing_models)
+        )
+if three_model_missing:
     raise ValueError(
-        "Covertype benchmark is incomplete. Missing completed models: "
-        + ", ".join(sorted(covertype_missing_models))
+        "Three-dataset benchmark is incomplete. Missing completed models: "
+        + ", ".join(three_model_missing)
         + ". Re-run notebook 07 and use its final output ZIP."
     )
 """
@@ -1015,25 +1666,30 @@ for filename, result in loaded.items():
                 "learning_strategy": "eager",
             }
         )
-    elif filename == "covertype_four_model_benchmark.json":
-        for model_name, metrics in result["models"].items():
-            records.append(
-                {
-                    "dataset": "covertype",
-                    "model": model_name,
-                    "train_accuracy": metrics["train_accuracy"],
-                    "test_accuracy": metrics["test_accuracy"],
-                    "f1_macro": metrics["f1_macro"],
-                    "error_rate": metrics["error_rate"],
-                    "generalization_gap": metrics["generalization_gap"],
-                    "training_seconds": metrics["training_seconds"],
-                    "prediction_seconds": metrics["prediction_seconds"],
-                    "total_model_seconds": metrics["total_model_seconds"],
-                    "dataset_scope": result["dataset_scope"],
-                    "train_accuracy_scope": result["train_accuracy_scope"]["kind"],
-                    "learning_strategy": metrics["learning_strategy"],
-                }
-            )
+    elif filename == "three_dataset_three_model_benchmark.json":
+        for dataset_name, model_results in result["datasets"].items():
+            for model_name, metrics in model_results.items():
+                records.append(
+                    {
+                        "dataset": dataset_name,
+                        "model": model_name,
+                        "train_accuracy": metrics["train_accuracy"],
+                        "test_accuracy": metrics["test_accuracy"],
+                        "f1_macro": metrics["f1_macro"],
+                        "error_rate": metrics["error_rate"],
+                        "generalization_gap": metrics["generalization_gap"],
+                        "training_seconds": metrics["training_seconds"],
+                        "prediction_seconds": metrics["prediction_seconds"],
+                        "total_model_seconds": metrics["total_model_seconds"],
+                        "dataset_scope": metrics["dataset_scope"],
+                        "train_accuracy_scope": (
+                            "diagnostic_sample"
+                            if metrics["train_accuracy_sample_size"] < metrics["train_samples"]
+                            else "entire_train_set"
+                        ),
+                        "learning_strategy": metrics["learning_strategy"],
+                    }
+                )
     else:
         for dataset_name, metrics in result["datasets"].items():
             records.append(
@@ -1181,7 +1837,7 @@ def comparison_notebook() -> dict[str, object]:
 
                 Tổng hợp Decision Tree, Random Forest, SVM và KNN trên cả ba dataset. Trong từng
                 dataset, bốn mô hình dùng cùng train/test split. Notebook chỉ đọc result JSON;
-                không huấn luyện lại model. Trên Kaggle, hãy **Add Input** chứa sáu output ZIP
+                không huấn luyện lại model. Trên Kaggle, hãy **Add Input** chứa bốn output ZIP
                 hoặc các JSON đã giải nén.
                 """
             ),
@@ -1206,108 +1862,16 @@ def comparison_notebook() -> dict[str, object]:
 def main() -> None:
     BENCHMARK_DIR.mkdir(parents=True, exist_ok=True)
     COMPARISON_DIR.mkdir(parents=True, exist_ok=True)
-    specs = [
-        {
-            "filename": "04_random_forest_letter_digits.ipynb",
-            "title": "Random Forest benchmark - Letter và Digits",
-            "experiment_id": "rf_letter_digits_benchmark",
-            "model_name": "Random Forest",
-            "model_import": "from sklearn.ensemble import RandomForestClassifier\n",
-            "estimator_code": dedent(
-                """
-                    return RandomForestClassifier(
-                        n_estimators=300,
-                        criterion="gini",
-                        random_state=RANDOM_STATE,
-                        n_jobs=-1,
-                    )
-                """
-            ).rstrip(),
-            "scaling_note": "Random Forest không cần scaling.",
-            "model_config": {
-                "n_estimators": 300,
-                "criterion": "gini",
-                "random_state": 42,
-                "n_jobs": -1,
-                "scaling": False,
-            },
-        },
-        {
-            "filename": "05_svm_letter_digits.ipynb",
-            "title": "SVM benchmark - Letter và Digits",
-            "experiment_id": "svm_letter_digits_benchmark",
-            "model_name": "SVM (RBF)",
-            "model_import": dedent(
-                """
-                from sklearn.pipeline import Pipeline
-                from sklearn.preprocessing import StandardScaler
-                from sklearn.svm import SVC
-                """
-            ),
-            "estimator_code": dedent(
-                """
-                    return Pipeline(
-                        [
-                            ("scaler", StandardScaler()),
-                            ("model", SVC(C=1.0, kernel="rbf", gamma="scale", cache_size=2048)),
-                        ]
-                    )
-                """
-            ).rstrip(),
-            "scaling_note": "SVM dùng StandardScaler.",
-            "model_config": {
-                "pipeline": "StandardScaler -> SVC",
-                "C": 1.0,
-                "kernel": "rbf",
-                "gamma": "scale",
-                "cache_size_mb": 2048,
-            },
-        },
-        {
-            "filename": "06_knn_letter_digits.ipynb",
-            "title": "KNN benchmark - Letter và Digits",
-            "experiment_id": "knn_letter_digits_benchmark",
-            "model_name": "KNN",
-            "model_import": dedent(
-                """
-                from sklearn.neighbors import KNeighborsClassifier
-                from sklearn.pipeline import Pipeline
-                from sklearn.preprocessing import StandardScaler
-                """
-            ),
-            "estimator_code": dedent(
-                """
-                    return Pipeline(
-                        [
-                            ("scaler", StandardScaler()),
-                            ("model", KNeighborsClassifier(n_neighbors=5, weights="uniform", n_jobs=-1)),
-                        ]
-                    )
-                """
-            ).rstrip(),
-            "scaling_note": "KNN dùng StandardScaler để khoảng cách không bị lệch thang đo.",
-            "model_config": {
-                "pipeline": "StandardScaler -> KNeighborsClassifier",
-                "n_neighbors": 5,
-                "weights": "uniform",
-                "n_jobs": -1,
-            },
-        },
-    ]
-    for spec in specs:
-        path = BENCHMARK_DIR / spec["filename"]
-        path.write_text(
-            json.dumps(benchmark_notebook(spec), ensure_ascii=False, indent=1) + "\n",
-            encoding="utf-8",
-        )
-        print(f"Wrote {path.relative_to(PROJECT_ROOT)}")
-
-    covertype_path = BENCHMARK_DIR / "07_covertype_four_model_benchmark.ipynb"
-    covertype_path.write_text(
-        json.dumps(covertype_benchmark_notebook(), ensure_ascii=False, indent=1) + "\n",
+    benchmark_path = BENCHMARK_DIR / "07_three_dataset_three_model_benchmark.ipynb"
+    benchmark_path.write_text(
+        json.dumps(three_dataset_three_model_notebook(), ensure_ascii=False, indent=1) + "\n",
         encoding="utf-8",
     )
-    print(f"Wrote {covertype_path.relative_to(PROJECT_ROOT)}")
+    print(f"Wrote {benchmark_path.relative_to(PROJECT_ROOT)}")
+
+    old_covertype_path = BENCHMARK_DIR / "07_covertype_four_model_benchmark.ipynb"
+    if old_covertype_path.exists():
+        old_covertype_path.unlink()
 
     comparison_path = COMPARISON_DIR / "08_three_dataset_model_comparison.ipynb"
     comparison_path.write_text(
