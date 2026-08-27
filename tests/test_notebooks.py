@@ -81,6 +81,7 @@ def test_expected_notebook_suite_exists() -> None:
         "05_three_dataset_three_model_benchmark.ipynb",
         "06_gini_vs_entropy_experiment.ipynb",
         "07_depth_sweep_experiment.ipynb",
+        "08_dt_improvements_experiment.ipynb",
     }
 
 
