@@ -1,0 +1,47 @@
+\chapter{Phương pháp nghiên cứu}
+
+\section{Thiết kế thực nghiệm}
+
+Mỗi bộ dữ liệu được đánh giá theo cùng một quy trình: chuẩn bị dữ liệu, tạo phép chia train/test cố định, huấn luyện bốn mô hình, dự đoán trên tập test và lưu toàn bộ chỉ số cùng hình trực quan. Quy trình chung giúp giảm ảnh hưởng của khác biệt tiền xử lý khi so sánh mô hình. Riêng các tham số regularization của Decision Tree được lựa chọn bằng cross-validation trên tập train.
+
+\section{Các mô hình so sánh}
+
+\subsection{Decision Tree}
+
+Decision Tree là mô hình trung tâm của nghiên cứu và được xây dựng theo nền tảng CART \cite{breiman1984cart}. Mô hình dễ diễn giải, không cần chuẩn hóa và huấn luyện nhanh. Nhược điểm chính là phương sai cao: cây có thể ghi nhớ dữ liệu, phát triển nhiều nhánh sâu và thay đổi đáng kể trước biến động nhỏ của tập huấn luyện.
+
+\subsection{Random Forest}
+
+Random Forest kết hợp nhiều cây được huấn luyện trên các mẫu và tập thuộc tính khác nhau \cite{breiman2001rf}. Cơ chế ensemble thường giảm phương sai và tổng quát hóa tốt hơn cây đơn. Đổi lại, mô hình lớn hơn, khó diễn giải ở mức từng quyết định và cần nhiều tài nguyên tính toán hơn.
+
+\subsection{Support Vector Machine}
+
+SVM với RBF kernel tạo biên phân lớp phi tuyến và thường hoạt động tốt trên dữ liệu nhỏ hoặc trung bình có số chiều cao \cite{cortes1995svm}. Mô hình cần chuẩn hóa đặc trưng, khó diễn giải trực tiếp và chi phí tính toán có thể tăng mạnh theo số mẫu.
+
+\subsection{K-Nearest Neighbors}
+
+KNN phân loại dựa trên nhãn của các điểm gần nhất \cite{cover1967knn}. Mô hình gần như không có giai đoạn học tham số và khai thác tốt cấu trúc lân cận. Hạn chế là cần lưu tập train, nhạy với thang đo và có chi phí dự đoán tăng theo kích thước dữ liệu.
+
+\section{Chỉ số đánh giá}
+
+Nghiên cứu sử dụng các chỉ số sau:
+
+\begin{itemize}
+    \item \textbf{Accuracy} đo tỷ lệ dự đoán đúng trên toàn bộ tập test;
+    \item \textbf{Macro-F1} tính F1 độc lập cho từng lớp rồi lấy trung bình, nhờ đó hạn chế việc lớp lớn lấn át lớp nhỏ;
+    \item \textbf{Train-test gap} là chênh lệch accuracy giữa train và test, dùng như tín hiệu thực nghiệm của overfitting;
+    \item \textbf{Thời gian fit và predict} phản ánh chi phí thực thi;
+    \item \textbf{Độ sâu và số lá} mô tả độ phức tạp của Decision Tree.
+\end{itemize}
+
+Với Letter Recognition và Covertype, train accuracy trong notebook so sánh được đo trên cùng một mẫu chẩn đoán cố định gồm 10,000 quan sát cho cả bốn mô hình; Digits dùng toàn bộ tập train.
+
+\section{Môi trường tính toán}
+
+Decision Tree chạy bằng scikit-learn trên CPU \cite{pedregosa2011sklearn}. Random Forest, SVM và KNN trong notebook so sánh sử dụng RAPIDS cuML trên GPU \cite{rapidsCuml}. Phiên Kaggle được cấu hình GPU x2 theo môi trường chạy của nhóm; tệp kết quả ghi nhận thiết bị tính toán của cuML là Tesla T4 với khoảng 14.9 GB bộ nhớ khả dụng. Các kết quả riêng của Decision Tree và HS ghi nhận Tesla P100 16 GB khả dụng nhưng mô hình vẫn chạy trên CPU.
+
+Do backend và thuật toán khác nhau, thời gian trong nghiên cứu được hiểu là chi phí thực tế của từng pipeline. Các con số này không phải phép đo speedup CPU-GPU thuần túy và không chứng minh hai GPU được sử dụng song song trong mọi thí nghiệm.
+
+\section{Nguyên tắc bảo đảm tính công bằng}
+
+Các mô hình sử dụng cùng phép chia dữ liệu và cùng tập test. Bộ chuẩn hóa chỉ học từ tập train để tránh rò rỉ dữ liệu. Random state được cố định nhằm bảo đảm khả năng tái lập. Kết luận về mô hình chỉ giới hạn trong cấu hình và implementation được khảo sát; nghiên cứu không suy rộng rằng một họ thuật toán luôn vượt họ thuật toán khác.

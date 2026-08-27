@@ -1,0 +1,15 @@
+\chapter{Kết luận và hướng phát triển}
+
+\section{Kết luận chính}
+
+Nghiên cứu đã đánh giá Decision Tree trên ba bộ dữ liệu đại diện cho ba điều kiện: phân loại nhiều lớp với đặc trưng hình học, ảnh nhiều chiều nhưng ít mẫu và dữ liệu bảng quy mô lớn, mất cân bằng. Không có mô hình nào tốt nhất trong mọi trường hợp. Random Forest dẫn đầu trên Letter Recognition, SVM tốt nhất trên Digits, còn Decision Tree tốt nhất trên Covertype trong cấu hình hiện tại. KNN có thời gian fit rất nhỏ nhưng chi phí dự đoán tăng trên dữ liệu lớn; SVM cho kết quả tốt ở dữ liệu nhỏ nhưng trở thành mô hình chậm nhất trên Covertype.
+
+Hierarchical Shrinkage làm mượt dự đoán mà giữ nguyên cấu trúc cây, trong khi CCP trực tiếp loại nhánh. Kết hợp CCP + HS trên Covertype tăng nhẹ accuracy và macro-F1, giảm train-test gap khoảng 17.6\% và giảm số lá khoảng 31.7\%. Đây là bằng chứng rõ nhất rằng phương pháp cải tiến đem lại một cây gọn hơn, ít overfitting hơn mà không đánh đổi hiệu năng test.
+
+\section{Ý nghĩa thực tiễn}
+
+Kết quả cho thấy việc lựa chọn mô hình cần dựa trên cấu trúc dữ liệu và yêu cầu triển khai. Decision Tree là lựa chọn hấp dẫn khi cần giải thích và tốc độ huấn luyện, nhưng cần regularization khi cây quá sâu. GPU hữu ích cho các implementation hỗ trợ tăng tốc, song không tự bảo đảm mô hình chính xác hơn hoặc nhanh hơn ở mọi giai đoạn. Trên dữ liệu lớn, chi phí dự đoán và mức phù hợp của thuật toán quan trọng không kém phần cứng.
+
+\section{Hạn chế và hướng phát triển}
+
+Nghiên cứu hiện sử dụng một phép chia chính với random state cố định và không tìm kiếm siêu tham số toàn diện cho tất cả mô hình. Các backend CPU và GPU cũng khác nhau, vì vậy thời gian chạy chưa phải benchmark phần cứng thuần túy. Trong tương lai, thí nghiệm nên được lặp lại với nhiều seed, áp dụng nested cross-validation cho lựa chọn siêu tham số, mở rộng không gian $\lambda$ và mức pruning, đồng thời đo kích thước mô hình, bộ nhớ và độ trễ dự đoán. Việc bổ sung kiểm định thống kê cũng giúp xác định liệu mức cải thiện nhỏ của HS có ổn định trên nhiều lần lấy mẫu hay không.

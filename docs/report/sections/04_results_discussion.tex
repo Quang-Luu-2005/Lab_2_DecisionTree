@@ -1,0 +1,117 @@
+\chapter{Kết quả và thảo luận}
+
+\section{Kết quả tổng hợp}
+
+Kết quả được trình bày riêng cho từng bộ dữ liệu nhằm bảo đảm bảng và hình có kích thước đủ lớn để đọc. Trong mỗi tiểu mục, bảng cung cấp giá trị chính xác còn biểu đồ hỗ trợ so sánh trực quan giữa các mô hình. Giá trị in đậm là kết quả tốt nhất trên bộ dữ liệu tương ứng.
+
+\section{Phân tích theo từng bộ dữ liệu}
+
+\subsection{Letter Recognition}
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Kết quả của bốn mô hình trên Letter Recognition.}
+    \label{tab:model-comparison-letter}
+    \begin{tabular}{@{}lrrr@{}}
+        \toprule
+        \textbf{Mô hình} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Tổng thời gian (s)} \\
+        \midrule
+        Decision Tree (CPU) & 0.8677 & 0.8677 & 0.0844 \\
+        Random Forest (GPU) & \textbf{0.9513} & \textbf{0.9512} & 3.0965 \\
+        SVM--RBF (GPU) & 0.9231 & 0.9232 & 3.7067 \\
+        KNN (GPU) & 0.9408 & 0.9408 & \textbf{0.0055} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{report_model_performance__letter_recognition.png}
+    \caption{Accuracy và macro-F1 của bốn mô hình trên Letter Recognition.}
+    \label{fig:model-performance-letter}
+\end{figure}
+
+Random Forest đạt kết quả tốt nhất với accuracy 0.9513 và macro-F1 0.9512. KNN đứng thứ hai, cho thấy các chữ cái có cấu trúc lân cận hữu ích. Decision Tree có thời gian chạy ngắn nhưng kém RF 8.36 điểm phần trăm accuracy và có train--test gap 0.1323, thể hiện overfitting rõ. Trên dữ liệu nhiều lớp này, việc kết hợp nhiều cây giúp RF giảm phương sai hiệu quả hơn một cây đơn.
+
+\subsection{Handwritten Digits}
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Kết quả của bốn mô hình trên Handwritten Digits.}
+    \label{tab:model-comparison-digits}
+    \begin{tabular}{@{}lrrr@{}}
+        \toprule
+        \textbf{Mô hình} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Tổng thời gian (s)} \\
+        \midrule
+        Decision Tree (CPU) & 0.8250 & 0.8230 & 0.0207 \\
+        Random Forest (GPU) & 0.9694 & 0.9689 & 0.6282 \\
+        SVM--RBF (GPU) & \textbf{0.9722} & \textbf{0.9718} & 0.7183 \\
+        KNN (GPU) & 0.9639 & 0.9634 & \textbf{0.0030} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{report_model_performance__handwritten_digits.png}
+    \caption{Accuracy và macro-F1 của bốn mô hình trên Handwritten Digits.}
+    \label{fig:model-performance-digits}
+\end{figure}
+
+SVM đạt accuracy 0.9722 và macro-F1 0.9718, nhỉnh hơn RF và KNN. Kết quả phù hợp với ưu thế của RBF kernel trên dữ liệu ảnh nhỏ, nhiều chiều. Decision Tree chỉ đạt accuracy 0.8250 do một cây đơn khó biểu diễn hình dạng chữ số bằng các phép chia theo từng thuộc tính. KNN cũng hoạt động tốt vì các chữ số tương tự tạo thành các lân cận có ý nghĩa.
+
+\subsection{Covertype}
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Kết quả của bốn mô hình trên Covertype.}
+    \label{tab:model-comparison-covertype}
+    \begin{tabular}{@{}lrrr@{}}
+        \toprule
+        \textbf{Mô hình} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Tổng thời gian (s)} \\
+        \midrule
+        Decision Tree (CPU) & \textbf{0.9389} & \textbf{0.9034} & 7.4089 \\
+        Random Forest (GPU) & 0.7957 & 0.6586 & 2.9952 \\
+        SVM--RBF (GPU) & 0.7907 & 0.6378 & 125.5468 \\
+        KNN (GPU) & 0.9284 & 0.8732 & \textbf{5.7556} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{report_model_performance__covertype.png}
+    \caption{Accuracy và macro-F1 của bốn mô hình trên Covertype.}
+    \label{fig:model-performance-covertype}
+\end{figure}
+
+Decision Tree đạt kết quả cao nhất với accuracy 0.9389 và macro-F1 0.9034; KNN đứng thứ hai. SVM mất 125.55 giây nhưng chỉ đạt accuracy 0.7907, cho thấy GPU không khắc phục được sự không phù hợp giữa cấu hình mô hình và dữ liệu. Random Forest cũng thấp hơn kỳ vọng trong cấu hình cuML hiện tại. Kết luận này chỉ áp dụng cho siêu tham số và implementation đã báo cáo, không khẳng định DT luôn vượt RF hoặc SVM.
+
+\section{Overfitting và chi phí tính toán}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{report_model_generalization_gap.png}
+    \caption{Train--test gap của từng mô hình trên ba bộ dữ liệu.}
+    \label{fig:model-generalization-gap}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{report_model_runtime.png}
+    \caption{Thời gian huấn luyện và dự đoán trên toàn bộ tập test; trục tung dùng thang logarithm.}
+    \label{fig:model-runtime}
+\end{figure}
+
+Decision Tree có train--test gap lớn nhất trên Letter và Digits, lần lượt khoảng 0.132 và 0.175. Đây là bằng chứng cho hạn chế phương sai cao của cây đơn. Trên Covertype, gap của Decision Tree giảm còn khoảng 0.061 nhờ lượng dữ liệu huấn luyện lớn, nhưng cây cơ sở trở nên rất phức tạp. KNN có thời gian fit gần như bằng không nhưng thời gian dự đoán tăng rõ trên Covertype. SVM là lựa chọn cạnh tranh trên Digits nhưng trở thành mô hình chậm nhất trên dữ liệu lớn.
+
+\section{Kiểm tra độ ổn định trên Covertype}
+
+Thí nghiệm 5-fold cross-validation độc lập cho Decision Tree cơ sở thu được accuracy $0.9330\pm0.0011$ và macro-F1 $0.8923\pm0.0011$. Độ lệch chuẩn nhỏ cho thấy kết quả tương đối ổn định giữa các fold. Một cấu hình regularization đặt trước giảm thời gian fit trung bình từ 8.67 xuống 7.42 giây nhưng làm accuracy giảm còn $0.8966\pm0.0019$. Kết quả cho thấy regularization quá mạnh có thể gây underfit và cần được chọn bằng validation thay vì áp dụng tùy ý.
+
+\section{Trả lời RQ1 và RQ2}
+
+Đối với RQ1, Decision Tree phù hợp nhất với Covertype trong cấu hình hiện tại, nhưng kém rõ rệt trên Letter và Digits. Lượng dữ liệu lớn giúp cây học các phân vùng chi tiết, trong khi dữ liệu ảnh hoặc dữ liệu ít mẫu làm hạn chế của phép chia theo trục bộc lộ rõ hơn. Đối với RQ2, Decision Tree có lợi thế về tính diễn giải và tốc độ huấn luyện, nhưng Random Forest, SVM hoặc KNN có thể đạt chất lượng tốt hơn tùy cấu trúc dữ liệu. Chi phí GPU và độ chính xác không có quan hệ đơn điệu; lựa chọn mô hình vẫn phải dựa trên đặc điểm bài toán.

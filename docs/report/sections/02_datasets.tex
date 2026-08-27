@@ -1,0 +1,43 @@
+\chapter{Dữ liệu nghiên cứu}
+
+\section{Tiêu chí lựa chọn}
+
+Ba bộ dữ liệu được chọn nhằm tạo ra các điều kiện thực nghiệm khác biệt về số mẫu, số thuộc tính, số lớp và bản chất đặc trưng. Thiết kế này giúp tránh việc đưa ra kết luận chỉ từ các bộ dữ liệu nhỏ hoặc có cấu trúc tương đồng. Letter Recognition đại diện cho phân loại nhiều lớp với đặc trưng hình học; Digits đại diện cho dữ liệu ảnh nhiều chiều nhưng ít mẫu; Covertype đại diện cho dữ liệu bảng quy mô lớn và phân bố lớp không đều.
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Đặc trưng của ba bộ dữ liệu sau bước chuẩn bị dữ liệu.}
+    \label{tab:dataset-summary}
+    \begin{tabularx}{\textwidth}{@{}lrrrrX@{}}
+        \toprule
+        \textbf{Bộ dữ liệu} & \textbf{Mẫu} & \textbf{Thuộc tính} & \textbf{Lớp} & \textbf{Train/Test} & \textbf{Tính chất chính} \\
+        \midrule
+        Letter Recognition & 18,668 & 16 & 26 & 14,934 / 3,734 & Đặc trưng hình học số nguyên, phân loại nhiều lớp \\
+        Handwritten Digits & 1,797 & 64 & 10 & 1,437 / 360 & Ảnh xám $8\times8$ được trải phẳng, dữ liệu nhỏ và nhiều chiều \\
+        Covertype & 581,012 & 54 & 7 & 464,809 / 116,203 & Quy mô lớn, thuộc tính số và nhị phân, phân bố lớp không đều \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Letter Recognition}
+
+Letter Recognition mô tả 26 chữ cái in hoa bằng 16 thuộc tính hình học đã trích xuất, chẳng hạn kích thước hộp bao, vị trí và phân bố điểm ảnh \cite{slate1991letter}. Các giá trị thuộc tính nằm trong khoảng từ 0 đến 15. Sau khi loại 1,332 dòng trùng hoàn toàn, bộ dữ liệu còn 18,668 mẫu.
+
+Bộ dữ liệu này phù hợp vì có nhiều lớp nhưng số thuộc tính vừa phải. Nó giúp kiểm tra khả năng tạo ranh giới quyết định cho bài toán đa lớp và cho thấy sự khác biệt giữa một cây đơn, mô hình tập hợp và mô hình dựa trên khoảng cách. Việc loại trùng trước khi chia dữ liệu tránh trường hợp cùng một quan sát xuất hiện ở cả train và test, làm kết quả lạc quan giả tạo.
+
+\section{Handwritten Digits}
+
+Handwritten Digits gồm 1,797 ảnh chữ số viết tay từ 0 đến 9. Mỗi ảnh $8\times8$ được biểu diễn bởi 64 mức cường độ điểm ảnh \cite{sklearnDigits}. So với Letter Recognition, dữ liệu có ít mẫu hơn nhưng số chiều cao hơn và các thuộc tính mang cấu trúc không gian của ảnh.
+
+Bộ dữ liệu này kiểm tra mô hình trong điều kiện tập huấn luyện nhỏ. Đây cũng là trường hợp phù hợp để quan sát lợi thế của SVM và KNN khi các lớp tạo thành những cụm tương đối rõ trong không gian đặc trưng, đồng thời bộc lộ hạn chế của phép chia theo từng trục của Decision Tree.
+
+\section{Covertype}
+
+Covertype gồm 581,012 mẫu, 54 thuộc tính và 7 loại lớp phủ rừng \cite{blackard1998covertype}. Các thuộc tính kết hợp biến liên tục về địa hình với biến nhị phân mô tả khu vực hoang dã và loại đất. Số lượng mẫu giữa các lớp không đồng đều, vì vậy macro-F1 có ý nghĩa đặc biệt quan trọng bên cạnh accuracy.
+
+Đây là bộ dữ liệu phù hợp nhất để đánh giá khả năng mở rộng, chi phí dự đoán và hiệu quả của phương pháp cải tiến. Với tập test gồm 116,203 mẫu, thay đổi nhỏ về hiệu năng có cơ sở thực nghiệm rõ hơn; đồng thời độ sâu và số lá lớn của cây cơ sở làm tác động của regularization dễ quan sát.
+
+\section{Chuẩn bị dữ liệu}
+
+Tất cả thí nghiệm sử dụng \texttt{test\_size=0.20}, \texttt{random\_state=42} và chia phân tầng theo nhãn. Letter Recognition sử dụng đúng tập train/test được tạo sau bước loại trùng. StandardScaler chỉ được fit trên tập train và chỉ áp dụng cho SVM, KNN; Decision Tree và Random Forest sử dụng đặc trưng gốc. Tập test chỉ được dùng để báo cáo kết quả cuối cùng, không tham gia chọn siêu tham số.

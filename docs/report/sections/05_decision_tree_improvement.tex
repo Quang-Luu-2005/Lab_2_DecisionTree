@@ -1,0 +1,100 @@
+\chapter{Cải tiến Decision Tree bằng Hierarchical Shrinkage}
+
+\section{Động cơ lựa chọn phương pháp}
+
+Kết quả ở Chương 4 cho thấy Decision Tree có train--test gap lớn trên hai bộ dữ liệu nhỏ và tạo cây rất phức tạp trên Covertype. Nhóm chọn Hierarchical Shrinkage vì phương pháp này regularize trực tiếp dự đoán của một cây đã huấn luyện mà không phá vỡ cấu trúc phân nhánh \cite{agarwal2022hs}. Điều này phù hợp với mục tiêu duy trì tính diễn giải của Decision Tree.
+
+\section{Nguyên lý Hierarchical Shrinkage}
+
+HS co ước lượng tại nút con về thông tin của các nút tổ tiên theo hệ số $\lambda$ \cite{agarwal2022hs}. Khi $\lambda$ tăng, dự đoán giảm phụ thuộc vào các nhánh sâu chứa ít mẫu, qua đó hạn chế xác suất quá tự tin và giảm phương sai. HS không thay đổi thuộc tính chia, độ sâu hoặc số lá; phần được cải tiến là ước lượng dự đoán tại các nút.
+
+Để đồng thời kiểm soát cấu trúc, nhóm kết hợp HS với Cost-Complexity Pruning, một cơ chế cắt tỉa thuộc khung CART \cite{breiman1984cart}. CCP loại các nhánh có đóng góp nhỏ, trực tiếp giảm độ sâu và số lá; HS sau đó làm mượt dự đoán trên cây đã cắt tỉa. Thiết kế này tách rõ ba vai trò:
+
+\begin{itemize}
+    \item \textbf{HS} cải thiện khả năng tổng quát hóa mà không thay đổi topology;
+    \item \textbf{CCP} giảm độ phức tạp cấu trúc;
+    \item \textbf{CCP + HS} cân bằng hiệu năng, overfitting và khả năng diễn giải.
+\end{itemize}
+
+\section{Thiết kế thí nghiệm cải tiến}
+
+Năm cấu hình được đánh giá gồm E0 -- cây cơ sở, E1 -- pre-pruning, E2 -- CCP, E3 -- HS và E4 -- CCP kết hợp HS. Hệ số $\lambda$ và mức pruning được chọn bằng 3-fold cross-validation trên tập train. Covertype được dùng làm dẫn chứng chính vì có 581,012 mẫu và cây cơ sở phát triển tới 23,956 lá.
+
+\section{Kết quả chính trên Covertype}
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Ảnh hưởng của các phương pháp cải tiến trên Covertype.}
+    \label{tab:hs-covertype}
+    \begin{tabular}{@{}llrrrrr@{}}
+        \toprule
+        \textbf{ID} & \textbf{Cấu hình} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Gap} & \textbf{Độ sâu} & \textbf{Số lá} \\
+        \midrule
+        E0 & Baseline & 0.9389 & 0.9034 & 0.0611 & 41 & 23,956 \\
+        E1 & Pre-pruning & 0.9297 & 0.8885 & 0.0410 & 40 & 16,637 \\
+        E2 & CCP & 0.9392 & 0.9045 & 0.0507 & 39 & 16,361 \\
+        E3 & HS ($\lambda=10$) & \textbf{0.9397} & 0.9048 & 0.0570 & 41 & 23,956 \\
+        E4 & CCP + HS ($\lambda=10$) & 0.9393 & \textbf{0.9053} & 0.0504 & 39 & 16,361 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{report_hs_performance__covertype.png}
+    \caption{Hiệu năng của năm cấu hình Decision Tree trên Covertype.}
+    \label{fig:hs-performance-covertype}
+\end{figure}
+
+So với E0, E3 tăng accuracy từ 0.9389 lên 0.9397 và macro-F1 từ 0.9034 lên 0.9048 trong khi cấu trúc giữ nguyên 41 tầng và 23,956 lá. Kết quả xác nhận HS tác động lên ước lượng dự đoán thay vì cách cây được xây dựng.
+
+E4 cho sự cân bằng tốt nhất. So với baseline, macro-F1 tăng 0.0019, accuracy tăng 0.0005 và train--test gap giảm từ 0.0611 xuống 0.0504, tương đương khoảng 17.6\%. Đồng thời, số lá giảm 7,595, tương đương 31.7\%, và độ sâu giảm từ 41 xuống 39. E3 có accuracy cao nhất, còn E4 có macro-F1 cao nhất và cấu trúc nhỏ hơn. Do Covertype mất cân bằng lớp, E4 được xem là cấu hình phù hợp nhất.
+
+\section{Độ phức tạp và khả năng tổng quát hóa}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{report_hs_performance_vs_complexity.png}
+    \caption{Quan hệ giữa macro-F1 và số lá của từng cấu hình Decision Tree.}
+    \label{fig:hs-complexity}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{report_hs_generalization_gap.png}
+    \caption{Train--test gap sau khi áp dụng các cấu hình regularization.}
+    \label{fig:hs-generalization-gap}
+\end{figure}
+
+Hai hình được tách riêng để phân biệt hai khía cạnh đánh giá: Hình~\ref{fig:hs-complexity} biểu diễn sự đánh đổi giữa hiệu năng và kích thước cây, trong khi Hình~\ref{fig:hs-generalization-gap} tập trung vào overfitting. Trên Covertype, E4 dịch chuyển theo hướng mong muốn: số lá giảm đáng kể, macro-F1 tăng nhẹ và gap thấp hơn baseline.
+
+\clearpage
+
+\section{Khả năng khái quát trên các bộ dữ liệu khác}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{report_hs_performance__letter_recognition.png}
+    \caption{Hiệu năng của năm cấu hình Decision Tree trên Letter Recognition.}
+    \label{fig:hs-performance-letter}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{report_hs_performance__handwritten_digits.png}
+    \caption{Hiệu năng của năm cấu hình Decision Tree trên Handwritten Digits.}
+    \label{fig:hs-performance-digits}
+\end{figure}
+
+HS không tạo mức cải thiện đồng đều. Trên Letter Recognition, HS với $\lambda=10$ tăng accuracy từ 0.8677 lên 0.8688 và macro-F1 từ 0.8677 lên 0.8688 nhưng không giảm số lá. Trên Digits, HS đạt accuracy 0.8222, thấp hơn baseline 0.8250; CCP + HS giảm số lá từ 142 xuống 64 nhưng macro-F1 chỉ đạt 0.8159.
+
+Các kết quả cho thấy HS phù hợp hơn khi cây có nhiều nhánh sâu và đủ dữ liệu để chọn $\lambda$ ổn định. Với dữ liệu nhỏ như Digits, lợi ích có thể bị lấn át bởi sai số lấy mẫu. Vì vậy, nghiên cứu không kết luận HS luôn làm tăng accuracy.
+
+\section{Trả lời RQ3 và thảo luận giới hạn}
+
+Đối với RQ3, HS cải thiện phần ước lượng xác suất và có thể giảm train--test gap mà không thay đổi cấu trúc. CCP cải thiện trực tiếp độ gọn của cây. Trên Covertype, kết hợp hai phương pháp tạo ra cấu hình có macro-F1 tốt nhất, gap thấp hơn và ít lá hơn baseline. Tuy nhiên, mức tăng accuracy và macro-F1 còn nhỏ, kết quả chưa được lặp lại qua nhiều random seed, và lợi ích không xuất hiện trên Digits. Do đó, kết luận mạnh nhất là HS + CCP cải thiện sự cân bằng giữa hiệu năng và độ phức tạp trên dữ liệu lớn, không phải bảo đảm tăng độ chính xác trong mọi bài toán.

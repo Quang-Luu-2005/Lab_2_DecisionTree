@@ -1,0 +1,10 @@
+\chapter*{Tóm tắt}
+\addcontentsline{toc}{chapter}{Tóm tắt}
+
+Nghiên cứu này đánh giá Decision Tree trên ba bài toán phân loại đa lớp có quy mô và cấu trúc khác nhau: Letter Recognition, Handwritten Digits và Covertype. Decision Tree được so sánh với Random Forest, Support Vector Machine và K-Nearest Neighbors theo một quy trình chia dữ liệu và hệ chỉ số thống nhất. Bên cạnh accuracy và macro-F1, nghiên cứu theo dõi train-test gap, thời gian thực thi và độ phức tạp của cây nhằm đánh giá đồng thời chất lượng dự đoán, overfitting và khả năng triển khai.
+
+Kết quả cho thấy không có mô hình tốt nhất trong mọi điều kiện. Random Forest dẫn đầu trên Letter Recognition, SVM đạt kết quả cao nhất trên Digits, trong khi Decision Tree tốt nhất trên Covertype ở cấu hình khảo sát. Để giảm hạn chế overfitting của cây đơn, nhóm áp dụng Hierarchical Shrinkage (HS), đồng thời kết hợp HS với Cost-Complexity Pruning (CCP). Trên Covertype, cấu hình CCP + HS tăng nhẹ macro-F1, giảm train-test gap khoảng 17.6\% và giảm số lá khoảng 31.7\% so với cây cơ sở. Kết quả cho thấy cải tiến đem lại sự cân bằng tốt hơn giữa hiệu năng, khả năng tổng quát hóa và độ phức tạp, dù lợi ích không đồng đều trên các bộ dữ liệu nhỏ.
+
+\noindent\textbf{Từ khóa:} Decision Tree, Hierarchical Shrinkage, Cost-Complexity Pruning, phân loại đa lớp, GPU, Covertype.
+
+\clearpage
