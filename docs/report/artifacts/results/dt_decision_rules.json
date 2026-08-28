@@ -1,0 +1,649 @@
+{
+  "dataset": "letter_recognition",
+  "baseline_metrics": {
+    "depth": 31,
+    "leaves": 1965,
+    "accuracy": 0.8677021960364221,
+    "macro_f1": 0.8676944398593799
+  },
+  "feature_importances": [
+    {
+      "feature": "x_ege",
+      "importance": 0.16447110706006474,
+      "percentage": 16.45,
+      "description": "Số cạnh quét từ trái sang phải (Mean edge count left-to-right)"
+    },
+    {
+      "feature": "y2bar",
+      "importance": 0.12332286224934824,
+      "percentage": 12.33,
+      "description": "Phương hại Y (Độ phân tán dọc - Mean Y variance)"
+    },
+    {
+      "feature": "y_ege",
+      "importance": 0.10319711668806289,
+      "percentage": 10.32,
+      "description": "Số cạnh quét từ dưới lên trên (Mean edge count bottom-to-top)"
+    },
+    {
+      "feature": "x2bar",
+      "importance": 0.08359305309423329,
+      "percentage": 8.36,
+      "description": "Phương hại X (Độ phân tán ngang - Mean X variance)"
+    },
+    {
+      "feature": "xegvy",
+      "importance": 0.07866858701029839,
+      "percentage": 7.87,
+      "description": "Tương quan cạnh X với vị trí Y (Correlation of X-edge with Y)"
+    },
+    {
+      "feature": "x2ybr",
+      "importance": 0.07426086506663715,
+      "percentage": 7.43,
+      "description": "Độ cong tương quan X^2*Y (Mean X^2 Y)"
+    },
+    {
+      "feature": "xy2br",
+      "importance": 0.0675155494607092,
+      "percentage": 6.75,
+      "description": "Độ cong tương quan X*Y^2 (Mean X Y^2)"
+    },
+    {
+      "feature": "y_bar",
+      "importance": 0.06605161021028426,
+      "percentage": 6.61,
+      "description": "Tọa độ Y trung bình các điểm ảnh bật (Mean Y of on pixels)"
+    },
+    {
+      "feature": "xybar",
+      "importance": 0.06497269758192845,
+      "percentage": 6.5,
+      "description": "Độ tương quan X-Y (Mean X Y correlation)"
+    },
+    {
+      "feature": "yegvx",
+      "importance": 0.052810248869510676,
+      "percentage": 5.28,
+      "description": "Tương quan cạnh Y với vị trí X (Correlation of Y-edge with X)"
+    },
+    {
+      "feature": "x_bar",
+      "importance": 0.04891754455185191,
+      "percentage": 4.89,
+      "description": "Tọa độ X trung bình các điểm ảnh bật (Mean X of on pixels)"
+    },
+    {
+      "feature": "y_box",
+      "importance": 0.0189747438680991,
+      "percentage": 1.9,
+      "description": "Vị trí thẳng đứng hộp chứa chữ (Vertical position of box)"
+    },
+    {
+      "feature": "onpix",
+      "importance": 0.016150518557430858,
+      "percentage": 1.62,
+      "description": "Tổng số điểm ảnh bật (Total number of on pixels)"
+    },
+    {
+      "feature": "high",
+      "importance": 0.014914691822603701,
+      "percentage": 1.49,
+      "description": "Chiều cao hộp chứa chữ (Height of box)"
+    },
+    {
+      "feature": "width",
+      "importance": 0.011254457566803629,
+      "percentage": 1.13,
+      "description": "Chiều rộng hộp chứa chữ (Width of box)"
+    },
+    {
+      "feature": "x_box",
+      "importance": 0.010924346342133606,
+      "percentage": 1.09,
+      "description": "Vị trí nằm ngang hộp chứa chữ (Horizontal position of box)"
+    }
+  ],
+  "top_node_splits": [
+    {
+      "node_id": 0,
+      "depth": 0,
+      "feature": "x2ybr",
+      "feature_desc": "Độ cong tương quan X^2*Y (Mean X^2 Y)",
+      "threshold": 2.5,
+      "gini_impurity": 0.9613525439347081,
+      "gini_gain": 0.02087572610922106,
+      "samples": 14934,
+      "majority_class": "P",
+      "left_child_samples": 1118,
+      "right_child_samples": 13816
+    },
+    {
+      "node_id": 1,
+      "depth": 1,
+      "feature": "y2bar",
+      "feature_desc": "Phương hại Y (Độ phân tán dọc - Mean Y variance)",
+      "threshold": 3.5,
+      "gini_impurity": 0.7037707892639873,
+      "gini_gain": 0.2987537749826571,
+      "samples": 1118,
+      "majority_class": "A",
+      "left_child_samples": 478,
+      "right_child_samples": 640
+    },
+    {
+      "node_id": 2,
+      "depth": 2,
+      "feature": "x_ege",
+      "feature_desc": "Số cạnh quét từ trái sang phải (Mean edge count left-to-right)",
+      "threshold": 5.5,
+      "gini_impurity": 0.08507379072495225,
+      "gini_gain": 0.04404953401706751,
+      "samples": 478,
+      "majority_class": "A",
+      "left_child_samples": 465,
+      "right_child_samples": 13
+    },
+    {
+      "node_id": 3,
+      "depth": 3,
+      "feature": "x2bar",
+      "feature_desc": "Phương hại X (Độ phân tán ngang - Mean X variance)",
+      "threshold": 7.0,
+      "gini_impurity": 0.038200948086484,
+      "gini_gain": 0.021769716095479758,
+      "samples": 465,
+      "majority_class": "A",
+      "left_child_samples": 459,
+      "right_child_samples": 6
+    },
+    {
+      "node_id": 18,
+      "depth": 3,
+      "feature": "x_box",
+      "feature_desc": "Vị trí nằm ngang hộp chứa chữ (Horizontal position of box)",
+      "threshold": 4.5,
+      "gini_impurity": 0.14201183431952658,
+      "gini_gain": 0.14201183431952658,
+      "samples": 13,
+      "majority_class": "M",
+      "left_child_samples": 1,
+      "right_child_samples": 12
+    },
+    {
+      "node_id": 21,
+      "depth": 2,
+      "feature": "x_bar",
+      "feature_desc": "Tọa độ X trung bình các điểm ảnh bật (Mean X of on pixels)",
+      "threshold": 7.5,
+      "gini_impurity": 0.6439746093750001,
+      "gini_gain": 0.18927398044418248,
+      "samples": 640,
+      "majority_class": "L",
+      "left_child_samples": 375,
+      "right_child_samples": 265
+    },
+    {
+      "node_id": 22,
+      "depth": 3,
+      "feature": "y_ege",
+      "feature_desc": "Số cạnh quét từ dưới lên trên (Mean edge count bottom-to-top)",
+      "threshold": 4.5,
+      "gini_impurity": 0.14232177777777777,
+      "gini_gain": 0.07046813236481037,
+      "samples": 375,
+      "majority_class": "L",
+      "left_child_samples": 354,
+      "right_child_samples": 21
+    },
+    {
+      "node_id": 39,
+      "depth": 3,
+      "feature": "x_ege",
+      "feature_desc": "Số cạnh quét từ trái sang phải (Mean edge count left-to-right)",
+      "threshold": 0.5,
+      "gini_impurity": 0.8967461730153079,
+      "gini_gain": 0.14017799928800279,
+      "samples": 265,
+      "majority_class": "J",
+      "left_child_samples": 53,
+      "right_child_samples": 212
+    },
+    {
+      "node_id": 136,
+      "depth": 1,
+      "feature": "y_bar",
+      "feature_desc": "Tọa độ Y trung bình các điểm ảnh bật (Mean Y of on pixels)",
+      "threshold": 9.5,
+      "gini_impurity": 0.9596312286485731,
+      "gini_gain": 0.020876457414435556,
+      "samples": 13816,
+      "majority_class": "P",
+      "left_child_samples": 11169,
+      "right_child_samples": 2647
+    },
+    {
+      "node_id": 137,
+      "depth": 2,
+      "feature": "y_ege",
+      "feature_desc": "Số cạnh quét từ dưới lên trên (Mean edge count bottom-to-top)",
+      "threshold": 2.5,
+      "gini_impurity": 0.9557880477362418,
+      "gini_gain": 0.021438898829773456,
+      "samples": 11169,
+      "majority_class": "U",
+      "left_child_samples": 2648,
+      "right_child_samples": 8521
+    },
+    {
+      "node_id": 138,
+      "depth": 3,
+      "feature": "xegvy",
+      "feature_desc": "Tương quan cạnh X với vị trí Y (Correlation of X-edge with Y)",
+      "threshold": 7.5,
+      "gini_impurity": 0.8892965448471628,
+      "gini_gain": 0.10974131434495238,
+      "samples": 2648,
+      "majority_class": "U",
+      "left_child_samples": 825,
+      "right_child_samples": 1823
+    },
+    {
+      "node_id": 409,
+      "depth": 3,
+      "feature": "xy2br",
+      "feature_desc": "Độ cong tương quan X*Y^2 (Mean X Y^2)",
+      "threshold": 8.5,
+      "gini_impurity": 0.9483497703768405,
+      "gini_gain": 0.025003575952148194,
+      "samples": 8521,
+      "majority_class": "G",
+      "left_child_samples": 5213,
+      "right_child_samples": 3308
+    },
+    {
+      "node_id": 3500,
+      "depth": 2,
+      "feature": "x_ege",
+      "feature_desc": "Số cạnh quét từ trái sang phải (Mean edge count left-to-right)",
+      "threshold": 5.5,
+      "gini_impurity": 0.8668829672099585,
+      "gini_gain": 0.08016390835293552,
+      "samples": 2647,
+      "majority_class": "T",
+      "left_child_samples": 2290,
+      "right_child_samples": 357
+    },
+    {
+      "node_id": 3501,
+      "depth": 3,
+      "feature": "x2ybr",
+      "feature_desc": "Độ cong tương quan X^2*Y (Mean X^2 Y)",
+      "threshold": 8.5,
+      "gini_impurity": 0.8429011651188956,
+      "gini_gain": 0.08195882156177947,
+      "samples": 2290,
+      "majority_class": "T",
+      "left_child_samples": 807,
+      "right_child_samples": 1483
+    },
+    {
+      "node_id": 3860,
+      "depth": 3,
+      "feature": "x2bar",
+      "feature_desc": "Phương hại X (Độ phân tán ngang - Mean X variance)",
+      "threshold": 4.5,
+      "gini_impurity": 0.4263352399783443,
+      "gini_gain": 0.11296544761695537,
+      "samples": 357,
+      "majority_class": "W",
+      "left_child_samples": 294,
+      "right_child_samples": 63
+    }
+  ],
+  "top_rules": [
+    {
+      "leaf_id": 7,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar <= 3.50",
+        "x_ege <= 5.50",
+        "x2bar <= 7.00",
+        "xybar <= 12.50",
+        "x_box <= 5.50",
+        "yegvx <= 9.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar <= 3.50 AND x_ege <= 5.50 AND x2bar <= 7.00 AND xybar <= 12.50 AND x_box <= 5.50 AND yegvx <= 9.50 THEN Class = 'A'",
+      "predicted_class": "A",
+      "samples": 451,
+      "correct_samples": 1,
+      "purity": 0.0022172949002217295,
+      "depth": 7
+    },
+    {
+      "leaf_id": 9,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar <= 3.50",
+        "x_ege <= 5.50",
+        "x2bar <= 7.00",
+        "xybar <= 12.50",
+        "x_box <= 5.50",
+        "yegvx > 9.50",
+        "onpix <= 3.00"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar <= 3.50 AND x_ege <= 5.50 AND x2bar <= 7.00 AND xybar <= 12.50 AND x_box <= 5.50 AND yegvx > 9.50 AND onpix <= 3.00 THEN Class = 'G'",
+      "predicted_class": "G",
+      "samples": 1,
+      "correct_samples": 1,
+      "purity": 1.0,
+      "depth": 8
+    },
+    {
+      "leaf_id": 10,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar <= 3.50",
+        "x_ege <= 5.50",
+        "x2bar <= 7.00",
+        "xybar <= 12.50",
+        "x_box <= 5.50",
+        "yegvx > 9.50",
+        "onpix > 3.00"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar <= 3.50 AND x_ege <= 5.50 AND x2bar <= 7.00 AND xybar <= 12.50 AND x_box <= 5.50 AND yegvx > 9.50 AND onpix > 3.00 THEN Class = 'A'",
+      "predicted_class": "A",
+      "samples": 2,
+      "correct_samples": 1,
+      "purity": 0.5,
+      "depth": 8
+    },
+    {
+      "leaf_id": 12,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar <= 3.50",
+        "x_ege <= 5.50",
+        "x2bar <= 7.00",
+        "xybar <= 12.50",
+        "x_box > 5.50",
+        "yegvx <= 9.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar <= 3.50 AND x_ege <= 5.50 AND x2bar <= 7.00 AND xybar <= 12.50 AND x_box > 5.50 AND yegvx <= 9.50 THEN Class = 'M'",
+      "predicted_class": "M",
+      "samples": 1,
+      "correct_samples": 1,
+      "purity": 1.0,
+      "depth": 7
+    },
+    {
+      "leaf_id": 13,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar <= 3.50",
+        "x_ege <= 5.50",
+        "x2bar <= 7.00",
+        "xybar <= 12.50",
+        "x_box > 5.50",
+        "yegvx > 9.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar <= 3.50 AND x_ege <= 5.50 AND x2bar <= 7.00 AND xybar <= 12.50 AND x_box > 5.50 AND yegvx > 9.50 THEN Class = 'A'",
+      "predicted_class": "A",
+      "samples": 3,
+      "correct_samples": 1,
+      "purity": 0.3333333333333333,
+      "depth": 7
+    },
+    {
+      "leaf_id": 14,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar <= 3.50",
+        "x_ege <= 5.50",
+        "x2bar <= 7.00",
+        "xybar > 12.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar <= 3.50 AND x_ege <= 5.50 AND x2bar <= 7.00 AND xybar > 12.50 THEN Class = 'N'",
+      "predicted_class": "N",
+      "samples": 1,
+      "correct_samples": 1,
+      "purity": 1.0,
+      "depth": 5
+    },
+    {
+      "leaf_id": 16,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar <= 3.50",
+        "x_ege <= 5.50",
+        "x2bar > 7.00",
+        "y_ege <= 2.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar <= 3.50 AND x_ege <= 5.50 AND x2bar > 7.00 AND y_ege <= 2.50 THEN Class = 'H'",
+      "predicted_class": "H",
+      "samples": 1,
+      "correct_samples": 1,
+      "purity": 1.0,
+      "depth": 5
+    },
+    {
+      "leaf_id": 17,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar <= 3.50",
+        "x_ege <= 5.50",
+        "x2bar > 7.00",
+        "y_ege > 2.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar <= 3.50 AND x_ege <= 5.50 AND x2bar > 7.00 AND y_ege > 2.50 THEN Class = 'R'",
+      "predicted_class": "R",
+      "samples": 5,
+      "correct_samples": 1,
+      "purity": 0.2,
+      "depth": 5
+    },
+    {
+      "leaf_id": 19,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar <= 3.50",
+        "x_ege > 5.50",
+        "x_box <= 4.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar <= 3.50 AND x_ege > 5.50 AND x_box <= 4.50 THEN Class = 'A'",
+      "predicted_class": "A",
+      "samples": 1,
+      "correct_samples": 1,
+      "purity": 1.0,
+      "depth": 4
+    },
+    {
+      "leaf_id": 20,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar <= 3.50",
+        "x_ege > 5.50",
+        "x_box > 4.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar <= 3.50 AND x_ege > 5.50 AND x_box > 4.50 THEN Class = 'M'",
+      "predicted_class": "M",
+      "samples": 12,
+      "correct_samples": 1,
+      "purity": 0.08333333333333333,
+      "depth": 4
+    },
+    {
+      "leaf_id": 25,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar > 3.50",
+        "x_bar <= 7.50",
+        "y_ege <= 4.50",
+        "y_bar <= 5.50",
+        "y_ege <= 3.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar > 3.50 AND x_bar <= 7.50 AND y_ege <= 4.50 AND y_bar <= 5.50 AND y_ege <= 3.50 THEN Class = 'L'",
+      "predicted_class": "L",
+      "samples": 346,
+      "correct_samples": 1,
+      "purity": 0.002890173410404624,
+      "depth": 6
+    },
+    {
+      "leaf_id": 27,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar > 3.50",
+        "x_bar <= 7.50",
+        "y_ege <= 4.50",
+        "y_bar <= 5.50",
+        "y_ege > 3.50",
+        "xy2br <= 8.00"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar > 3.50 AND x_bar <= 7.50 AND y_ege <= 4.50 AND y_bar <= 5.50 AND y_ege > 3.50 AND xy2br <= 8.00 THEN Class = 'A'",
+      "predicted_class": "A",
+      "samples": 1,
+      "correct_samples": 1,
+      "purity": 1.0,
+      "depth": 7
+    },
+    {
+      "leaf_id": 28,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar > 3.50",
+        "x_bar <= 7.50",
+        "y_ege <= 4.50",
+        "y_bar <= 5.50",
+        "y_ege > 3.50",
+        "xy2br > 8.00"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar > 3.50 AND x_bar <= 7.50 AND y_ege <= 4.50 AND y_bar <= 5.50 AND y_ege > 3.50 AND xy2br > 8.00 THEN Class = 'L'",
+      "predicted_class": "L",
+      "samples": 1,
+      "correct_samples": 1,
+      "purity": 1.0,
+      "depth": 7
+    },
+    {
+      "leaf_id": 31,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar > 3.50",
+        "x_bar <= 7.50",
+        "y_ege <= 4.50",
+        "y_bar > 5.50",
+        "yegvx <= 7.50",
+        "y_bar <= 7.00"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar > 3.50 AND x_bar <= 7.50 AND y_ege <= 4.50 AND y_bar > 5.50 AND yegvx <= 7.50 AND y_bar <= 7.00 THEN Class = 'A'",
+      "predicted_class": "A",
+      "samples": 1,
+      "correct_samples": 1,
+      "purity": 1.0,
+      "depth": 7
+    },
+    {
+      "leaf_id": 32,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar > 3.50",
+        "x_bar <= 7.50",
+        "y_ege <= 4.50",
+        "y_bar > 5.50",
+        "yegvx <= 7.50",
+        "y_bar > 7.00"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar > 3.50 AND x_bar <= 7.50 AND y_ege <= 4.50 AND y_bar > 5.50 AND yegvx <= 7.50 AND y_bar > 7.00 THEN Class = 'N'",
+      "predicted_class": "N",
+      "samples": 1,
+      "correct_samples": 1,
+      "purity": 1.0,
+      "depth": 7
+    },
+    {
+      "leaf_id": 33,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar > 3.50",
+        "x_bar <= 7.50",
+        "y_ege <= 4.50",
+        "y_bar > 5.50",
+        "yegvx > 7.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar > 3.50 AND x_bar <= 7.50 AND y_ege <= 4.50 AND y_bar > 5.50 AND yegvx > 7.50 THEN Class = 'M'",
+      "predicted_class": "M",
+      "samples": 4,
+      "correct_samples": 1,
+      "purity": 0.25,
+      "depth": 6
+    },
+    {
+      "leaf_id": 36,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar > 3.50",
+        "x_bar <= 7.50",
+        "y_ege > 4.50",
+        "x2bar <= 6.50",
+        "onpix <= 5.00"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar > 3.50 AND x_bar <= 7.50 AND y_ege > 4.50 AND x2bar <= 6.50 AND onpix <= 5.00 THEN Class = 'S'",
+      "predicted_class": "S",
+      "samples": 10,
+      "correct_samples": 1,
+      "purity": 0.1,
+      "depth": 6
+    },
+    {
+      "leaf_id": 37,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar > 3.50",
+        "x_bar <= 7.50",
+        "y_ege > 4.50",
+        "x2bar <= 6.50",
+        "onpix > 5.00"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar > 3.50 AND x_bar <= 7.50 AND y_ege > 4.50 AND x2bar <= 6.50 AND onpix > 5.00 THEN Class = 'A'",
+      "predicted_class": "A",
+      "samples": 4,
+      "correct_samples": 1,
+      "purity": 0.25,
+      "depth": 6
+    },
+    {
+      "leaf_id": 38,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar > 3.50",
+        "x_bar <= 7.50",
+        "y_ege > 4.50",
+        "x2bar > 6.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar > 3.50 AND x_bar <= 7.50 AND y_ege > 4.50 AND x2bar > 6.50 THEN Class = 'R'",
+      "predicted_class": "R",
+      "samples": 7,
+      "correct_samples": 1,
+      "purity": 0.14285714285714285,
+      "depth": 5
+    },
+    {
+      "leaf_id": 41,
+      "conditions": [
+        "x2ybr <= 2.50",
+        "y2bar > 3.50",
+        "x_bar > 7.50",
+        "x_ege <= 0.50",
+        "y_ege <= 1.50"
+      ],
+      "rule_str": " IF x2ybr <= 2.50 AND y2bar > 3.50 AND x_bar > 7.50 AND x_ege <= 0.50 AND y_ege <= 1.50 THEN Class = 'J'",
+      "predicted_class": "J",
+      "samples": 47,
+      "correct_samples": 1,
+      "purity": 0.02127659574468085,
+      "depth": 5
+    }
+  ],
+  "total_rules_extracted": 1965
+}
