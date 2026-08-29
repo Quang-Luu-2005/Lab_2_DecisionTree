@@ -293,7 +293,7 @@ KHOA CÔNG NGHỆ THÔNG TIN}
   \chaptertag{4}{PHƯƠNG PHÁP NGHIÊN CỨU}
   \small
   \setlength{\tabcolsep}{3.5pt}
-  \begin{tabularx}{\textwidth}{@{}L{2.8cm}C{1.55cm}C{1.35cm}C{1.0cm}Y@{}}
+  \begin{tabularx}{\textwidth}{@{}L{2.65cm}C{1.55cm}C{1.60cm}C{1.0cm}Y@{}}
     \toprule
     \textbf{Dataset} & \textbf{Mẫu} & \textbf{Features} & \textbf{Lớp} & \textbf{Vai trò} \\
     \midrule
@@ -402,7 +402,7 @@ KHOA CÔNG NGHỆ THÔNG TIN}
   \frametitle{Baseline Covertype dự đoán tốt nhưng tạo cây rất lớn}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
   \begin{center}
-    \includegraphics[width=0.92\linewidth,height=0.40\textheight,keepaspectratio]{dt_covertype_baseline__tree_top_levels.png}
+    \includegraphics[width=0.92\linewidth,height=0.36\textheight,keepaspectratio]{dt_covertype_baseline__tree_top_levels.png}
   \end{center}
   \vspace{-0.12cm}
   \begin{center}
@@ -410,8 +410,8 @@ KHOA CÔNG NGHỆ THÔNG TIN}
     \metric{accentorange}{6,11\%}{Error rate}\hfill
     \metric{boxframe}{90,34\%}{Macro-F1}
   \end{center}
-  \vspace{0.12cm}
-  {\small\textbf{Một luật top-level:} nếu \texttt{Elevation $\leq$ 3044,5}, mẫu đi sang nhánh mà lớp 2 chiếm ưu thế. Cây đầy đủ sâu \textbf{41 tầng} với \textbf{23.956 lá}.}
+  \vspace{-0.16cm}
+  {\scriptsize\textbf{Luật:} \texttt{Elevation $\leq$ 3044,5} $\rightarrow$ nhánh lớp 2. \textbf{Độ phức tạp:} depth = 41; leaves = 23.956.}
   \sourcefooter{Baseline CART trên Covertype; hình chỉ hiển thị 3 tầng đầu.}
   \note{[Sources] dt_covertype_scalability baseline result; tree exported with scikit-learn 1.6.1.\\
   Talk track (1:00): Đọc một split thật để chứng minh tính diễn giải. Sau đó đối chiếu với 23.956 lá: giải thích cục bộ được, nhưng toàn cây quá lớn để kiểm soát.}
