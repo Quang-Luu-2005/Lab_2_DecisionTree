@@ -7,6 +7,7 @@ __pycache__/
 .coverage
 htmlcov/
 .tmp/
+.tmp_*/
 
 # Virtual environments and local settings
 .venv/
@@ -42,6 +43,7 @@ docs/references/**/assets/
 # Large model binaries extracted from report result ZIPs
 docs/report/artifacts/models/
 tmp/
+tmp_*/
 
 # LaTeX build artifacts
 *.aux
@@ -70,4 +72,5 @@ tmp/
 *.toc
 *.vrb
 *.xdv
+*-blx.bib
 main.pdf
