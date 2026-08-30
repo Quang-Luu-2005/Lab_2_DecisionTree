@@ -143,7 +143,7 @@ def download_letter() -> dict[str, object]:
 
     return {
         "id": "letter_recognition",
-        "role": "primary",
+        "role": "robustness",
         "source": "UCI Machine Learning Repository",
         "source_page": LETTER_SOURCE_PAGE,
         "mirror_source": source_used,
@@ -173,7 +173,7 @@ def materialize_digits() -> dict[str, object]:
 
     return {
         "id": "handwritten_digits",
-        "role": "cross_dataset",
+        "role": "robustness",
         "source": "scikit-learn load_digits (UCI optical handwritten digits test set)",
         "source_page": DIGITS_SOURCE_PAGE,
         "materialized_file": str(DIGITS_CSV.relative_to(PROJECT_ROOT)),
@@ -197,7 +197,7 @@ def materialize_covertype() -> dict[str, object]:
 
     return {
         "id": "covertype",
-        "role": "scalability",
+        "role": "primary",
         "source": "UCI Machine Learning Repository via sklearn.datasets.fetch_covtype",
         "source_page": COVERTYPE_SOURCE_PAGE,
         "materialized_file": str(COVERTYPE_CSV.relative_to(PROJECT_ROOT)),

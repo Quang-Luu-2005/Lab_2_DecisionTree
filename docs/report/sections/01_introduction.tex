@@ -1,35 +1,47 @@
 \chapter{Giới thiệu}
 
-\section{Bối cảnh và vấn đề nghiên cứu}
+\section{Bối cảnh và động lực}
 
-Decision Tree là mô hình học máy phổ biến nhờ khả năng diễn giải trực quan, không đòi hỏi chuẩn hóa đặc trưng và có thể biểu diễn các quan hệ phi tuyến \cite{breiman1984cart}. Mỗi dự đoán có thể được truy vết qua một chuỗi điều kiện, vì vậy mô hình phù hợp với các bài toán cần giải thích quyết định. Tuy nhiên, một cây đơn thường nhạy với dữ liệu huấn luyện, dễ phát triển quá sâu và dẫn đến overfitting. Cùng một cấu hình cũng có thể cho hiệu quả rất khác nhau khi quy mô, số chiều hoặc phân bố lớp thay đổi.
+Decision Tree là mô hình học máy phổ biến nhờ khả năng diễn giải trực quan, không yêu cầu chuẩn hóa đặc trưng và có thể biểu diễn quan hệ phi tuyến bằng các luật \textit{if--then} \cite{breiman1984cart}. Tuy nhiên, phép chia tham lam có thể làm cây ghi nhớ tập huấn luyện, phát triển quá sâu và tạo nhiều lá chỉ chứa rất ít mẫu. Khi đó, mô hình vẫn giải thích được một dự đoán riêng lẻ nhưng khó diễn giải ở mức toàn cục và có nguy cơ phương sai cao.
 
-Từ vấn đề đó, nghiên cứu tập trung vào câu hỏi tổng quát: \textit{Decision Tree hoạt động như thế nào trên các bộ dữ liệu có cấu trúc khác nhau, và có thể cải thiện khả năng tổng quát hóa của cây mà vẫn duy trì tính diễn giải hay không?}
+Vấn đề trung tâm của nghiên cứu là: \textit{làm thế nào xây dựng, phân tích và cải tiến một Decision Tree sao cho cây vẫn dự đoán tốt, tổng quát hóa tốt hơn và giữ được cấu trúc đủ gọn để diễn giải?}
+
+\section{Phạm vi cốt lõi và phần mở rộng}
+
+Nghiên cứu được tổ chức thành hai tầng để bám sát yêu cầu Lab trước khi mở rộng:
+
+\begin{itemize}
+    \item \textbf{Core Lab:} dùng Covertype làm case study chính để xây dựng Decision Tree cơ sở, trực quan cây sinh ra, phân tích split và luật quyết định, đo accuracy, error rate, macro-F1, confusion matrix, overfitting và đánh giá ba phương pháp cải tiến.
+    \item \textbf{Extended study:} dùng Letter Recognition và Handwritten Digits làm hai bộ dữ liệu kiểm tra độ bền của kết luận; Random Forest, SVM--RBF và KNN chỉ đóng vai trò mô hình đối chứng.
+\end{itemize}
+
+Mặc dù đề bài chỉ yêu cầu một bộ dữ liệu, Covertype được dùng để thực hiện đầy đủ mọi phân tích bắt buộc. Hai bộ dữ liệu còn lại giúp kiểm tra liệu kết luận về Decision Tree có giữ được trong các chế độ dữ liệu khác hay không, thay vì thay đổi trọng tâm của Lab.
+
+\section{Công trình liên quan}
+
+ID3 đặt nền móng cho việc sinh cây bằng information gain \cite{quinlan1986id3}; C4.5 mở rộng xử lý thuộc tính liên tục và dùng gain ratio \cite{quinlan1993c45}. Nghiên cứu này dùng CART với split nhị phân, Gini impurity và Cost-Complexity Pruning \cite{breiman1984cart}. Random Forest giảm phương sai bằng ensemble nhiều cây \cite{breiman2001rf}; SVM và KNN đại diện lần lượt cho phương pháp kernel và phương pháp dựa trên lân cận \cite{cortes1995svm,cover1967knn}. Hierarchical Shrinkage bổ sung một hướng regularization khác: giữ nguyên topology nhưng làm mượt ước lượng dự đoán ở các nút sâu \cite{agarwal2022hs}.
+
+\section{Mục tiêu nghiên cứu}
+
+Các mục tiêu cốt lõi được đặt trước các mục tiêu mở rộng:
+
+\begin{enumerate}
+    \item xây dựng và đánh giá một Decision Tree cơ sở có cấu hình tái lập;
+    \item phân tích cây sinh ra thông qua root split, các luật quyết định, độ sâu, số lá và lỗi theo lớp;
+    \item áp dụng ba chiến lược cải tiến gồm pre-pruning, Cost-Complexity Pruning (CCP) và Hierarchical Shrinkage (HS);
+    \item so sánh cây cơ sở với từng cây cải tiến theo hiệu năng, overfitting và độ phức tạp;
+    \item kiểm tra độ bền của kết luận trên ba chế độ dữ liệu;
+    \item đặt Decision Tree trong tương quan với Random Forest, SVM và KNN mà không suy rộng vượt quá cấu hình đã khảo sát.
+\end{enumerate}
 
 \section{Câu hỏi nghiên cứu}
 
-Ba câu hỏi nghiên cứu được đặt ra:
-
 \begin{itemize}
-    \item \textbf{RQ1:} Hiệu năng của Decision Tree thay đổi như thế nào giữa dữ liệu nhiều lớp, dữ liệu ảnh ít mẫu và dữ liệu bảng quy mô lớn?
-    \item \textbf{RQ2:} So với Random Forest, SVM và KNN, Decision Tree có ưu thế và hạn chế gì về chất lượng dự đoán, overfitting và thời gian chạy?
-    \item \textbf{RQ3:} Hierarchical Shrinkage, khi sử dụng riêng hoặc kết hợp Cost-Complexity Pruning, cải thiện những khía cạnh nào của Decision Tree?
+    \item \textbf{RQ1:} Decision Tree thay đổi như thế nào giữa dữ liệu đa lớp, dữ liệu ảnh ít mẫu và dữ liệu bảng quy mô lớn?
+    \item \textbf{RQ2:} Decision Tree có ưu thế và hạn chế gì so với Random Forest, SVM và KNN trong các cấu hình đã thử nghiệm?
+    \item \textbf{RQ3:} Pre-pruning, CCP và HS tác động như thế nào đến hiệu năng, overfitting và độ phức tạp của cây?
 \end{itemize}
-
-\section{Mục tiêu và đóng góp}
-
-Nghiên cứu hướng tới các mục tiêu sau:
-
-\begin{itemize}
-    \item xây dựng quy trình thực nghiệm thống nhất cho ba bài toán phân loại đa lớp;
-    \item đánh giá mô hình theo accuracy, macro-F1, train-test gap, độ phức tạp và thời gian chạy;
-    \item so sánh Decision Tree với ba mô hình đối chứng đại diện cho ensemble, kernel và phương pháp dựa trên khoảng cách;
-    \item kiểm tra khả năng mở rộng trên Covertype với hơn nửa triệu mẫu;
-    \item đánh giá định lượng tác động của HS và CCP lên dự đoán, overfitting và cấu trúc cây.
-\end{itemize}
-
-Đóng góp chính của nghiên cứu là một phân tích thực nghiệm thống nhất trên ba kiểu dữ liệu, đi kèm đánh giá rõ ràng về giới hạn của từng mô hình. Đối với cải tiến Decision Tree, nghiên cứu tách biệt vai trò của HS trong việc làm mượt dự đoán và vai trò của CCP trong việc giảm độ phức tạp cấu trúc.
 
 \section{Cấu trúc báo cáo}
 
-Chương 2 trình bày dữ liệu và lý do lựa chọn. Chương 3 mô tả mô hình, quy trình thực nghiệm, chỉ số và môi trường tính toán. Chương 4 báo cáo kết quả so sánh và thảo luận. Chương 5 trình bày phương pháp cải tiến Decision Tree và phân tích tác động của HS kết hợp CCP. Chương 6 tổng kết các phát hiện, giới hạn và hướng phát triển.
+Chương 2 mô tả dữ liệu và vai trò của từng bộ dữ liệu. Chương 3 trình bày CART cơ sở, cấu hình, chỉ số và protocol. Chương 4 phân tích trực tiếp cây Covertype sinh ra. Chương 5 trình bày ba phương pháp cải tiến và thí nghiệm kết hợp. Chương 6 tổng hợp so sánh cốt lõi, robustness, benchmark, tính tái lập và giới hạn. Chương 7 kết luận và trả lời ba câu hỏi nghiên cứu.

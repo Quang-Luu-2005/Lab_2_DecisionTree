@@ -4,9 +4,9 @@ The assignment requires one dataset. The project uses three datasets with distin
 
 | Dataset | Role | Expected shape | Target | Source |
 |---|---|---:|---|---|
-| UCI Letter Recognition | Primary Decision Tree study | 20,000 x 16 | 26 uppercase letters A-Z | [UCI dataset 59](https://archive.ics.uci.edu/dataset/59/letter%2Brecognition) |
-| Handwritten Digits | Cross-dataset comparison | 1,797 x 64 | 10 digits 0-9 | [`sklearn.datasets.load_digits`](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html) |
-| UCI Covertype | Scalability experiment | 581,012 x 54 | 7 forest cover types | [UCI dataset 31](https://archive.ics.uci.edu/dataset/31/covertype) |
+| UCI Letter Recognition | Robustness: multiclass geometric features | 20,000 x 16 | 26 uppercase letters A-Z | [UCI dataset 59](https://archive.ics.uci.edu/dataset/59/letter%2Brecognition) |
+| Handwritten Digits | Robustness: small image dataset | 1,797 x 64 | 10 digits 0-9 | [`sklearn.datasets.load_digits`](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html) |
+| UCI Covertype | Primary Decision Tree case study | 581,012 x 54 | 7 forest cover types | [UCI dataset 31](https://archive.ics.uci.edu/dataset/31/covertype) |
 
 Run `python scripts/download_datasets.py` from the repository root. The script:
 
@@ -17,10 +17,9 @@ Run `python scripts/download_datasets.py` from the repository root. The script:
 
 Raw data is ignored by Git. Keep `dataset_manifest.json` locally with the downloaded files and regenerate it when refreshing data.
 
-Letter Recognition remains the primary dataset for the complete baseline/improvement study.
-Digits is used for the cross-dataset representation experiment. Covertype is limited to a
-scalability comparison: baseline versus regularized Decision Tree, 5-fold cross-validation,
-runtime, generalization gap, and tree complexity.
+Covertype is the primary case study used for the complete baseline, resulting-tree analysis,
+error analysis and E0-E4 improvement comparison. Letter Recognition and Digits are robustness
+datasets used to test whether conclusions generalize to different data regimes.
 
 ## Candidate checked but not used
 

@@ -15,6 +15,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{array}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{float}
 \usepackage{caption}
 \usepackage{xcolor}
@@ -40,6 +42,14 @@
 
 \definecolor{labblue}{RGB}{20,63,107}
 \hypersetup{colorlinks=true,linkcolor=labblue,urlcolor=labblue}
+
+% Điền thông tin nhóm tại một nơi duy nhất trước khi nộp.
+\newcommand{\lecturername}{[GIẢNG VIÊN]}
+\newcommand{\groupname}{[TÊN NHÓM / MÃ NHÓM]}
+\newcommand{\memberone}{[HỌ TÊN -- MSSV]}
+\newcommand{\membertwo}{[HỌ TÊN -- MSSV]}
+\newcommand{\memberthree}{[HỌ TÊN -- MSSV]}
+\newcommand{\memberfour}{[HỌ TÊN -- MSSV]}
 
 \pagestyle{fancy}
 \setlength{\headheight}{14.5pt}
@@ -73,11 +83,12 @@
     {\color{labblue}\rule{0.82\textwidth}{1.2pt}\par}
     \vfill
     \begin{tabular}{@{}ll@{}}
-        \textbf{Giảng viên:} & [GIẢNG VIÊN] \\
-        \textbf{Sinh viên:} & [HỌ TÊN - MSSV] \\
-                            & [HỌ TÊN - MSSV] \\
-                            & [HỌ TÊN - MSSV] \\
-                            & [HỌ TÊN - MSSV] \\
+        \textbf{Giảng viên:} & \lecturername \\
+        \textbf{Nhóm:} & \groupname \\
+        \textbf{Sinh viên:} & \memberone \\
+                            & \membertwo \\
+                            & \memberthree \\
+                            & \memberfour \\
     \end{tabular}
     \vfill
     {Thành phố Hồ Chí Minh, tháng 8 năm 2026\par}
@@ -85,6 +96,7 @@
 
 \hypersetup{pageanchor=true}
 \pagenumbering{roman}
+\input{sections/group_introduction}
 \input{sections/abstract}
 \tableofcontents
 \clearpage
@@ -103,7 +115,9 @@
 \input{sections/03_methodology}
 \input{sections/04_results_discussion}
 \input{sections/05_decision_tree_improvement}
+\input{sections/06_comparison_discussion}
 \input{sections/06_conclusion}
 \input{sections/07_references}
+\input{sections/08_appendices}
 
 \end{document}

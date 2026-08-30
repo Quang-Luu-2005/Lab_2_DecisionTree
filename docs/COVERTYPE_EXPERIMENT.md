@@ -1,10 +1,11 @@
-# Covertype scalability experiment
+# Covertype primary case study
 
 ## Mục đích
 
-Covertype bổ sung một thí nghiệm quy mô lớn cho bài Decision Tree: 581.012 mẫu, 54 đặc
-trưng số và 7 lớp. Bộ dữ liệu này không thay thế Letter Recognition là bộ chính; nó dùng để
-kiểm tra khả năng mở rộng, overfitting và đánh đổi giữa hiệu năng với độ phức tạp của cây.
+Covertype là case study chính của bài Decision Tree: 581,012 mẫu, 54 đặc trưng số và 7 lớp.
+Bộ dữ liệu được dùng để hoàn thành toàn bộ core Lab: baseline, resulting-tree analysis,
+decision rules, error analysis, overfitting và so sánh E0--E4. Letter Recognition và Digits
+đóng vai trò robustness datasets.
 
 ## Protocol
 
@@ -28,10 +29,10 @@ không được dùng vì không có ý nghĩa tương ứng trong bài phân lo
 ## Kết quả kiểm chứng cục bộ
 
 Lần Run All ngày 2026-08-25 trên toàn bộ dữ liệu đã hoàn tất thành công. Baseline đạt
-hold-out accuracy 0,9389 và macro-F1 0,9034; cây sâu 41 với 23.956 lá. Trong 5-fold CV,
-baseline đạt accuracy 0,9330 ± 0,0011 và macro-F1 0,8923 ± 0,0011. Regularized đạt
-accuracy 0,8966 ± 0,0019 và macro-F1 0,8388 ± 0,0028, đổi lại giảm độ sâu xuống 20 và
-số lá hold-out xuống 9.679. Thời gian phụ thuộc tải máy nên được lưu trong result JSON thay
+hold-out accuracy 0.9389 và macro-F1 0.9034; cây sâu 41 với 23,956 lá. Trong 5-fold CV,
+baseline đạt accuracy $0.9330 \pm 0.0011$ và macro-F1 $0.8923 \pm 0.0011$. Regularized đạt
+accuracy $0.8966 \pm 0.0019$ và macro-F1 $0.8388 \pm 0.0028$, đổi lại giảm độ sâu xuống 20 và
+số lá hold-out xuống 9,679. Thời gian phụ thuộc tải máy nên được lưu trong result JSON thay
 vì ghi cố định trong tài liệu. Đây chỉ là số kiểm chứng local; báo cáo cuối nên lấy số từ
 result JSON của lần chạy Kaggle chính thức.
 

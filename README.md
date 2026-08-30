@@ -51,6 +51,11 @@ Các thư mục đầu ra đã được tạo sẵn bằng `.gitkeep`; file lớ
 
 Dataset sources and the reproducible download command are documented in [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md).
 
+Covertype is the primary Lab case study; Letter Recognition and Handwritten Digits are
+robustness datasets. The consolidated protocol, headline results and artifact map are in
+[docs/EXPERIMENT_SUMMARY.md](docs/EXPERIMENT_SUMMARY.md). Viva questions and bounded answers
+are prepared in [docs/VIVA_QA.md](docs/VIVA_QA.md).
+
 ## Chuẩn bị Letter Recognition (thẻ 02–03)
 
 Sau khi tải dữ liệu, chạy pipeline audit, làm sạch và tạo split dùng chung:

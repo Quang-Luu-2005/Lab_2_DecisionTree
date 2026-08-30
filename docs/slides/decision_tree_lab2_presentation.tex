@@ -14,7 +14,6 @@
 
 \graphicspath{{../report/artifacts/figures/}{../../figures/}}
 
-% Bảng màu kế thừa từ mẫu slide của dự án.
 \definecolor{primaryblue}{HTML}{0065BD}
 \definecolor{secondaryblue}{HTML}{4A90E2}
 \definecolor{accentorange}{HTML}{FF6B35}
@@ -36,7 +35,6 @@
 \setbeamercolor{normal text}{fg=darkgray,bg=white}
 \setbeamerfont{frametitle}{size=\large,series=\bfseries}
 \setbeamerfont{title}{size=\LARGE,series=\bfseries}
-\setbeamerfont{subtitle}{size=\large}
 
 \newif\ifappendixslides
 \appendixslidesfalse
@@ -50,7 +48,7 @@
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.22\paperwidth,ht=2.8ex,dp=1.2ex,rightskip=4mm plus1fil]{date in head/foot}%
       \scriptsize\textcolor{darkgray}{%
-        \ifappendixslides Appendix A\insertframenumber/4\else\insertframenumber/26\fi}
+        \ifappendixslides Appendix A\insertframenumber/6\else\insertframenumber/24\fi}
     \end{beamercolorbox}%
   }
 }
@@ -62,39 +60,10 @@
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 
 \tcbset{
-  focusbox/.style={
-    colframe=boxframe,
-    colback=white,
-    coltext=darkgray,
-    boxrule=1.5pt,
-    arc=3mm,
-    left=4mm,
-    right=4mm,
-    top=3mm,
-    bottom=3mm
-  },
-  riskbox/.style={
-    colframe=accentorange,
-    colback=white,
-    coltext=darkgray,
-    boxrule=1.3pt,
-    arc=2.5mm,
-    left=3mm,
-    right=3mm,
-    top=2mm,
-    bottom=2mm
-  },
-  resultbox/.style={
-    colframe=boxframe,
-    colback=white,
-    coltext=darkgray,
-    boxrule=1.5pt,
-    arc=2.5mm,
-    left=3mm,
-    right=3mm,
-    top=2mm,
-    bottom=2mm
-  }
+  focusbox/.style={colframe=boxframe,colback=white,coltext=darkgray,boxrule=1.5pt,
+    arc=3mm,left=4mm,right=4mm,top=3mm,bottom=3mm},
+  riskbox/.style={colframe=accentorange,colback=white,coltext=darkgray,boxrule=1.3pt,
+    arc=2.5mm,left=3mm,right=3mm,top=2mm,bottom=2mm}
 }
 
 \newcommand{\metric}[3]{%
@@ -111,12 +80,11 @@
   \vspace{0.12cm}%
 }
 
-\title{Decision Tree Modeling\\and Improvement}
-\subtitle{Từ cây cơ sở đến Cost-Complexity Pruning và Hierarchical Shrinkage}
-\author{Nhóm thực hiện}
-\institute{TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN -- ĐHQG TP.HCM\\
-KHOA CÔNG NGHỆ THÔNG TIN}
-\date{Tháng 8 năm 2026}
+% Điền thông tin nhóm tại đây trước khi nộp.
+\newcommand{\memberone}{[HỌ TÊN -- MSSV]}
+\newcommand{\membertwo}{[HỌ TÊN -- MSSV]}
+\newcommand{\memberthree}{[HỌ TÊN -- MSSV]}
+\newcommand{\memberfour}{[HỌ TÊN -- MSSV]}
 
 \begin{document}
 
@@ -127,163 +95,108 @@ KHOA CÔNG NGHỆ THÔNG TIN}
     {\LARGE\bfseries\textcolor{primaryblue}{Decision Tree Modeling}}\\[0.08cm]
     {\LARGE\bfseries\textcolor{primaryblue}{and Improvement}}\\[0.35cm]
     {\large Từ cây cơ sở đến CCP và Hierarchical Shrinkage}\\[0.55cm]
-    {\color{primaryblue}\rule{0.74\textwidth}{1.2pt}}\\[0.55cm]
+    {\color{primaryblue}\rule{0.74\textwidth}{1.2pt}}\\[0.52cm]
     {\normalsize\textbf{Nhóm thực hiện}}\\[0.18cm]
-    {\small [HỌ TÊN -- MSSV] \quad [HỌ TÊN -- MSSV]}\\[0.08cm]
-    {\small [HỌ TÊN -- MSSV] \quad [HỌ TÊN -- MSSV]}\\[0.55cm]
-    {\small Introduction to Artificial Intelligence -- Lab 2}\\[0.1cm]
+    {\small \memberone \quad \membertwo}\\[0.08cm]
+    {\small \memberthree \quad \memberfour}\\[0.48cm]
+    {\small Introduction to Artificial Intelligence -- Lab 2}\\[0.08cm]
     {\scriptsize Trường Đại học Khoa học Tự nhiên -- ĐHQG TP.HCM}
   \end{center}
   \note{[Sources] Lab 2 assignment and project report.\\
-  Talk track (0:15): Giới thiệu ngắn tên đề tài và mục tiêu: hiểu cây, đo đúng, rồi cải tiến có kiểm chứng.}
+  Talk track (0:15): Giới thiệu đề tài và thông điệp: hiểu cây cơ sở trước, sau đó mới đánh giá cải tiến.}
 \end{frame}
 
 % 2 ---------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Sáu chương nối từ vấn đề đến bằng chứng}
-  \begin{enumerate}
-    \item \textbf{Bối cảnh và động lực}
-    \item \textbf{Các công trình liên quan}
-    \item \textbf{Kiến thức nền tảng}
-    \item \textbf{Phương pháp nghiên cứu}
-    \item \textbf{Thực nghiệm và phân tích kết quả}
-    \item \textbf{Kết luận}
-  \end{enumerate}
-  \vspace{0.28cm}
-  \begin{tcolorbox}[focusbox,width=0.88\textwidth,top=2mm,bottom=2mm]
-    \centering
-    Từ \textbf{vấn đề} $\rightarrow$ \textbf{cơ chế} $\rightarrow$ \textbf{thực nghiệm} $\rightarrow$ \textbf{kết luận}.
+  \frametitle{Cây dễ giải thích nhưng có thể ghi nhớ tập train}
+  \chaptertag{1}{BỐI CẢNH VÀ ĐỘNG LỰC}
+  \begin{tcolorbox}[riskbox,width=0.90\textwidth,top=3mm,bottom=3mm]
+    \centering\Large\bfseries
+    Split tham lam + điều kiện dừng lỏng $\Rightarrow$ cây sâu, nhiều lá và high variance.
   \end{tcolorbox}
-  \note{[Sources] Cấu trúc nghiên cứu của báo cáo nhóm.\\
-  Talk track (0:20): Giới thiệu sáu chương như một mạch lập luận. Không đọc chi tiết từng mục; chỉ cho biết phần đầu xây cơ sở để hiểu kết quả phía sau.}
+  \vspace{0.40cm}
+  \begin{itemize}
+    \item Mỗi path là một luật \textit{if--then} có thể truy vết.
+    \item Khả năng diễn giải toàn cục giảm nhanh khi số lá tăng.
+    \item Mục tiêu là giữ score, giảm gap và làm cây gọn hơn.
+  \end{itemize}
+  \note{[Sources] Breiman et al., Classification and Regression Trees, 1984.\\
+  Talk track (0:35): Nêu tension giữa interpretability và complexity; đây là động lực cho toàn bộ bài.}
 \end{frame}
 
 % 3 ---------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Cây sâu đánh đổi khả năng diễn giải lấy nguy cơ overfit}
+  \frametitle{Covertype hoàn thành core Lab; hai dataset còn lại kiểm tra độ bền}
   \chaptertag{1}{BỐI CẢNH VÀ ĐỘNG LỰC}
-  \begin{tcolorbox}[riskbox,width=0.90\textwidth,top=3mm,bottom=3mm]
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \textbf{Core Lab -- Covertype}
+      \begin{itemize}
+        \item Build và phân tích cây.
+        \item Accuracy, Error rate, Macro-F1.
+        \item Ba phương pháp cải tiến.
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{Extended study}
+      \begin{itemize}
+        \item Letter và Digits: robustness.
+        \item RF, SVM, KNN: benchmark.
+        \item CV, runtime, complexity.
+      \end{itemize}
+  \end{columns}
+  \vspace{0.35cm}
+  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=2mm,bottom=2mm]
     \centering
-    \Large\bfseries
-    Cây không giới hạn có thể ghi nhớ tập train và tạo hàng chục nghìn lá.
+    Trọng tâm xuyên suốt vẫn là \textbf{Decision Tree cơ sở $\rightarrow$ phân tích $\rightarrow$ cải tiến}.
   \end{tcolorbox}
-  \vspace{0.40cm}
-  \begin{itemize}
-    \item Cây đơn dễ đọc vì mỗi đường đi là một luật \textit{if--then}.
-    \item Split tham lam làm cây nhạy với nhiễu và các nhánh ít mẫu.
-    \item Bài toán không chỉ là tăng điểm số, mà còn phải kiểm soát độ phức tạp.
-  \end{itemize}
-  \note{[Sources] Breiman et al., Classification and Regression Trees, 1984; report Chapter 1.\\
-  Talk track (0:35): Mở bằng tension: cây dễ giải thích ở quy mô nhỏ nhưng chính ưu điểm này suy giảm khi cây quá sâu. Từ đó đặt mục tiêu kiểm soát phương sai và độ phức tạp.}
+  \note{[Sources] Scope and objectives in report Chapter 1.\\
+  Talk track (0:35): Giải thích vì sao dùng ba dataset mà không lệch đề.}
 \end{frame}
 
 % 4 ---------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Ba câu hỏi dẫn đường cho toàn bộ nghiên cứu}
-  \chaptertag{1}{BỐI CẢNH VÀ ĐỘNG LỰC}
-  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=3mm,bottom=3mm]
-    \textbf{RQ1 -- Phù hợp dữ liệu}\\
-    Decision Tree hoạt động thế nào trên dữ liệu đa lớp, ảnh và dữ liệu bảng lớn?\\[0.38cm]
-    \textbf{RQ2 -- So sánh mô hình}\\
-    Khi nào cây đơn cạnh tranh được với Random Forest, SVM và KNN?\\[0.38cm]
-    \textbf{RQ3 -- Cải tiến}\\
-    Regularization có giảm overfitting mà vẫn giữ hiệu năng và khả năng diễn giải không?
-  \end{tcolorbox}
-  \note{[Sources] Mục tiêu nghiên cứu của nhóm.\\
-  Talk track (0:35): RQ1 hỏi phạm vi phù hợp, RQ2 đặt cây trong bối cảnh các mô hình khác, RQ3 kiểm tra giá trị của CCP và Hierarchical Shrinkage.}
-\end{frame}
-
-% 5 --------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Decision Tree phát triển từ ID3 và C4.5 đến CART}
+  \frametitle{CART bổ sung split nhị phân, Gini và pruning cho cây quyết định}
   \chaptertag{2}{CÁC CÔNG TRÌNH LIÊN QUAN}
   \small
   \begin{tabularx}{\textwidth}{@{}L{2.2cm}L{2.8cm}Y@{}}
     \toprule
-    \textbf{Thuật toán} & \textbf{Công trình} & \textbf{Đóng góp chính} \\
+    \textbf{Thuật toán} & \textbf{Công trình} & \textbf{Đóng góp} \\
     \midrule
-    ID3 & Quinlan (1986) & Chọn thuộc tính bằng information gain \\
-    C4.5 & Quinlan (1993) & Xử lý thuộc tính liên tục và dùng gain ratio \\
-    \textcolor{primaryblue}{\textbf{CART}} & \textcolor{primaryblue}{\textbf{Breiman et al. (1984)}} & \textcolor{primaryblue}{\textbf{Binary split, Gini impurity và pruning}} \\
+    ID3 & Quinlan (1986) & Information gain \\
+    C4.5 & Quinlan (1993) & Feature liên tục, gain ratio \\
+    \textcolor{primaryblue}{\textbf{CART}} & \textcolor{primaryblue}{\textbf{Breiman et al. (1984)}} & \textcolor{primaryblue}{\textbf{Binary split, Gini, cost-complexity pruning}} \\
+    HS & Agarwal et al. (2022) & Làm mượt prediction theo hierarchy \\
     \bottomrule
   \end{tabularx}
-  \vspace{0.36cm}
-  \begin{tcolorbox}[focusbox,width=0.90\textwidth,top=2mm,bottom=2mm]
-    \centering
-    Nghiên cứu dùng \textbf{CART} qua \texttt{DecisionTreeClassifier} của scikit-learn.
-  \end{tcolorbox}
-  \note{[Sources] Quinlan, Induction of Decision Trees, 1986; Quinlan, C4.5, 1993; Breiman et al., Classification and Regression Trees, 1984.\\
-  Talk track (0:30): Đặt CART vào lịch sử ngắn của Decision Tree. Nhóm dùng CART vì split nhị phân, Gini và cơ chế pruning phù hợp trực tiếp với bài toán nghiên cứu.}
+  \vspace{0.35cm}
+  \centering
+  Nghiên cứu dùng CART làm baseline và HS như prediction regularization.
+  \note{[Sources] Quinlan 1986; Quinlan 1993; Breiman et al. 1984; Agarwal et al. 2022.\\
+  Talk track (0:35): Đặt baseline và cải tiến vào đúng lịch sử phương pháp.}
 \end{frame}
 
-% 6 --------------------------------------------------------------------------
+% 5 ---------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Ba mô hình đối chứng đại diện cho ba cơ chế khác nhau}
-  \chaptertag{2}{CÁC CÔNG TRÌNH LIÊN QUAN}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.31\textwidth}
-      \textbf{Random Forest}\\[0.15cm]
-      Ensemble nhiều cây để giảm phương sai.
-    \column{0.31\textwidth}
-      \textbf{SVM--RBF}\\[0.15cm]
-      Tạo ranh giới phi tuyến bằng kernel.
-    \column{0.31\textwidth}
-      \textbf{KNN}\\[0.15cm]
-      Dự đoán theo các điểm lân cận.
-  \end{columns}
-  \vspace{0.62cm}
-  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=3mm,bottom=3mm]
-    \centering
-    Đối chứng trả lời câu hỏi: \textbf{Decision Tree cơ bản mạnh ở đâu trước khi cải tiến?}
-  \end{tcolorbox}
-  \note{[Sources] Breiman, Random Forests, 2001; Cortes and Vapnik, 1995; Cover and Hart, 1967.\\
-  Talk track (0:30): Ba đối chứng bao phủ ensemble, kernel và dự đoán theo khoảng cách. Chúng được dùng để xác định phạm vi phù hợp của cây cơ bản, chưa bàn đến cải tiến.}
-\end{frame}
-
-% 7 --------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Gini đo mức độ hỗn tạp tại mỗi nút}
+  \frametitle{CART chọn phép chia làm giảm Gini nhiều nhất}
   \chaptertag{3}{KIẾN THỨC NỀN TẢNG}
-  \begin{tcolorbox}[focusbox,width=0.78\textwidth,top=4mm,bottom=4mm]
+  \begin{tcolorbox}[focusbox,width=0.90\textwidth,top=3mm,bottom=3mm]
     \centering
-    {\Large
-    $\displaystyle Gini(S)=1-\sum_{k=1}^{K}p_k^2$}
+    $\displaystyle Gini(S)=1-\sum_{k=1}^{K}p_k^2$\\[0.32cm]
+    $\displaystyle \Delta G(j,t)=Gini(S)-\frac{n_L}{n}Gini(S_L)-\frac{n_R}{n}Gini(S_R)$
   \end{tcolorbox}
-  \vspace{0.45cm}
+  \vspace{0.38cm}
   \begin{itemize}
-    \item $p_k$ là tỷ lệ lớp $k$ trong tập mẫu tại nút.
-    \item $Gini=0$ khi tất cả mẫu thuộc cùng một lớp.
-    \item CART tìm phép chia làm hai nút con thuần hơn nút cha.
+    \item $Gini=0$ khi nút chỉ chứa một lớp.
+    \item Chọn $(j^\star,t^\star)=\arg\max_{j,t}\Delta G(j,t)$.
+    \item Lặp cùng phép chọn tham lam tại mỗi nút con.
   \end{itemize}
   \note{[Sources] Breiman et al., 1984.\\
-  Talk track (0:35): Giải thích trực giác: Gini thấp nghĩa nút gần thuần. Công thức là nền tảng để so sánh các candidate split ở slide tiếp theo.}
+  Talk track (0:45): Giải thích impurity và weighted gain; đây là toán học cốt lõi của baseline.}
 \end{frame}
 
-% 8 --------------------------------------------------------------------------
+% 6 ---------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{CART chọn split tạo mức giảm Gini lớn nhất}
-  \chaptertag{3}{KIẾN THỨC NỀN TẢNG}
-  \begin{tcolorbox}[focusbox,width=0.88\textwidth,top=3mm,bottom=3mm]
-    \centering
-    $\displaystyle
-      \Delta G(j,t)=Gini(S)
-      -\frac{n_L}{n}Gini(S_L)
-      -\frac{n_R}{n}Gini(S_R)$\\[0.35cm]
-    $\displaystyle (j^\star,t^\star)=\arg\max_{j,t}\Delta G(j,t)$
-  \end{tcolorbox}
-  \vspace{0.40cm}
-  \begin{itemize}
-    \item $j$ là feature; $t$ là threshold.
-    \item Gain lớn nghĩa hai nút con giảm hỗn tạp nhiều nhất.
-    \item Phép chọn tham lam được lặp lại ở từng nút.
-  \end{itemize}
-  \note{[Sources] Breiman et al., 1984.\\
-  Talk track (0:40): Đọc công thức từ trái sang phải: impurity của nút cha trừ impurity có trọng số của hai nút con. Chọn feature và threshold có gain lớn nhất.}
-\end{frame}
-
-% 9 --------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Huấn luyện cây là một quá trình đệ quy}
+  \frametitle{Điều kiện dừng quyết định cây có phát triển quá sâu hay không}
   \chaptertag{3}{KIẾN THỨC NỀN TẢNG}
   \begin{tcolorbox}[focusbox,width=0.84\textwidth,top=3mm,bottom=3mm]
     {\small\ttfamily
@@ -291,421 +204,415 @@ KHOA CÔNG NGHỆ THÔNG TIN}
     \quad if Stop($S$): return Leaf($\hat p(y\mid S)$)\\
     \quad $(j^\star,t^\star)\leftarrow\arg\max_{j,t}\Delta G(j,t)$\\
     \quad $S_L,S_R\leftarrow$ Split($S,j^\star,t^\star$)\\
-    \quad return Node($j^\star,t^\star$,\\
-    \qquad BuildTree($S_L$), BuildTree($S_R$))}
+    \quad return Node(BuildTree($S_L$), BuildTree($S_R$))}
   \end{tcolorbox}
   \vspace{0.28cm}
-  \centering
-  \textcolor{accentorange}{\textbf{Điểm dễ overfit:}} điều kiện dừng quá lỏng khiến quá trình tiếp tục đến các nhánh rất ít mẫu.
-  \note{[Sources] Breiman et al., 1984; scikit-learn DecisionTreeClassifier documentation.\\
-  Talk track (0:40): Theo dõi một lời gọi BuildTree: kiểm tra dừng, tìm split tốt nhất, chia dữ liệu và gọi lại cho hai nhánh. Overfitting xuất hiện khi điều kiện dừng cho phép cây đi quá sâu.}
-\end{frame}
-
-% 10 --------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Suy luận chỉ đi qua một đường từ gốc đến lá}
-  \chaptertag{3}{KIẾN THỨC NỀN TẢNG}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.48\textwidth}
-      \begin{tcolorbox}[focusbox,top=3mm,bottom=3mm]
-        {\small\ttfamily
-        Predict($x,v$):\\
-        \quad while $v$ is not leaf:\\
-        \qquad $v\leftarrow$ left if $x_j\leq t$\\
-        \qquad else right\\
-        \quad return $\arg\max_k\hat p_k(v)$}
-      \end{tcolorbox}
-    \column{0.48\textwidth}
-      \textbf{Ba vị trí cải tiến}
-      \begin{itemize}
-        \item Điều kiện dừng.
-        \item Topology sau khi fit.
-        \item Xác suất tại các nút.
-      \end{itemize}
-  \end{columns}
-  \vspace{0.35cm}
-  \begin{tcolorbox}[riskbox,width=0.91\textwidth,top=2mm,bottom=2mm]
+  \begin{tcolorbox}[riskbox,width=0.88\textwidth,top=2mm,bottom=2mm]
     \centering
-    Lá ít mẫu có thể tạo xác suất quá cực đoan dù luật suy luận vẫn hợp lệ.
+    Stop quá lỏng $\Rightarrow$ nhánh ít mẫu $\Rightarrow$ prediction cực đoan và phương sai cao.
   \end{tcolorbox}
-  \note{[Sources] Breiman et al., 1984; project implementation.\\
-  Talk track (0:30): Mỗi mẫu chỉ đi một đường nên cây dự đoán nhanh và dễ giải thích. Tuy nhiên, xác suất ở lá ít mẫu có thể thiếu ổn định; đây là nơi HS can thiệp.}
+  \note{[Sources] Breiman et al., 1984; scikit-learn DecisionTreeClassifier documentation.\\
+  Talk track (0:40): Đi qua pseudocode và chỉ ra vị trí xuất hiện overfitting.}
 \end{frame}
 
-% 11 --------------------------------------------------------------------------
+% 7 ---------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Ba dataset đại diện cho ba cấu trúc dữ liệu}
+  \frametitle{Ba dataset tạo ra ba chế độ kiểm thử khác nhau}
   \chaptertag{4}{PHƯƠNG PHÁP NGHIÊN CỨU}
   \small
   \begin{tabularx}{\textwidth}{@{}L{3.0cm}C{1.8cm}C{1.6cm}Y@{}}
     \toprule
-    \textbf{Dataset} & \textbf{Mẫu} & \textbf{Features} & \textbf{Kiểu kiểm thử} \\
+    \textbf{Dataset} & \textbf{Mẫu} & \textbf{Features} & \textbf{Vai trò} \\
     \midrule
-    Letter Recognition & 18.668 & 16 & Đa lớp, đặc trưng hình học \\
-    Handwritten Digits & 1.797 & 64 & Ảnh ít mẫu, nhiều chiều \\
-    \textcolor{primaryblue}{\textbf{Covertype}} & \textcolor{primaryblue}{\textbf{581.012}} & \textcolor{primaryblue}{\textbf{54}} & \textcolor{primaryblue}{\textbf{Dữ liệu bảng lớn, mất cân bằng}} \\
+    Letter Recognition & 18,668 & 16 & Robustness: 26 lớp, feature hình học \\
+    Handwritten Digits & 1,797 & 64 & Robustness: ảnh nhỏ, nhiều chiều \\
+    \textcolor{primaryblue}{\textbf{Covertype}} & \textcolor{primaryblue}{\textbf{581,012}} & \textcolor{primaryblue}{\textbf{54}} & \textcolor{primaryblue}{\textbf{Primary: bảng lớn, 7 lớp mất cân bằng}} \\
     \bottomrule
   \end{tabularx}
-  \vspace{0.48cm}
+  \vspace{0.40cm}
   \centering
-  Covertype là bài toán chính; Letter và Digits kiểm tra độ bền của kết luận.
-  \note{[Sources] UCI Letter Recognition DOI 10.24432/C5ZP40; sklearn load_digits; UCI Covertype DOI 10.24432/C50K5N.\\
-  Talk track (0:35): Ba dataset không có vai trò ngang nhau. Covertype trả lời yêu cầu chính; hai bộ nhỏ là stress test cho cấu trúc dữ liệu khác.}
+  Covertype có đủ mẫu và complexity để quan sát tác động regularization.
+  \note{[Sources] UCI Letter Recognition; sklearn Digits; UCI Covertype.\\
+  Talk track (0:40): Nêu vai trò, không chỉ đọc số lượng mẫu.}
 \end{frame}
 
-% 12 --------------------------------------------------------------------------
+% 8 ---------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Covertype tạo đủ áp lực để đánh giá độ phức tạp cây}
+  \frametitle{Train-only validation giữ test set độc lập}
   \chaptertag{4}{PHƯƠNG PHÁP NGHIÊN CỨU}
-  \begin{center}
-    \metric{primaryblue}{581.012}{Mẫu}\hfill
-    \metric{boxframe}{54}{Features}\hfill
-    \metric{accentorange}{7}{Lớp}
-  \end{center}
-  \vspace{0.52cm}
+  \begin{tcolorbox}[focusbox,width=0.93\textwidth,top=4mm,bottom=4mm]
+    \centering\large
+    Data $\longrightarrow$ 80/20 stratified split\\[0.28cm]
+    Train $\longrightarrow$ 3-fold CV chọn tham số $\longrightarrow$ fit lại $\longrightarrow$ Test
+  \end{tcolorbox}
+  \vspace{0.38cm}
   \begin{itemize}
-    \item Quy mô lớn cho phép cây phát triển nhiều tầng và nhiều lá.
-    \item Phân bố lớp mất cân bằng làm accuracy chưa đủ để đánh giá.
-    \item Dữ liệu bảng phù hợp với các luật split theo feature và threshold.
+    \item \texttt{random\_state=42}; cùng test set cho mọi model.
+    \item Scaler chỉ fit train và chỉ dùng cho SVM/KNN.
+    \item Baseline Covertype được kiểm tra thêm bằng 5-fold CV.
   \end{itemize}
-  \vspace{0.05cm}
-  \begin{tcolorbox}[focusbox,width=0.90\textwidth,top=1mm,bottom=1mm]
-    \centering
-    Vì vậy Covertype được dùng làm \textbf{dataset dẫn chứng chính}.
-  \end{tcolorbox}
-  \note{[Sources] UCI Covertype DOI 10.24432/C50K5N; dataset manifest.\\
-  Talk track (0:30): Nhấn mạnh ba lý do chọn Covertype: lớn, mất cân bằng và là dữ liệu bảng. Đây là điều kiện phù hợp để đo cả prediction lẫn complexity.}
+  \note{[Sources] Project notebooks and shared split protocol.\\
+  Talk track (0:40): Chốt no leakage và vai trò khác nhau của 3-fold với 5-fold CV.}
 \end{frame}
 
-% 13 --------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Train và test được tách trước mọi bước lựa chọn mô hình}
-  \chaptertag{4}{PHƯƠNG PHÁP NGHIÊN CỨU}
-  \begin{tcolorbox}[focusbox,width=0.92\textwidth,top=4mm,bottom=4mm]
-    \centering
-    \Large
-    Dữ liệu sạch $\longrightarrow$ 80/20 stratified split\\[0.35cm]
-    $\longrightarrow$ train $\longrightarrow$ test cuối cùng
-  \end{tcolorbox}
-  \vspace{0.42cm}
-  \begin{itemize}
-    \item \texttt{random\_state=42} dùng chung.
-    \item Scaler chỉ fit trên train cho SVM và KNN.
-    \item Cross-validation chỉ truy cập tập train.
-  \end{itemize}
-  \note{[Sources] Project notebooks and report Chapter 3.\\
-  Talk track (0:35): Nhấn mạnh test set không tham gia chọn mô hình hay tham số. Đây là điều kiện để so sánh công bằng và tránh data leakage.}
-\end{frame}
-
-% 14 --------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Đánh giá cần đồng thời đo chất lượng và độ phức tạp}
-  \chaptertag{4}{PHƯƠNG PHÁP NGHIÊN CỨU}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.47\textwidth}
-      \textbf{Chất lượng dự đoán}
-      \begin{itemize}
-        \item Accuracy
-        \item Error rate
-        \item Macro-F1
-        \item Confusion matrix
-      \end{itemize}
-    \column{0.47\textwidth}
-      \textbf{Overfitting và triển khai}
-      \begin{itemize}
-        \item Train--test gap
-        \item Độ sâu
-        \item Số lá
-        \item Fit/prediction time
-      \end{itemize}
-  \end{columns}
-  \vspace{0.35cm}
-  \begin{tcolorbox}[focusbox,width=0.90\textwidth,top=2mm,bottom=2mm]
-    \centering
-    Macro-F1 cho mỗi lớp trọng số ngang nhau; số lá phản ánh trực tiếp khả năng diễn giải.
-  \end{tcolorbox}
-  \note{[Sources] scikit-learn metric definitions; project protocol.\\
-  Talk track (0:35): Không dùng một metric duy nhất. Macro-F1 bổ sung accuracy trên dữ liệu mất cân bằng; gap và số lá cho biết regularization có thật sự giúp hay không.}
-\end{frame}
-
-% 15 --------------------------------------------------------------------------
+% 9 ---------------------------------------------------------------------------
 \begin{frame}
   \frametitle{Baseline E0 là một CART chưa giới hạn độ sâu}
   \chaptertag{4}{PHƯƠNG PHÁP NGHIÊN CỨU}
   \begin{columns}[T,onlytextwidth]
-    \column{0.47\textwidth}
-      \textbf{Cấu hình cơ bản}
+    \column{0.48\textwidth}
+      \textbf{Cấu hình E0}
       \begin{itemize}
         \item \texttt{criterion=gini}
-        \item \texttt{random\_state=42}
-        \item Không đặt \texttt{max\_depth}
+        \item \texttt{splitter=best}
+        \item \texttt{max\_depth=None}
+        \item \texttt{min\_samples\_leaf=1}
         \item \texttt{ccp\_alpha=0}
       \end{itemize}
-    \column{0.47\textwidth}
-      \textbf{Vai trò của E0}
+    \column{0.46\textwidth}
+      \textbf{Chỉ số báo cáo}
       \begin{itemize}
-        \item Đo năng lực của cây chuẩn.
-        \item Làm mốc cho các mô hình đối chứng.
-        \item Bộc lộ overfitting và độ phức tạp.
+        \item Accuracy và Error rate
+        \item Macro-F1, confusion matrix
+        \item Train--test gap
+        \item Depth, number of leaves
       \end{itemize}
   \end{columns}
-  \vspace{0.34cm}
+  \vspace{0.22cm}
+  \centering
+  \texttt{random\_state=42}; các tham số khác dùng mặc định scikit-learn.
+  \note{[Sources] Baseline model metadata and scikit-learn documentation.\\
+  Talk track (0:35): Baseline chưa dùng bất kỳ cải tiến nào; đây là mốc E0.}
+\end{frame}
+
+% 10 --------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Root split của cây Covertype là Elevation $\leq$ 3044.5}
+  \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
+  \begin{center}
+    \includegraphics[width=0.95\linewidth,height=0.58\textheight,keepaspectratio]{dt_covertype_baseline__tree_top_levels.png}
+  \end{center}
+  \vspace{-0.18cm}
+  \centering
+  {\small Chỉ hiển thị các tầng đầu; toàn cây có \textbf{depth 41} và \textbf{23,956 leaves}.}
+  \note{[Sources] Covertype baseline model and exported top-level tree.\\
+  Talk track (0:50): Đọc root split, số mẫu ở root và nhấn mạnh chỉ top levels được hiển thị để giữ khả năng đọc.}
+\end{frame}
+
+% 11 --------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Các path thật cho thấy cây giải thích cục bộ nhưng khó đọc toàn cục}
+  \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
+  \small
+  \begin{tabularx}{\textwidth}{@{}L{1.3cm}L{2.1cm}Y@{}}
+    \toprule
+    \textbf{Rule} & \textbf{Kết quả} & \textbf{Điều kiện nổi bật trên path} \\
+    \midrule
+    R1 & Lớp 2; $n=264$ & Elevation thấp, Wilderness 0, gần hydrology \\
+    R2 & Lớp 5; $n=71$ & Elevation thấp, xa fire point và roadway $>621$ \\
+    R3 & Lớp 1; $n=298$ & Elevation $>3360.5$, Wilderness 2, Soil 31 vắng \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{0.24cm}
+  \begin{tcolorbox}[riskbox,width=0.91\textwidth,top=1mm,bottom=1mm]
+    \centering
+    Ba luật đều là lá thuần trên train, nhưng toàn cây có gần \textbf{24 nghìn luật}.
+  \end{tcolorbox}
+  \note{[Sources] Rules extracted from the stored baseline model; full paths in Appendix A3.\\
+  Talk track (0:45): Chứng minh interpretability bằng rule thật, sau đó chỉ ra giới hạn toàn cục.}
+\end{frame}
+
+% 12 --------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Baseline dự đoán tốt nhưng đạt lỗi train bằng không}
+  \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
+  \begin{center}
+    \metric{primaryblue}{93.89\%}{Test accuracy}\hfill
+    \metric{accentorange}{6.11\%}{Error rate}\hfill
+    \metric{boxframe}{90.34\%}{Macro-F1}
+  \end{center}
+  \vspace{0.55cm}
+  \begin{tcolorbox}[riskbox,width=0.90\textwidth,top=3mm,bottom=3mm]
+    \centering\large
+    Train accuracy $=100\%$ $\Rightarrow$ train--test gap $=6.11$ điểm phần trăm.
+  \end{tcolorbox}
+  \vspace{0.35cm}
+  \centering
+  Zero train error + depth 41 + 23,956 leaves là bằng chứng nhất quán với high variance.
+  \note{[Sources] Covertype baseline JSON and holdout comparison.\\
+  Talk track (0:45): Test accuracy cao không phủ nhận overfitting; phải đọc cùng gap và complexity.}
+\end{frame}
+
+% 13 --------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Lớp 4 và 5 có recall thấp hơn rõ rệt}
+  \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.62\textwidth}
+      \includegraphics[width=\linewidth,height=0.63\textheight,keepaspectratio]{dt_covertype_scalability__confusion_matrix.png}
+    \column{0.34\textwidth}
+      \textbf{Recall theo lớp}
+      \begin{itemize}
+        \item Lớp 1: 93.80\%
+        \item Lớp 2: 94.83\%
+        \item Lớp 4: 84.88\%
+        \item Lớp 5: 84.47\%
+        \item Lớp 6: 87.24\%
+      \end{itemize}
+      \vspace{0.15cm}
+      Macro-F1 giúp lớp nhỏ không bị lớp 1--2 lấn át.
+  \end{columns}
+  \note{[Sources] Covertype baseline confusion matrix and per-class metrics.\\
+  Talk track (0:50): Nêu các cặp lỗi chính và giải thích vì sao ưu tiên macro-F1.}
+\end{frame}
+
+% 14 --------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Ba phương pháp nhắm vào ba điểm yếu khác nhau của baseline}
+  \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
+  \small
+  \begin{tabularx}{\textwidth}{@{}L{3.1cm}L{3.0cm}Y@{}}
+    \toprule
+    \textbf{Quan sát ở E0} & \textbf{Phương pháp} & \textbf{Vị trí tác động} \\
+    \midrule
+    Cây tiếp tục phát triển sâu & Pre-pruning & Điều kiện dừng \\
+    Nhiều subtree đóng góp nhỏ & CCP & Topology sau khi fit \\
+    Nút sâu dự đoán quá tự tin & HS & Xác suất tại nút \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{0.36cm}
+  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=2mm,bottom=2mm]
+    \centering
+    E1, E2, E3 là ba phương pháp; \textbf{E4 chỉ là combined extension}.
+  \end{tcolorbox}
+  \note{[Sources] Baseline analysis; Breiman et al. 1984; Agarwal et al. 2022.\\
+  Talk track (0:30): Đây là điểm chuyển rõ ràng từ Decision Tree cơ bản sang cải tiến.}
+\end{frame}
+
+% 15 --------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Pre-pruning giảm gap nhưng dừng cây quá sớm}
+  \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.46\textwidth}
+      \textbf{Covertype E1}
+      \begin{itemize}
+        \item \texttt{min\_samples\_leaf=5}
+        \item Leaves: 23,956 $\rightarrow$ 16,637
+        \item Gap: 6.11\% $\rightarrow$ 4.10\%
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{Đánh đổi}
+      \begin{itemize}
+        \item Accuracy: 92.97\%
+        \item Error rate: 7.03\%
+        \item Macro-F1: 88.85\%
+      \end{itemize}
+  \end{columns}
+  \vspace{0.35cm}
   \begin{tcolorbox}[riskbox,width=0.90\textwidth,top=2mm,bottom=2mm]
     \centering
-    E0 \textbf{chưa dùng} pre-pruning, Cost-Complexity Pruning hay Hierarchical Shrinkage.
+    Early stopping giảm variance nhưng đã loại cả cấu trúc hữu ích $\Rightarrow$ underfit.
   \end{tcolorbox}
-  \note{[Sources] scikit-learn DecisionTreeClassifier documentation; baseline notebook configuration.\\
-  Talk track (0:25): Chốt rõ baseline là CART chưa giới hạn độ sâu và chưa dùng bất kỳ cải tiến nào. Mọi kết quả ba slide tiếp theo đều thuộc Decision Tree cơ bản.}
+  \note{[Sources] HS benchmark summary and train-only CV selection.\\
+  Talk track (0:40): Pre-pruning giúp gap nhưng score giảm rõ, nên không phải cấu hình cuối.}
 \end{frame}
 
 % 16 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Không có mô hình tốt nhất trên mọi dataset}
+  \frametitle{CCP cắt 31.7\% số lá mà giữ nguyên hiệu năng test}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
-  \small
-  \begin{center}
-  \begin{tabular}{@{}L{3.0cm}L{2.7cm}C{1.7cm}C{1.7cm}@{}}
-    \toprule
-    \textbf{Dataset} & \textbf{Mô hình tốt nhất} & \textbf{Accuracy} & \textbf{Macro-F1} \\
-    \midrule
-    Letter Recognition & \textcolor{primaryblue}{\textbf{Random Forest}} & \textbf{95,13\%} & \textbf{95,12\%} \\
-    Handwritten Digits & \textcolor{primaryblue}{\textbf{SVM--RBF}} & \textbf{97,22\%} & \textbf{97,18\%} \\
-    Covertype & \textcolor{boxframe}{\textbf{Decision Tree}} & \textbf{93,89\%} & \textbf{90,34\%} \\
-    \bottomrule
-  \end{tabular}
-  \end{center}
-  \vspace{0.18cm}
-  \begin{tcolorbox}[focusbox,width=0.90\textwidth,top=2mm,bottom=2mm]
+  \begin{tcolorbox}[focusbox,width=0.88\textwidth,top=3mm,bottom=3mm]
     \centering
-    Cấu trúc dữ liệu quyết định lựa chọn mô hình; kết quả chỉ áp dụng cho cấu hình đã khảo sát.
+    $\displaystyle T_{\alpha}=\arg\min_{T\subseteq T_0}
+    \left[R(T)+\alpha|\mathcal{L}(T)|\right]$
   \end{tcolorbox}
-  \note{[Sources] gpu_three_dataset_four_model_comparison summary.\\
-  Talk track (0:45): RF thắng Letter, SVM thắng Digits, cây đơn thắng Covertype trong cấu hình này. Không suy rộng thành thứ hạng thuật toán phổ quát.}
+  \vspace{0.35cm}
+  \begin{center}
+    \metric{boxframe}{$3.442\times10^{-6}$}{$\alpha$ chọn bởi CV}\hfill
+    \metric{primaryblue}{16,361}{Leaves}\hfill
+    \metric{successgreen}{90.45\%}{Macro-F1}
+  \end{center}
+  \vspace{0.30cm}
+  \centering
+  Depth 41 $\rightarrow$ 39; error rate 6.11\% $\rightarrow$ 6.08\%.
+  \note{[Sources] CART pruning; scikit-learn CCP; Covertype E2 results.\\
+  Talk track (0:45): CCP thấy cây đầy đủ rồi mới cắt subtree có đóng góp nhỏ.}
 \end{frame}
 
 % 17 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Baseline Covertype dự đoán tốt nhưng tạo cây rất lớn}
+  \frametitle{HS tăng score bằng cách làm mượt prediction, không cắt cây}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
-  \begin{center}
-    \includegraphics[width=0.90\linewidth,height=0.40\textheight,keepaspectratio]{dt_covertype_baseline__tree_top_levels.png}
-  \end{center}
-  \vspace{-0.20cm}
-  \begin{center}
-    \metric{primaryblue}{93,89\%}{Accuracy}\hfill
-    \metric{accentorange}{6,11\%}{Error rate}\hfill
-    \metric{boxframe}{90,34\%}{Macro-F1}
-  \end{center}
-  \vspace{-0.05cm}
-  \centering
-  {\scriptsize\textbf{Luật:} \texttt{Elevation $\leq$ 3044,5} $\rightarrow$ nhánh lớp 2.
-  \textbf{Toàn cây:} depth = 41; leaves = 23.956.}
-  \note{[Sources] dt_covertype_scalability baseline result; tree exported with scikit-learn 1.6.1.\\
-  Talk track (0:45): Đọc một split thật để chứng minh tính diễn giải. Sau đó đối chiếu với 23.956 lá: giải thích cục bộ được nhưng toàn cây quá lớn.}
+  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=3mm,bottom=3mm]
+    \centering
+    $\displaystyle \hat p_{HS}(v)=\hat p_{HS}(pa(v))+
+    \frac{n_v}{n_v+\lambda}[\hat p(v)-\hat p(pa(v))]$
+  \end{tcolorbox}
+  \vspace{0.35cm}
+  \begin{itemize}
+    \item CV chọn $\lambda=10$; nút ít mẫu bị kéo mạnh hơn về nút cha.
+    \item E3 đạt accuracy cao nhất: 93.97\%; macro-F1 90.48\%.
+    \item Topology không đổi: depth 41 và 23,956 leaves.
+  \end{itemize}
+  \note{[Sources] Agarwal et al., Hierarchical Shrinkage, 2022; E3 artifact.\\
+  Talk track (0:50): Nhấn mạnh khác biệt cơ chế giữa HS và pruning.}
 \end{frame}
 
 % 18 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Generalization gap xác nhận cây baseline đang overfit}
+  \frametitle{E3 thắng accuracy; E4 thắng trade-off tổng thể}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
+  \scriptsize
+  \begin{tabular}{@{}L{2.5cm}C{1.55cm}C{1.45cm}C{1.55cm}C{1.35cm}C{1.15cm}C{1.35cm}@{}}
+    \toprule
+    \textbf{Cấu hình} & \textbf{Accuracy} & \textbf{Error} & \textbf{Macro-F1} & \textbf{Gap} & \textbf{Depth} & \textbf{Leaves} \\
+    \midrule
+    E0 Baseline & 93.89\% & 6.11\% & 90.34\% & 6.11\% & 41 & 23,956 \\
+    E1 Pre-pruning & 92.97\% & 7.03\% & 88.85\% & 4.10\% & 40 & 16,637 \\
+    E2 CCP & 93.92\% & 6.08\% & 90.45\% & 5.07\% & 39 & 16,361 \\
+    \textcolor{primaryblue}{\textbf{E3 HS}} & \textcolor{primaryblue}{\textbf{93.97\%}} & \textbf{6.03\%} & 90.48\% & 5.70\% & 41 & 23,956 \\
+    \textcolor{boxframe}{\textbf{E4 CCP + HS}} & 93.93\% & 6.07\% & \textcolor{boxframe}{\textbf{90.53\%}} & \textcolor{boxframe}{\textbf{5.04\%}} & 39 & \textcolor{boxframe}{\textbf{16,361}} \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.35cm}
   \begin{center}
-    \includegraphics[width=0.78\linewidth,height=0.45\textheight,keepaspectratio]{report_model_generalization_gap.png}
+    E4 thấp hơn E3 chỉ 0.04 điểm phần trăm accuracy nhưng nhỏ hơn 31.7\% về số lá.
   \end{center}
-  \vspace{-0.08cm}
-  \begin{tcolorbox}[riskbox,width=0.88\textwidth,top=2mm,bottom=2mm]
-    \centering
-    \textbf{100\% train accuracy} nhưng chỉ \textbf{93,89\% test accuracy}\\
-    $\Rightarrow$ gap \textbf{6,11 điểm \%}.
-  \end{tcolorbox}
-  \note{[Sources] Model comparison summary and report generalization-gap figure.\\
-  Talk track (0:35): Test accuracy cao không loại trừ overfitting. Gap cùng số lá lớn tạo động lực trực tiếp để đánh giá regularization.}
+  \note{[Sources] E0--E4 Covertype summary.\\
+  Talk track (0:55): Đọc theo hàng E0, E3, E4; không đọc toàn bộ bảng.}
 \end{frame}
 
 % 19 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Vấn đề của baseline xác định đúng chỗ cần cải tiến}
+  \frametitle{E4 cải thiện complexity và gap rõ hơn score}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
-  \small
-  \begin{tabularx}{\textwidth}{@{}L{3.3cm}L{3.0cm}Y@{}}
-    \toprule
-    \textbf{Quan sát ở baseline} & \textbf{Phương pháp} & \textbf{Vị trí tác động} \\
-    \midrule
-    Cây tiếp tục phát triển sâu & Pre-pruning & Điều kiện dừng \\
-    Nhiều nhánh đóng góp nhỏ & CCP & Topology sau khi fit \\
-    Lá ít mẫu dự đoán quá tự tin & Hierarchical Shrinkage & Xác suất tại nút \\
-    \bottomrule
-  \end{tabularx}
-  \vspace{0.10cm}
-  \begin{tcolorbox}[focusbox,width=0.90\textwidth,top=1mm,bottom=1mm]
-    \centering
-    Chỉ sau khi thấy baseline overfit, nhóm mới đưa các phương pháp cải tiến vào benchmark.
-  \end{tcolorbox}
-  \note{[Sources] Baseline complexity and generalization-gap results; Breiman et al., 1984; Agarwal et al., 2022.\\
-  Talk track (0:25): Ánh xạ từng vấn đề quan sát được sang đúng cơ chế cải tiến. Đây là điểm chuyển từ Decision Tree cơ bản sang phần cải tiến.}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.61\textwidth}
+      \includegraphics[width=\linewidth,height=0.54\textheight,keepaspectratio]{report_hs_performance_vs_complexity.png}
+    \column{0.35\textwidth}
+      {\Large\bfseries\textcolor{boxframe}{$-31.7\%$}}\\[-0.08cm]
+      {\small number of leaves}\\[0.25cm]
+      {\Large\bfseries\textcolor{boxframe}{$-17.6\%$}}\\[-0.08cm]
+      {\small train--test gap}\\[0.25cm]
+      {\Large\bfseries\textcolor{primaryblue}{$+0.19$ pp}}\\[-0.08cm]
+      {\small Macro-F1}
+  \end{columns}
+  \vspace{0.08cm}
+  \centering
+  \textbf{Cải tiến chính là performance--complexity trade-off, không phải accuracy đơn thuần.}
+  \note{[Sources] Covertype E0 and E4 summary; test set n=116,203.\\
+  Talk track (0:50): Hero slide giải thích vì sao E4 được chọn.}
 \end{frame}
 
 % 20 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Pre-pruning dừng sớm; CCP cắt cây sau khi fit}
+  \frametitle{Regularization chỉ có lợi rõ trên cây đủ lớn}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.46\textwidth}
-      \textbf{Pre-pruning}
-      \begin{itemize}
-        \item Giới hạn \texttt{max\_depth}.
-        \item Yêu cầu số mẫu tối thiểu.
-        \item Rủi ro: dừng quá sớm gây underfit.
-      \end{itemize}
-    \column{0.50\textwidth}
-      \textbf{Cost-Complexity Pruning}
-      \[
-        T_\alpha=\arg\min_{T\subseteq T_0}
-        \left[R(T)+\alpha|\mathcal{L}(T)|\right]
-      \]
-      $\alpha$ lớn tạo cây nhỏ hơn.
-  \end{columns}
-  \vspace{0.35cm}
+  \small
+  \begin{tabularx}{\textwidth}{@{}L{2.7cm}C{2.0cm}C{2.0cm}Y@{}}
+    \toprule
+    \textbf{Dataset} & $\Delta$ \textbf{Macro-F1} & $\Delta$ \textbf{Leaves} & \textbf{E4 so với E0} \\
+    \midrule
+    Letter & $+0.11$ pp & $0.0\%$ & Hiệu ứng rất nhẹ; $\alpha=0$ \\
+    Digits & $-0.71$ pp & $-54.9\%$ & Cây nhỏ nhưng mất điểm \\
+    \textcolor{primaryblue}{\textbf{Covertype}} & \textcolor{boxframe}{\textbf{$+0.19$ pp}} & \textcolor{boxframe}{\textbf{$-31.7\%$}} & \textcolor{primaryblue}{\textbf{Trade-off tốt nhất}} \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{0.40cm}
   \begin{tcolorbox}[focusbox,width=0.90\textwidth,top=2mm,bottom=2mm]
     \centering
-    Cả hai phương pháp đều thay đổi \textbf{topology}.
+    HS không phải ``thuốc tăng điểm'' phổ quát; tác động phụ thuộc data regime.
   \end{tcolorbox}
-  \note{[Sources] Breiman et al., 1984; scikit-learn minimal cost-complexity pruning documentation.\\
-  Talk track (0:40): Pre-pruning ra quyết định sớm, CCP đánh giá subtree sau khi đã thấy cây đầy đủ. Mục tiêu CCP cộng lỗi và penalty theo số lá.}
+  \note{[Sources] Three-dataset E0--E4 summary.\\
+  Talk track (0:40): Digits là negative result quan trọng giúp tránh overclaim.}
 \end{frame}
 
 % 21 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Hierarchical Shrinkage làm mềm các nút ít mẫu}
+  \frametitle{Không có mô hình tốt nhất trên mọi dataset}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
-  \begin{tcolorbox}[focusbox,width=0.90\textwidth,top=4mm,bottom=4mm]
+  \small
+  \begin{tabular}{@{}L{3.1cm}L{2.7cm}C{1.8cm}C{1.8cm}@{}}
+    \toprule
+    \textbf{Dataset} & \textbf{Mô hình tốt nhất} & \textbf{Accuracy} & \textbf{Macro-F1} \\
+    \midrule
+    Letter Recognition & \textcolor{primaryblue}{\textbf{Random Forest}} & \textbf{95.13\%} & \textbf{95.12\%} \\
+    Handwritten Digits & \textcolor{primaryblue}{\textbf{SVM--RBF}} & \textbf{97.22\%} & \textbf{97.18\%} \\
+    Covertype & \textcolor{boxframe}{\textbf{Decision Tree}} & \textbf{93.89\%} & \textbf{90.34\%} \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.35cm}
+  \begin{tcolorbox}[riskbox,width=0.91\textwidth,top=2mm,bottom=2mm]
     \centering
-    $\displaystyle
-      \hat p_{HS}(v)=\hat p_{HS}(pa(v))+
-      \frac{n_v}{n_v+\lambda}
-      \left[\hat p(v)-\hat p(pa(v))\right]$
+    Kết quả chỉ áp dụng cho implementation và hyperparameters đã thử; không suy rộng thứ hạng thuật toán.
   \end{tcolorbox}
-  \vspace{0.42cm}
-  \begin{itemize}
-    \item $n_v$ lớn: giữ nhiều thông tin của nút con.
-    \item $n_v$ nhỏ hoặc $\lambda$ lớn: kéo mạnh hơn về nút cha.
-    \item Split, depth và số lá không đổi.
-  \end{itemize}
-  \note{[Sources] Agarwal et al., Hierarchical Shrinkage, 2022; HS benchmark notebook.\\
-  Talk track (0:45): Giải thích hệ số n trên n cộng lambda. Nút đông mẫu được tin nhiều; nút ít mẫu mượn thông tin từ cha để giảm phương sai.}
+  \note{[Sources] Three-dataset four-model benchmark summary.\\
+  Talk track (0:45): RF thắng Letter, SVM thắng Digits, DT thắng Covertype trong pipeline này.}
 \end{frame}
 
 % 22 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Năm cấu hình tách riêng tác động của từng cải tiến}
+  \frametitle{CV và artifact tracking làm kết quả có thể tái lập}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
-  \small
-  \begin{tabularx}{0.92\textwidth}{@{}L{2.5cm}L{3.1cm}Y@{}}
-    \toprule
-    \textbf{Cấu hình} & \textbf{Thay đổi} & \textbf{Câu hỏi kiểm tra} \\
-    \midrule
-    E0 Baseline & Không regularization & Điểm xuất phát \\
-    E1 Pre-pruning & Dừng sớm & Dừng sớm có đủ không? \\
-    E2 CCP & Cắt topology & Cây nhỏ đi bao nhiêu? \\
-    E3 HS & Làm mượt prediction & Có giảm phương sai không? \\
-    \textcolor{boxframe}{\textbf{E4 CCP + HS}} & \textcolor{boxframe}{\textbf{Kết hợp hai cơ chế}} & \textcolor{boxframe}{\textbf{Trade-off có tốt hơn?}} \\
-    \bottomrule
-  \end{tabularx}
-  \par\vspace{0.22cm}
-  \begin{center}
-    $\alpha$ và $\lambda$ được chọn bằng 3-fold CV chỉ trên tập train.
-  \end{center}
-  \note{[Sources] HS benchmark notebook and parameter-selection outputs.\\
-  Talk track (0:30): E0 đến E4 là ablation study. E2 và E3 tách riêng topology với prediction; E4 kiểm tra tác động khi kết hợp.}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \textbf{Validation}
+      \begin{itemize}
+        \item 3-fold CV chọn $\alpha,\lambda$.
+        \item Test không tham gia tuning.
+        \item Covertype E0 có 5-fold CV.
+      \end{itemize}
+    \column{0.47\textwidth}
+      \textbf{Covertype 5-fold}
+      \begin{itemize}
+        \item Accuracy: $93.30\%\pm0.11$ pp
+        \item Macro-F1: $89.23\%\pm0.11$ pp
+        \item Cùng split contract và seed.
+      \end{itemize}
+  \end{columns}
+  \vspace{0.28cm}
+  \centering
+  JSON/CSV lưu metrics, parameters, hardware và đường dẫn artifact cho từng notebook.
+  \note{[Sources] Covertype 5-fold CV; HS train-only selection; repository conventions.\\
+  Talk track (0:40): Tách selection CV khỏi stability CV và nêu traceability.}
 \end{frame}
 
 % 23 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{E3 thắng accuracy; E4 thắng macro-F1}
+  \frametitle{Kết luận được giới hạn bởi seed, tuning và backend}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
-  \small
-  \begin{tabular}{@{}L{3.3cm}C{2.1cm}C{2.1cm}C{2.1cm}@{}}
-    \toprule
-    \textbf{Cấu hình} & \textbf{Accuracy} & \textbf{Error rate} & \textbf{Macro-F1} \\
-    \midrule
-    E0 Baseline & 93,89\% & 6,11\% & 90,34\% \\
-    E1 Pre-pruning & 92,97\% & 7,03\% & 88,85\% \\
-    E2 CCP & 93,92\% & 6,08\% & 90,45\% \\
-    \textcolor{primaryblue}{\textbf{E3 HS}} & \textcolor{primaryblue}{\textbf{93,97\%}} & \textcolor{primaryblue}{\textbf{6,03\%}} & 90,48\% \\
-    \textcolor{boxframe}{\textbf{E4 CCP + HS}} & 93,93\% & 6,07\% & \textcolor{boxframe}{\textbf{90,53\%}} \\
-    \bottomrule
-  \end{tabular}
-  \par\vspace{0.35cm}
-  \begin{center}
-    Covertype mất cân bằng nên macro-F1 là tiêu chí ưu tiên.
-  \end{center}
-  \note{[Sources] dt_hierarchical_shrinkage summary and selection outputs.\\
-  Talk track (0:45): E3 đạt accuracy cao nhất; E4 đạt macro-F1 cao nhất. Không gọi chênh lệch accuracy rất nhỏ là đột phá; lựa chọn E4 cần xem thêm complexity.}
+  \begin{enumerate}
+    \item \textbf{Một holdout chính:} cần lặp nhiều seed cho effect size nhỏ.
+    \item \textbf{Tuning chưa exhaustive:} RF/SVM/KNN chưa được tối ưu toàn diện.
+    \item \textbf{CPU/GPU khác nhau:} runtime không phải speedup phần cứng thuần túy.
+    \item \textbf{Gain nhỏ:} chưa có kiểm định thống kê nhiều lần lấy mẫu.
+  \end{enumerate}
+  \vspace{0.28cm}
+  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=2mm,bottom=2mm]
+    \centering
+    Kết luận mạnh nhất: \textbf{E4 cải thiện trade-off trên Covertype}, không phải HS luôn tốt hơn.
+  \end{tcolorbox}
+  \note{[Sources] Report threats to validity and hardware metadata.\\
+  Talk track (0:40): Chủ động giới hạn claim trước phần kết luận.}
 \end{frame}
 
 % 24 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{CCP + HS giảm mạnh độ phức tạp mà không giảm hiệu năng}
-  \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.60\textwidth}
-      \includegraphics[width=\linewidth,height=0.51\textheight,keepaspectratio]{report_hs_performance_vs_complexity.png}
-    \column{0.37\textwidth}
-      {\Large\bfseries\textcolor{boxframe}{$-31,7\%$}}\\[-0.08cm]
-      {\small số lá: 23.956 $\rightarrow$ 16.361}\\[0.24cm]
-      {\Large\bfseries\textcolor{boxframe}{$-17,6\%$}}\\[-0.08cm]
-      {\small gap: 6,11 $\rightarrow$ 5,04 điểm \%}\\[0.24cm]
-      {\Large\bfseries\textcolor{primaryblue}{$+0,19$ điểm \%}}\\[-0.08cm]
-      {\small macro-F1}
-  \end{columns}
-  \vspace{0.08cm}
-  \centering
-  \textbf{Giá trị chính nằm ở trade-off, không phải accuracy đơn thuần.}
-  \note{[Sources] HS benchmark summary; Covertype test set size 116,203.\\
-  Talk track (0:50): Đây là hero slide. E4 làm cây nhỏ và giảm gap rõ rệt trong khi macro-F1 tăng nhẹ. Đây mới là bằng chứng thuyết phục cho cải tiến.}
-\end{frame}
-
-% 25 --------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Cải tiến chỉ rõ khi dữ liệu và cây đủ lớn}
-  \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
-  \small
-  \begin{tabularx}{\textwidth}{@{}L{3.1cm}C{2.2cm}C{2.2cm}Y@{}}
-    \toprule
-    \textbf{Dataset} & $\Delta$ \textbf{Macro-F1} & $\Delta$ \textbf{Leaves} & \textbf{Kết luận} \\
-    \midrule
-    Letter Recognition & $+0,11$ điểm \% & $0\%$ & Cải thiện rất nhẹ \\
-    Handwritten Digits & $-0,71$ điểm \% & $-54,9\%$ & Cắt mạnh gây mất điểm \\
-    \textcolor{primaryblue}{\textbf{Covertype}} & \textcolor{boxframe}{\textbf{$+0,19$ điểm \%}} & \textcolor{boxframe}{\textbf{$-31,7\%$}} & \textcolor{primaryblue}{\textbf{Trade-off tốt nhất}} \\
-    \bottomrule
-  \end{tabularx}
-  \vspace{0.05cm}
-  \begin{tcolorbox}[focusbox,width=0.90\textwidth,top=1mm,bottom=1mm]
-    \centering
-    HS không phải “thuốc tăng điểm” phổ quát; lợi ích phụ thuộc quy mô và độ sâu cây.
-  \end{tcolorbox}
-  \note{[Sources] dt_hierarchical_shrinkage summary.\\
-  Talk track (0:35): Digits là negative result quan trọng. HS chỉ mang lại trade-off rõ trên Covertype, nơi cây và dữ liệu đủ lớn.}
-\end{frame}
-
-% 26 --------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Decision Tree phù hợp khi cần tốc độ và khả năng diễn giải}
+  \frametitle{Cây tốt hơn phải chính xác, gọn và tổng quát hóa tốt}
   \chaptertag{6}{KẾT LUẬN}
   \begin{itemize}
-    \item \textbf{RQ1:} cây đơn mạnh nhất trên Covertype, nhưng yếu hơn trên Letter và Digits.
-    \item \textbf{RQ2:} không có thuật toán thắng mọi dataset; cấu trúc dữ liệu quyết định lựa chọn.
-    \item \textbf{RQ3:} CCP + HS phù hợp khi cây sâu, dữ liệu lớn và cần cân bằng hiệu năng với độ phức tạp.
+    \item \textbf{RQ1:} Decision Tree phù hợp nhất với dữ liệu bảng lớn Covertype.
+    \item \textbf{RQ2:} RF thắng Letter, SVM thắng Digits; không có universal winner.
+    \item \textbf{RQ3:} CCP giảm topology, HS làm mượt prediction; E4 kết hợp hai cơ chế.
   \end{itemize}
-  \vspace{0.28cm}
-  \begin{tcolorbox}[focusbox,width=0.92\textwidth,top=2mm,bottom=2mm]
-    \centering
-    \textbf{Cây tốt hơn không chỉ chính xác hơn -- mà còn gọn hơn, ít overfit hơn và vẫn giải thích được.}
+  \vspace{0.35cm}
+  \begin{tcolorbox}[focusbox,width=0.92\textwidth,top=3mm,bottom=3mm]
+    \centering\large\bfseries
+    E4 giữ Macro-F1, giảm 31.7\% số lá và giảm 17.6\% gap trên Covertype.
   \end{tcolorbox}
-  \vspace{0.16cm}
-  \centering
-  {\scriptsize\textcolor{mutedgray}{Phạm vi: một split chính; backend CPU/GPU khác nhau; chưa chứng minh HS luôn tốt hơn.}}
-  \note{[Sources] Synthesis of all reported experiments and limitations.\\
-  Talk track (0:30): Trả lời ba RQ và chốt bằng tiêu chí lựa chọn. Chủ động nêu phạm vi kết luận trước phần câu hỏi.}
+  \note{[Sources] Synthesis of all reported experiments.\\
+  Talk track (0:35): Trả lời ba RQ và kết thúc bằng tiêu chí của một cây tốt hơn.}
 \end{frame}
 
 % APPENDIX --------------------------------------------------------------------
@@ -715,87 +622,124 @@ KHOA CÔNG NGHỆ THÔNG TIN}
 
 % A1 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Appendix: Kết quả đầy đủ của 3 dataset $\times$ 4 model}
+  \frametitle{Appendix: Bảng đầy đủ 3 datasets $\times$ 4 models}
   \scriptsize
-  \begin{tabular}{@{}L{2.25cm}L{2.25cm}C{1.3cm}C{1.3cm}C{1.3cm}C{1.65cm}@{}}
+  \begin{tabular}{@{}L{2.15cm}L{2.15cm}C{1.3cm}C{1.3cm}C{1.3cm}C{1.6cm}@{}}
     \toprule
-    \textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Error} & \textbf{Tổng time (s)} \\
+    \textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Error} & \textbf{Runtime (s)} \\
     \midrule
-    Letter & Decision Tree & 86,77\% & 86,77\% & 13,23\% & 0,084 \\
-           & Random Forest & \textbf{95,13\%} & \textbf{95,12\%} & 4,87\% & 3,097 \\
-           & SVM--RBF & 92,31\% & 92,32\% & 7,69\% & 3,707 \\
-           & KNN & 94,08\% & 94,08\% & 5,92\% & 0,005 \\
+    Letter & Decision Tree & 86.77\% & 86.77\% & 13.23\% & 0.084 \\
+           & Random Forest & \textbf{95.13\%} & \textbf{95.12\%} & 4.87\% & 3.097 \\
+           & SVM--RBF & 92.31\% & 92.32\% & 7.69\% & 3.707 \\
+           & KNN & 94.08\% & 94.08\% & 5.92\% & \textbf{0.005} \\
     \addlinespace
-    Digits & Decision Tree & 82,50\% & 82,30\% & 17,50\% & 0,021 \\
-           & Random Forest & 96,94\% & 96,89\% & 3,06\% & 0,628 \\
-           & SVM--RBF & \textbf{97,22\%} & \textbf{97,18\%} & 2,78\% & 0,718 \\
-           & KNN & 96,39\% & 96,34\% & 3,61\% & 0,003 \\
+    Digits & Decision Tree & 82.50\% & 82.30\% & 17.50\% & 0.021 \\
+           & Random Forest & 96.94\% & 96.89\% & 3.06\% & 0.628 \\
+           & SVM--RBF & \textbf{97.22\%} & \textbf{97.18\%} & 2.78\% & 0.718 \\
+           & KNN & 96.39\% & 96.34\% & 3.61\% & \textbf{0.003} \\
     \addlinespace
-    Covertype & Decision Tree & \textbf{93,89\%} & \textbf{90,34\%} & 6,11\% & 7,409 \\
-              & Random Forest & 79,57\% & 65,86\% & 20,43\% & 2,995 \\
-              & SVM--RBF & 79,07\% & 63,78\% & 20,93\% & 125,547 \\
-              & KNN & 92,84\% & 87,32\% & 7,16\% & 5,756 \\
+    Covertype & Decision Tree & \textbf{93.89\%} & \textbf{90.34\%} & 6.11\% & 7.409 \\
+              & Random Forest & 79.57\% & 65.86\% & 20.43\% & 2.995 \\
+              & SVM--RBF & 79.07\% & 63.78\% & 20.93\% & 125.547 \\
+              & KNN & 92.84\% & 87.32\% & 7.16\% & \textbf{5.756} \\
     \bottomrule
   \end{tabular}
-  \par\vspace{0.15cm}
-  \noindent\begin{minipage}{\textwidth}
-    \tiny Runtime phản ánh backend và pipeline thực tế; không dùng để suy ra speedup phần cứng thuần túy.
-  \end{minipage}
-  \note{[Sources] Full model comparison summary.\\
-  Q&A: Nếu được hỏi vì sao RF Covertype thấp, nhấn mạnh cuML backend/cấu hình và giới hạn phạm vi kết luận.}
+  \par\vspace{0.10cm}
+  {\tiny Runtime phản ánh backend/pipeline thực tế, không phải speedup CPU--GPU có kiểm soát.}
+  \note{[Sources] Full four-model benchmark summary.}
 \end{frame}
 
 % A2 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Appendix: Confusion matrix cho thấy lỗi tập trung ở lớp thiểu số}
-  \begin{center}
-    \includegraphics[width=0.68\linewidth,height=0.74\textheight,keepaspectratio]{dt_covertype_scalability__confusion_matrix.png}
-  \end{center}
-  \note{[Sources] Covertype baseline confusion matrix.\\
-  Q&A: Accuracy bị chi phối bởi lớp lớn, vì vậy nhóm dùng macro-F1 để cho mỗi lớp trọng số ngang nhau.}
-\end{frame}
-
-% A3 --------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Appendix: Tham số cải tiến được chọn chỉ từ tập train}
+  \frametitle{Appendix: Tham số cải tiến được chọn từ train}
   \small
-  \begin{tabularx}{\textwidth}{@{}L{2.6cm}Y Y Y@{}}
+  \begin{tabularx}{\textwidth}{@{}L{2.5cm}YYY@{}}
     \toprule
     \textbf{Dataset} & \textbf{Pre-pruning} & \textbf{CCP} & \textbf{HS} \\
     \midrule
     Letter & \texttt{max\_depth=16} & $\alpha=0$ & $\lambda=10$ \\
-    Digits & \texttt{max\_depth=8} & $\alpha=0{,}002196$ & $\lambda=10$ \\
-    Covertype & \shortstack{\texttt{min\_samples\_leaf}\\=5} & $\alpha=3{,}442\times10^{-6}$ & $\lambda=10$ \\
+    Digits & \texttt{max\_depth=8} & $\alpha=0.002196$ & $\lambda=10$ \\
+    Covertype & \shortstack{\texttt{min\_samples}\\\texttt{\_leaf=5}} & $\alpha=3.442\times10^{-6}$ & $\lambda=10$ \\
     \bottomrule
   \end{tabularx}
-  \vspace{0.45cm}
+  \vspace{0.42cm}
   \begin{tcolorbox}[focusbox,width=0.92\textwidth]
     \centering
-    \textbf{3-fold cross-validation trên train} chọn cấu hình; test set chỉ được mở để báo cáo cuối cùng.
+    3-fold CV chỉ dùng train; test set chỉ dùng báo cáo cuối.
   \end{tcolorbox}
-  \par\vspace{0.12cm}
-  {\scriptsize 5-fold CV độc lập cho baseline Covertype: accuracy $0{,}9330\pm0{,}0011$; macro-F1 $0{,}8923\pm0{,}0011$.\par}
-  \note{[Sources] HS CV selection CSV; Covertype 5-fold CV output.\\
-  Q&A: Một seed là hạn chế của holdout chính, nhưng baseline Covertype có độ lệch chuẩn nhỏ qua 5 fold.}
+  \vspace{0.20cm}
+  {\small Digits E4 chọn $\lambda=0$ sau CCP; Letter chọn $\alpha=0$.}
+  \note{[Sources] HS selection JSON and CV CSV.}
+\end{frame}
+
+% A3 --------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Appendix: Ba decision rules đầy đủ từ cây baseline}
+  \scriptsize
+  \textbf{R1 $\rightarrow$ lớp 2 ($n=264$, depth 6):}\\
+  Elevation $\leq3044.5$; Elevation $\leq2510.5$; Hydrology $>15$; Wilderness 0 $=1$; Fire Points $\leq5122$; Hydrology $\leq300.5$.\\[0.30cm]
+
+  \textbf{R2 $\rightarrow$ lớp 5 ($n=71$, depth 6):}\\
+  Elevation $\leq3044.5$; Elevation $\leq2510.5$; Hydrology $>15$; Wilderness 0 $=1$; Fire Points $>5122$; Roadways $>621$.\\[0.30cm]
+
+  \textbf{R3 $\rightarrow$ lớp 1 ($n=298$, depth 7):}\\
+  Elevation $>3044.5$; Elevation $>3322.5$; Wilderness 2 $=1$; Soil 31 $=0$; Elevation $>3360.5$; Fire Points $\leq403$; Roadways $>2934.5$.\\[0.35cm]
+
+  \begin{tcolorbox}[riskbox,width=0.92\textwidth,top=1mm,bottom=1mm]
+    \centering
+    Các lá thuần trên train không phải luật nhân quả hay bảo đảm 100\% trên dữ liệu mới.
+  \end{tcolorbox}
+  \note{[Sources] Rules extracted from the stored baseline model.}
 \end{frame}
 
 % A4 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Appendix: Hardware, tài liệu và đóng góp nhóm}
+  \frametitle{Appendix: Elevation chi phối feature importance}
+  \begin{center}
+    \includegraphics[width=0.80\linewidth,height=0.74\textheight,keepaspectratio]{dt_covertype_scalability__feature_importance.png}
+  \end{center}
+  \note{[Sources] Covertype baseline feature importance.}
+\end{frame}
+
+% A5 --------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Appendix: Hardware và backend được công bố tách biệt}
   \small
-  \textbf{Hardware/backend.} Kaggle GPU x2; cuML ghi nhận Tesla T4 cho RF/SVM/KNN. Decision Tree và HS dùng scikit-learn trên CPU; notebook baseline ghi nhận P100 khả dụng nhưng compute device vẫn là CPU.\\[0.35cm]
-
-  \textbf{Tài liệu chính.} Breiman et al. (1984), \textit{Classification and Regression Trees}; Agarwal et al. (2022), \textit{Hierarchical Shrinkage}; UCI Letter Recognition và Covertype; scikit-learn Digits; RAPIDS cuML.\\[0.35cm]
-
-  \textbf{Đóng góp thành viên.}
-  \begin{tabularx}{\textwidth}{@{}L{3.4cm}Y@{}}
-    {[HỌ TÊN -- MSSV]} & [Dữ liệu / baseline / kiểm thử] \\
-    {[HỌ TÊN -- MSSV]} & [Benchmark model / Kaggle GPU] \\
-    {[HỌ TÊN -- MSSV]} & [Hierarchical Shrinkage / phân tích] \\
-    {[HỌ TÊN -- MSSV]} & [Report / slide / tổng hợp kết quả] \\
+  \begin{tabularx}{\textwidth}{@{}L{3.0cm}L{3.0cm}Y@{}}
+    \toprule
+    \textbf{Thí nghiệm} & \textbf{Backend} & \textbf{Thiết bị ghi nhận} \\
+    \midrule
+    Decision Tree / HS & scikit-learn & CPU; P100 khả dụng nhưng không dùng compute \\
+    RF / SVM / KNN & RAPIDS cuML & Tesla T4 trong phiên Kaggle GPU x2 \\
+    \bottomrule
   \end{tabularx}
-  \note{[Sources] Notebook environment metadata; report references.\\
-  Q&A: GPU x2 là cấu hình môi trường, không khẳng định hai GPU được dùng song song. Điền tên, MSSV và đóng góp thật trước khi nộp.}
+  \vspace{0.45cm}
+  \begin{itemize}
+    \item GPU x2 là cấu hình môi trường, không khẳng định hai GPU chạy song song.
+    \item Runtime không dùng để suy ra speedup CPU--GPU thuần túy.
+    \item RF Covertype chỉ đại diện cho configuration cuML đã thử nghiệm.
+  \end{itemize}
+  \note{[Sources] Notebook environment metadata and report methodology.}
+\end{frame}
+
+% A6 --------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Appendix: Đóng góp nhóm và tài liệu chính}
+  \scriptsize
+  \begin{tabularx}{\textwidth}{@{}L{3.5cm}Y@{}}
+    \memberone & Dữ liệu, baseline và kiểm thử \\
+    \membertwo & Benchmark model và Kaggle GPU \\
+    \memberthree & CCP, HS và phân tích \\
+    \memberfour & Report, slide và tổng hợp kết quả \\
+  \end{tabularx}
+  \vspace{0.32cm}
+  \textbf{Tài liệu chính:} Breiman et al. (1984), \textit{Classification and Regression Trees}; Agarwal et al. (2022), \textit{Hierarchical Shrinkage}; Quinlan (1986, 1993); UCI Letter Recognition và Covertype; scikit-learn Digits; RAPIDS cuML.
+  \vspace{0.28cm}
+  \begin{tcolorbox}[riskbox,width=0.92\textwidth,top=1mm,bottom=1mm]
+    \centering
+    Điền tên, MSSV và điều chỉnh đóng góp đúng thực tế trước khi nộp.
+  \end{tcolorbox}
+  \note{[Sources] Report references and project contribution record.}
 \end{frame}
 
 \end{document}

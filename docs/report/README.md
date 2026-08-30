@@ -3,8 +3,8 @@
 Thư mục này là báo cáo thật của project. Các figure và result trong `artifacts/` được trích xuất
 từ các lần chạy Kaggle.
 
-Report chỉ lưu figures và results cần thiết cho việc đối chiếu; các model `.joblib` trong ZIP
-không được giữ lại vì không cần cho việc biên dịch. Metadata ghi nhận notebook tổng hợp dùng
+Report chỉ lưu figures và results cần thiết cho việc đối chiếu; model `.joblib` không được sao
+chép vào `artifacts/` vì không cần cho việc biên dịch. Metadata ghi nhận notebook tổng hợp dùng
 Tesla T4 cho ba mô hình cuML; các notebook Decision Tree và Hierarchical Shrinkage chạy trên
 CPU dù Kaggle có hiển thị GPU.
 
@@ -18,3 +18,6 @@ Pop-Location
 ```
 
 File PDF cuối nằm tại `output/pdf/decision_tree_lab2_report.pdf`.
+
+Tóm tắt protocol, kết quả chính và bản đồ artifact nằm tại
+[`docs/EXPERIMENT_SUMMARY.md`](../EXPERIMENT_SUMMARY.md).

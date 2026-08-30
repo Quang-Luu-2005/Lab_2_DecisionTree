@@ -1,0 +1,54 @@
+\appendix
+
+\chapter{Bảng benchmark đầy đủ}
+\label{app:full-benchmark}
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \caption{Kết quả 3 datasets $\times$ 4 models. Runtime là tổng fit và predict của pipeline đã báo cáo.}
+    \label{tab:full-model-benchmark}
+    \begin{tabular}{@{}llrrrr@{}}
+        \toprule
+        \textbf{Dataset} & \textbf{Mô hình} & \textbf{Accuracy} & \textbf{Error} & \textbf{Macro-F1} & \textbf{Runtime (s)} \\
+        \midrule
+        Letter & Decision Tree & 86.77\% & 13.23\% & 86.77\% & 0.084 \\
+               & Random Forest & \textbf{95.13\%} & \textbf{4.87\%} & \textbf{95.12\%} & 3.097 \\
+               & SVM--RBF & 92.31\% & 7.69\% & 92.32\% & 3.707 \\
+               & KNN & 94.08\% & 5.92\% & 94.08\% & \textbf{0.005} \\
+        \addlinespace
+        Digits & Decision Tree & 82.50\% & 17.50\% & 82.30\% & 0.021 \\
+               & Random Forest & 96.94\% & 3.06\% & 96.89\% & 0.628 \\
+               & SVM--RBF & \textbf{97.22\%} & \textbf{2.78\%} & \textbf{97.18\%} & 0.718 \\
+               & KNN & 96.39\% & 3.61\% & 96.34\% & \textbf{0.003} \\
+        \addlinespace
+        Covertype & Decision Tree & \textbf{93.89\%} & \textbf{6.11\%} & \textbf{90.34\%} & 7.409 \\
+                  & Random Forest & 79.57\% & 20.43\% & 65.86\% & 2.995 \\
+                  & SVM--RBF & 79.07\% & 20.93\% & 63.78\% & 125.547 \\
+                  & KNN & 92.84\% & 7.16\% & 87.32\% & \textbf{5.756} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Các số runtime không dùng để suy ra speedup CPU--GPU vì backend và implementation khác nhau.
+
+\chapter{Tái lập bảng và hình}
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Nguồn tái lập các kết quả chính.}
+    \label{tab:artifact-traceability}
+    \begin{tabularx}{\textwidth}{@{}lXX@{}}
+        \toprule
+        \textbf{Kết quả} & \textbf{Notebook} & \textbf{Artifact} \\
+        \midrule
+        Baseline Covertype & Notebook 03 Covertype & \nolinkurl{dt_covertype_scalability.json} \\
+        E0--E4 và CV & Notebook 04 HS benchmark & \nolinkurl{dt_hierarchical_shrinkage__summary.csv} \\
+        3 $\times$ 4 benchmark & Notebook 05 model benchmark & \nolinkurl{gpu_three_dataset_four_model_comparison__summary.csv} \\
+        Tree rules và recall lớp & Baseline model + split chung & \nolinkurl{dt_covertype_baseline__decision_rules.csv} và \nolinkurl{__per_class_metrics.csv} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Notebook có tên ``three model'' vì ba mô hình GPU là RF, SVM và KNN; Decision Tree CPU vẫn được đo trong cùng notebook, nên bảng kết quả có bốn model.
