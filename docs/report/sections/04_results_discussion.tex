@@ -4,7 +4,6 @@
 
 Hình~\ref{fig:covertype-tree} trình bày các tầng đầu của E0. Toàn cây không thể hiển thị trên một trang mà vẫn đọc được vì có depth 41 và 23,956 lá; việc chỉ vẽ các tầng đầu bảo toàn khả năng quan sát root split và các nhánh chính.
 
-\clearpage
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.98\textwidth]{dt_covertype_baseline__tree_top_levels.png}
@@ -65,7 +64,6 @@ Các luật cho thấy ưu điểm giải thích cục bộ: một dự đoán c
 
 Trên Covertype, E0 đạt train accuracy 100\% nhưng test accuracy 93.89\%, tạo train--test gap 6.11 điểm phần trăm. Khi đặt cạnh depth 41 và 23,956 lá, lỗi train bằng không là bằng chứng nhất quán với high variance: cây học rất chi tiết tập train nhưng không giữ được toàn bộ lợi thế đó trên test. Accuracy vẫn cao, vì vậy mục tiêu cải tiến không chỉ là tăng score mà còn phải giảm gap và complexity.
 
-\clearpage
 \section{Confusion matrix và lỗi theo lớp}
 
 \begin{figure}[H]
@@ -98,15 +96,14 @@ Trên Covertype, E0 đạt train accuracy 100\% nhưng test accuracy 93.89\%, t�
 
 Hai lớp lớn 1 và 2 đạt recall gần 94\%, trong khi lớp 4 và 5 chỉ khoảng 84--85\%. Lỗi lớn nhất tập trung giữa lớp 1--2, lớp 3--6 và các lớp có support nhỏ. Vì vậy, accuracy 93.89\% có thể che khuất chất lượng thấp hơn ở lớp thiểu số; macro-F1 90.34\% là chỉ số chọn cấu hình phù hợp hơn.
 
+\clearpage
 \section{Feature importance và giới hạn diễn giải}
 
-\clearpage
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.86\textwidth]{dt_covertype_scalability__feature_importance.png}
     \caption{Feature importance của Decision Tree cơ sở trên Covertype.}
     \label{fig:covertype-feature-importance}
 \end{figure}
-\clearpage
 
 Elevation chiếm importance lớn nhất (0.3395), theo sau bởi Horizontal Distance to Roadways (0.1502), Horizontal Distance to Fire Points (0.1412) và Horizontal Distance to Hydrology (0.0615). Feature importance cung cấp tóm tắt toàn cục về mức sử dụng feature; các path ở phần trước cung cấp giải thích cục bộ cho từng dự đoán. Hai góc nhìn bổ sung lẫn nhau nhưng không biến cây lớn thành một mô hình dễ đọc toàn cục.
