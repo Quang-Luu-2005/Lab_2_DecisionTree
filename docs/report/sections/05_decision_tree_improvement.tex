@@ -36,7 +36,7 @@ Nút có nhiều mẫu giữ phần lớn thông tin riêng; nút ít mẫu ho�
 \begin{table}[H]
     \centering
     \small
-    \caption{Tham số được chọn bằng 3-fold cross-validation trên train.}
+    \caption[Tham số cải tiến được chọn bằng cross-validation]{Tham số được chọn bằng 3-fold cross-validation trên train.}
     \label{tab:improvement-parameters}
     \begin{tabularx}{\textwidth}{@{}lXXX@{}}
         \toprule
@@ -55,10 +55,10 @@ Trường hợp $\alpha=0$ ở Letter cho thấy CV không tìm thấy pruning c
 
 \begin{table}[H]
     \centering
-    \scriptsize
-    \caption{So sánh cây cơ sở và các cấu hình cải tiến trên Covertype.}
+    \footnotesize
+    \caption[So sánh E0--E4 trên Covertype]{So sánh cây cơ sở và các cấu hình cải tiến trên Covertype.}
     \label{tab:improvement-master}
-    \begin{tabular}{@{}llrrrrrr@{}}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrrrr@{}}
         \toprule
         \textbf{ID} & \textbf{Cấu hình} & \textbf{Accuracy} & \textbf{Error} & \textbf{Macro-F1} & \textbf{Gap} & \textbf{Depth} & \textbf{Leaves} \\
         \midrule
@@ -68,7 +68,7 @@ Trường hợp $\alpha=0$ ở Letter cho thấy CV không tìm thấy pruning c
         E3 & HS ($\lambda=10$) & \textbf{93.97\%} & \textbf{6.03\%} & 90.48\% & 5.70\% & 41 & 23,956 \\
         E4 & CCP + HS & 93.93\% & 6.07\% & \textbf{90.53\%} & \textbf{5.04\%} & 39 & \textbf{16,361} \\
         \bottomrule
-    \end{tabular}
+    \end{tabular*}
 \end{table}
 
 E1 giảm gap và số lá nhưng làm accuracy và macro-F1 giảm nhiều nhất, cho thấy early stopping đã regularize quá mạnh. E2 giảm 31.7\% số lá và vẫn tăng nhẹ hai metric test. E3 đạt accuracy cao nhất nhưng giữ nguyên 23,956 lá, đúng với cơ chế prediction regularization. E4 kết hợp được cấu trúc của E2 với dự đoán được shrink, đạt macro-F1 cao nhất.
@@ -78,18 +78,22 @@ E1 giảm gap và số lá nhưng làm accuracy và macro-F1 giảm nhiều nh�
 E3 cao hơn E4 chỉ 0.04 điểm phần trăm accuracy. Đổi lại, E4 có macro-F1 cao hơn 0.05 điểm phần trăm, ít hơn 7,595 lá và gap thấp hơn 0.66 điểm phần trăm. So với E0, E4 tăng 0.19 điểm phần trăm macro-F1, giảm 31.7\% số lá và giảm 17.6\% train--test gap. Vì Covertype mất cân bằng và mục tiêu không chỉ là tối đa accuracy, E4 tạo trade-off kiểu Pareto phù hợp hơn giữa chất lượng dự đoán, generalization, complexity và interpretability.
 
 \clearpage
+\thispagestyle{fancy}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.88\textwidth]{report_hs_performance_vs_complexity.png}
-    \caption{Quan hệ giữa macro-F1 và number of leaves của năm cấu hình trên Covertype.}
+    \caption[Macro-F1 và độ phức tạp cây trên Covertype]{Quan hệ giữa macro-F1 và number of leaves của năm cấu hình trên Covertype.}
     \label{fig:improvement-complexity}
 \end{figure}
+\thispagestyle{fancy}
 \clearpage
+\thispagestyle{fancy}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.88\textwidth]{report_hs_generalization_gap.png}
-    \caption{Train--test gap của các cấu hình cải tiến trên ba bộ dữ liệu.}
+    \caption[Train--test gap sau regularization]{Train--test gap của các cấu hình cải tiến trên ba bộ dữ liệu.}
     \label{fig:improvement-gap}
 \end{figure}
+\thispagestyle{fancy}
 \clearpage

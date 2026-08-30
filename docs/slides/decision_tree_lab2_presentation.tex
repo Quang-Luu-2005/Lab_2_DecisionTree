@@ -158,6 +158,7 @@
   \frametitle{CART bổ sung split nhị phân, Gini và pruning cho cây quyết định}
   \chaptertag{2}{CÁC CÔNG TRÌNH LIÊN QUAN}
   \small
+  {\renewcommand{\arraystretch}{1.28}%
   \begin{tabularx}{\textwidth}{@{}L{2.2cm}L{2.8cm}Y@{}}
     \toprule
     \textbf{Thuật toán} & \textbf{Công trình} & \textbf{Đóng góp} \\
@@ -167,10 +168,11 @@
     \textcolor{primaryblue}{\textbf{CART}} & \textcolor{primaryblue}{\textbf{Breiman et al. (1984)}} & \textcolor{primaryblue}{\textbf{Binary split, Gini, cost-complexity pruning}} \\
     HS & Agarwal et al. (2022) & Làm mượt prediction theo hierarchy \\
     \bottomrule
-  \end{tabularx}
-  \vspace{0.35cm}
-  \centering
-  Nghiên cứu dùng CART làm baseline và HS như prediction regularization.
+  \end{tabularx}}
+  \par\vspace{0.42cm}
+  \begin{center}
+    Nghiên cứu dùng CART làm baseline và HS như prediction regularization.
+  \end{center}
   \note{[Sources] Quinlan 1986; Quinlan 1993; Breiman et al. 1984; Agarwal et al. 2022.\\
   Talk track (0:35): Đặt baseline và cải tiến vào đúng lịch sử phương pháp.}
 \end{frame}
@@ -229,9 +231,10 @@
     \textcolor{primaryblue}{\textbf{Covertype}} & \textcolor{primaryblue}{\textbf{581,012}} & \textcolor{primaryblue}{\textbf{54}} & \textcolor{primaryblue}{\textbf{Primary: bảng lớn, 7 lớp mất cân bằng}} \\
     \bottomrule
   \end{tabularx}
-  \vspace{0.40cm}
-  \centering
-  Covertype có đủ mẫu và complexity để quan sát tác động regularization.
+  \par\vspace{0.40cm}
+  \begin{center}
+    Covertype có đủ mẫu và complexity để quan sát tác động regularization.
+  \end{center}
   \note{[Sources] UCI Letter Recognition; sklearn Digits; UCI Covertype.\\
   Talk track (0:40): Nêu vai trò, không chỉ đọc số lượng mẫu.}
 \end{frame}
@@ -313,7 +316,7 @@
     R3 & Lớp 1; $n=298$ & Elevation $>3360.5$, Wilderness 2, Soil 31 vắng \\
     \bottomrule
   \end{tabularx}
-  \vspace{0.24cm}
+  \par\vspace{0.28cm}
   \begin{tcolorbox}[riskbox,width=0.91\textwidth,top=1mm,bottom=1mm]
     \centering
     Ba luật đều là lá thuần trên train, nhưng toàn cây có gần \textbf{24 nghìn luật}.
@@ -380,7 +383,7 @@
     Nút sâu dự đoán quá tự tin & HS & Xác suất tại nút \\
     \bottomrule
   \end{tabularx}
-  \vspace{0.36cm}
+  \par\vspace{0.38cm}
   \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=2mm,bottom=2mm]
     \centering
     E1, E2, E3 là ba phương pháp; \textbf{E4 chỉ là combined extension}.
@@ -475,7 +478,7 @@
     \textcolor{boxframe}{\textbf{E4 CCP + HS}} & 93.93\% & 6.07\% & \textcolor{boxframe}{\textbf{90.53\%}} & \textcolor{boxframe}{\textbf{5.04\%}} & 39 & \textcolor{boxframe}{\textbf{16,361}} \\
     \bottomrule
   \end{tabular}
-  \vspace{0.35cm}
+  \par\vspace{0.35cm}
   \begin{center}
     E4 thấp hơn E3 chỉ 0.04 điểm phần trăm accuracy nhưng nhỏ hơn 31.7\% về số lá.
   \end{center}
@@ -519,7 +522,7 @@
     \textcolor{primaryblue}{\textbf{Covertype}} & \textcolor{boxframe}{\textbf{$+0.19$ pp}} & \textcolor{boxframe}{\textbf{$-31.7\%$}} & \textcolor{primaryblue}{\textbf{Trade-off tốt nhất}} \\
     \bottomrule
   \end{tabularx}
-  \vspace{0.40cm}
+  \par\vspace{0.40cm}
   \begin{tcolorbox}[focusbox,width=0.90\textwidth,top=2mm,bottom=2mm]
     \centering
     HS không phải ``thuốc tăng điểm'' phổ quát; tác động phụ thuộc data regime.
@@ -542,7 +545,7 @@
     Covertype & \textcolor{boxframe}{\textbf{Decision Tree}} & \textbf{93.89\%} & \textbf{90.34\%} \\
     \bottomrule
   \end{tabular}
-  \vspace{0.35cm}
+  \par\vspace{0.35cm}
   \begin{tcolorbox}[riskbox,width=0.91\textwidth,top=2mm,bottom=2mm]
     \centering
     Kết quả chỉ áp dụng cho implementation và hyperparameters đã thử; không suy rộng thứ hạng thuật toán.
@@ -644,7 +647,7 @@
               & KNN & 92.84\% & 87.32\% & 7.16\% & \textbf{5.756} \\
     \bottomrule
   \end{tabular}
-  \par\vspace{0.10cm}
+  \par\vspace{0.18cm}
   {\tiny Runtime phản ánh backend/pipeline thực tế, không phải speedup CPU--GPU có kiểm soát.}
   \note{[Sources] Full four-model benchmark summary.}
 \end{frame}
@@ -662,7 +665,7 @@
     Covertype & \shortstack{\texttt{min\_samples}\\\texttt{\_leaf=5}} & $\alpha=3.442\times10^{-6}$ & $\lambda=10$ \\
     \bottomrule
   \end{tabularx}
-  \vspace{0.42cm}
+  \par\vspace{0.42cm}
   \begin{tcolorbox}[focusbox,width=0.92\textwidth]
     \centering
     3-fold CV chỉ dùng train; test set chỉ dùng báo cáo cuối.
@@ -713,7 +716,7 @@
     RF / SVM / KNN & RAPIDS cuML & Tesla T4 trong phiên Kaggle GPU x2 \\
     \bottomrule
   \end{tabularx}
-  \vspace{0.45cm}
+  \par\vspace{0.45cm}
   \begin{itemize}
     \item GPU x2 là cấu hình môi trường, không khẳng định hai GPU chạy song song.
     \item Runtime không dùng để suy ra speedup CPU--GPU thuần túy.
@@ -732,7 +735,7 @@
     \memberthree & CCP, HS và phân tích \\
     \memberfour & Report, slide và tổng hợp kết quả \\
   \end{tabularx}
-  \vspace{0.32cm}
+  \par\vspace{0.32cm}
   \textbf{Tài liệu chính:} Breiman et al. (1984), \textit{Classification and Regression Trees}; Agarwal et al. (2022), \textit{Hierarchical Shrinkage}; Quinlan (1986, 1993); UCI Letter Recognition và Covertype; scikit-learn Digits; RAPIDS cuML.
   \vspace{0.28cm}
   \begin{tcolorbox}[riskbox,width=0.92\textwidth,top=1mm,bottom=1mm]

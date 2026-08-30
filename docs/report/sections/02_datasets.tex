@@ -7,9 +7,9 @@ Covertype là bộ dữ liệu chính để thực hiện đầy đủ các yêu
 \begin{table}[H]
     \centering
     \small
-    \caption{Đặc trưng và vai trò của ba bộ dữ liệu sau bước chuẩn bị.}
+    \caption[Đặc trưng của ba bộ dữ liệu]{Đặc trưng và vai trò của ba bộ dữ liệu sau bước chuẩn bị.}
     \label{tab:dataset-summary}
-    \begin{tabularx}{\textwidth}{@{}XrrrrX@{}}
+    \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrr>{\raggedright\arraybackslash}X@{}}
         \toprule
         \textbf{Bộ dữ liệu} & \textbf{Mẫu} & \textbf{Thuộc tính} & \textbf{Lớp} & \textbf{Train/Test} & \textbf{Vai trò} \\
         \midrule
@@ -39,10 +39,11 @@ Covertype của UCI gồm 581,012 mẫu, 54 thuộc tính và 7 loại lớp ph�
 Covertype phù hợp nhất với yêu cầu Lab vì có ba đặc điểm: quy mô đủ lớn để cây phát triển sâu, dữ liệu bảng phù hợp với luật feature--threshold, và phân bố lớp không đều khiến accuracy đơn thuần chưa đủ. Cây cơ sở đạt depth 41 với 23,956 lá, do đó ảnh hưởng của regularization có thể quan sát rõ cả về hiệu năng lẫn cấu trúc.
 
 \clearpage
+\thispagestyle{fancy}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.82\textwidth]{dt_covertype_scalability__class_distribution.png}
-    \caption{Phân bố 7 lớp trong Covertype. Chênh lệch số mẫu giữa các lớp là lý do báo cáo macro-F1 và recall theo lớp bên cạnh accuracy.}
+    \caption[Phân bố lớp của Covertype]{Phân bố 7 lớp trong Covertype. Chênh lệch số mẫu giữa các lớp là lý do báo cáo macro-F1 và recall theo lớp bên cạnh accuracy.}
     \label{fig:covertype-class-distribution}
 \end{figure}
 \clearpage

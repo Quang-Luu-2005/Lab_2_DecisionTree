@@ -7,7 +7,7 @@ Hình~\ref{fig:covertype-tree} trình bày các tầng đầu của E0. Toàn c�
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.98\textwidth]{dt_covertype_baseline__tree_top_levels.png}
-    \caption{Các tầng đầu của Decision Tree cơ sở trên Covertype. Toàn cây có depth 41 và 23,956 lá.}
+    \caption[Các tầng đầu của Decision Tree Covertype cơ sở]{Các tầng đầu của Decision Tree cơ sở trên Covertype. Toàn cây có depth 41 và 23,956 lá.}
     \label{fig:covertype-tree}
 \end{figure}
 \clearpage
@@ -49,7 +49,7 @@ Các luật cho thấy ưu điểm giải thích cục bộ: một dự đoán c
 \begin{table}[H]
     \centering
     \small
-    \caption{Kết quả Decision Tree cơ sở trên ba bộ dữ liệu.}
+    \caption[Decision Tree cơ sở trên ba bộ dữ liệu]{Kết quả Decision Tree cơ sở trên ba bộ dữ liệu.}
     \label{tab:baseline-three-datasets}
     \begin{tabular}{@{}lrrr@{}}
         \toprule
@@ -69,15 +69,16 @@ Trên Covertype, E0 đạt train accuracy 100\% nhưng test accuracy 93.89\%, t�
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.76\textwidth]{dt_covertype_scalability__confusion_matrix.png}
-    \caption{Confusion matrix của Decision Tree cơ sở trên 116,203 mẫu test Covertype.}
+    \caption[Confusion matrix của Decision Tree Covertype cơ sở]{Confusion matrix của Decision Tree cơ sở trên 116,203 mẫu test Covertype.}
     \label{fig:covertype-confusion}
 \end{figure}
 \clearpage
+\thispagestyle{fancy}
 
 \begin{table}[H]
     \centering
     \small
-    \caption{Recall và số mẫu test của từng lớp Covertype.}
+    \caption[Recall theo lớp của Covertype]{Recall và số mẫu test của từng lớp Covertype.}
     \label{tab:covertype-class-recall}
     \begin{tabular}{@{}crrr@{}}
         \toprule
@@ -97,12 +98,13 @@ Trên Covertype, E0 đạt train accuracy 100\% nhưng test accuracy 93.89\%, t�
 Hai lớp lớn 1 và 2 đạt recall gần 94\%, trong khi lớp 4 và 5 chỉ khoảng 84--85\%. Lỗi lớn nhất tập trung giữa lớp 1--2, lớp 3--6 và các lớp có support nhỏ. Vì vậy, accuracy 93.89\% có thể che khuất chất lượng thấp hơn ở lớp thiểu số; macro-F1 90.34\% là chỉ số chọn cấu hình phù hợp hơn.
 
 \clearpage
+\thispagestyle{fancy}
 \section{Feature importance và giới hạn diễn giải}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.86\textwidth]{dt_covertype_scalability__feature_importance.png}
-    \caption{Feature importance của Decision Tree cơ sở trên Covertype.}
+    \caption[Feature importance của Decision Tree Covertype cơ sở]{Feature importance của Decision Tree cơ sở trên Covertype.}
     \label{fig:covertype-feature-importance}
 \end{figure}
 

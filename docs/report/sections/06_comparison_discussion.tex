@@ -7,9 +7,10 @@
 \begin{table}[H]
     \centering
     \small
-    \caption{Tác động của E4 so với baseline trên ba chế độ dữ liệu.}
+    \caption[Tác động của E4 trên ba bộ dữ liệu]{Tác động của E4 so với baseline trên ba chế độ dữ liệu.}
     \label{tab:robustness-e4}
-    \begin{tabularx}{\textwidth}{@{}lrrrX@{}}
+    \setlength{\tabcolsep}{3.5pt}
+    \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.15cm}>{\centering\arraybackslash}p{2.15cm}>{\centering\arraybackslash}p{1.75cm}>{\centering\arraybackslash}p{1.65cm}>{\raggedright\arraybackslash}X@{}}
         \toprule
         \textbf{Dataset} & \textbf{$\Delta$ Macro-F1} & \textbf{$\Delta$ Leaves} & \textbf{E4 Error} & \textbf{Diễn giải} \\
         \midrule
@@ -29,7 +30,7 @@ Decision Tree là mô hình nghiên cứu chính. Random Forest, SVM--RBF và KN
 \begin{table}[H]
     \centering
     \small
-    \caption{Mô hình tốt nhất theo test accuracy trong các cấu hình đã khảo sát.}
+    \caption[Mô hình tốt nhất trên từng bộ dữ liệu]{Mô hình tốt nhất theo test accuracy trong các cấu hình đã khảo sát.}
     \label{tab:best-models}
     \begin{tabular}{@{}llrr@{}}
         \toprule

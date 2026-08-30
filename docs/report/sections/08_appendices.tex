@@ -5,10 +5,10 @@
 
 \begin{table}[H]
     \centering
-    \scriptsize
-    \caption{Kết quả 3 datasets $\times$ 4 models. Runtime là tổng fit và predict của pipeline đã báo cáo.}
+    \footnotesize
+    \caption[Benchmark đầy đủ: 3 datasets $\times$ 4 models]{Kết quả 3 datasets $\times$ 4 models. Runtime là tổng fit và predict của pipeline đã báo cáo.}
     \label{tab:full-model-benchmark}
-    \begin{tabular}{@{}llrrrr@{}}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrr@{}}
         \toprule
         \textbf{Dataset} & \textbf{Mô hình} & \textbf{Accuracy} & \textbf{Error} & \textbf{Macro-F1} & \textbf{Runtime (s)} \\
         \midrule
@@ -27,7 +27,7 @@
                   & SVM--RBF & 79.07\% & 20.93\% & 63.78\% & 125.547 \\
                   & KNN & 92.84\% & 7.16\% & 87.32\% & \textbf{5.756} \\
         \bottomrule
-    \end{tabular}
+    \end{tabular*}
 \end{table}
 
 Các số runtime không dùng để suy ra speedup CPU--GPU vì backend và implementation khác nhau.
@@ -36,17 +36,17 @@ Các số runtime không dùng để suy ra speedup CPU--GPU vì backend và imp
 
 \begin{table}[H]
     \centering
-    \small
-    \caption{Nguồn tái lập các kết quả chính.}
+    \footnotesize
+    \caption[Nguồn tái lập bảng và hình]{Nguồn tái lập các kết quả chính.}
     \label{tab:artifact-traceability}
-    \begin{tabularx}{\textwidth}{@{}lXX@{}}
+    \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{4.1cm}X@{}}
         \toprule
         \textbf{Kết quả} & \textbf{Notebook} & \textbf{Artifact} \\
         \midrule
         Baseline Covertype & Notebook 03 Covertype & \nolinkurl{dt_covertype_scalability.json} \\
         E0--E4 và CV & Notebook 04 HS benchmark & \nolinkurl{dt_hierarchical_shrinkage__summary.csv} \\
         3 $\times$ 4 benchmark & Notebook 05 model benchmark & \nolinkurl{gpu_three_dataset_four_model_comparison__summary.csv} \\
-        Tree rules và recall lớp & Baseline model + split chung & \nolinkurl{dt_covertype_baseline__decision_rules.csv} và \nolinkurl{__per_class_metrics.csv} \\
+        Tree rules và recall lớp & Baseline model + split chung & \nolinkurl{dt_covertype_baseline__decision_rules.csv}\newline \nolinkurl{__per_class_metrics.csv} \\
         \bottomrule
     \end{tabularx}
 \end{table}

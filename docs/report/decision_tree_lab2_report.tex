@@ -30,12 +30,29 @@
 \setlength{\parindent}{1.2cm}
 \setlength{\parskip}{0.25em}
 \setlist[itemize]{leftmargin=1.8em,itemsep=0.25em}
-\setcounter{tocdepth}{2}
+% Chỉ hiển thị đến cấp section để mục lục gọn và không dồn sát chân trang.
+\setcounter{tocdepth}{1}
 \renewcommand{\arraystretch}{1.18}
 \captionsetup{font=small,labelfont=bf}
 \renewcommand{\contentsname}{Mục lục}
 \renewcommand{\listfigurename}{Danh mục hình}
 \renewcommand{\listtablename}{Danh mục bảng}
+\newcommand{\printreportcontents}{%
+    \begingroup
+    \setlength{\parskip}{0pt}%
+    \small
+    \tableofcontents
+    \endgroup
+}
+\newcommand{\printfrontmatterlist}[2]{%
+    \clearpage
+    \phantomsection
+    \addcontentsline{toc}{chapter}{#1}%
+    \begingroup
+    \setlength{\parskip}{0pt}%
+    #2
+    \endgroup
+}
 \makeatletter
 \renewcommand{\@seccntformat}[1]{\csname the#1\endcsname\hspace{0.35em}}
 \makeatother
@@ -98,15 +115,9 @@
 \pagenumbering{roman}
 \input{sections/group_introduction}
 \input{sections/abstract}
-\tableofcontents
-\clearpage
-\phantomsection
-\addcontentsline{toc}{chapter}{Danh mục hình}
-\listoffigures
-\clearpage
-\phantomsection
-\addcontentsline{toc}{chapter}{Danh mục bảng}
-\listoftables
+\printreportcontents
+\printfrontmatterlist{\listfigurename}{\listoffigures}
+\printfrontmatterlist{\listtablename}{\listoftables}
 \clearpage
 \pagenumbering{arabic}
 
@@ -114,6 +125,8 @@
 \input{sections/02_datasets}
 \input{sections/03_methodology}
 \input{sections/04_results_discussion}
+% Cân hai trang mục lục: phần cải tiến bắt đầu ở trang mục lục thứ hai.
+\addtocontents{toc}{\protect\newpage}
 \input{sections/05_decision_tree_improvement}
 \input{sections/06_comparison_discussion}
 \input{sections/06_conclusion}
