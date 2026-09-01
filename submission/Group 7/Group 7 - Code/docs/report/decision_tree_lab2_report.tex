@@ -25,6 +25,7 @@
 \usepackage{cite}
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
+\usepackage{tikz}
 
 \graphicspath{{artifacts/figures/}}
 \setlength{\parindent}{1.2cm}
@@ -61,12 +62,16 @@
 \hypersetup{colorlinks=true,linkcolor=labblue,urlcolor=labblue}
 
 % Điền thông tin nhóm tại một nơi duy nhất trước khi nộp.
-\newcommand{\lecturername}{Bùi Duy Đăng; Bùi Tiến Lên; Võ Nhật Tân}
+\newcommand{\lecturername}{Bùi Duy Đăng -- Bùi Tiến Lên -- Võ Nhật Tân}
 \newcommand{\groupname}{Nhóm 7}
-\newcommand{\memberone}{Lưu Huy Minh Quang -- 23127016}
-\newcommand{\membertwo}{Ngô Quang Thắng -- 23127473}
-\newcommand{\memberthree}{Vũ Lê Trọng Văn -- 20127095}
-\newcommand{\memberfour}{Nguyễn Duy Khang -- 23127202}
+\newcommand{\memberonename}{Lưu Huy Minh Quang}
+\newcommand{\memberoneid}{23127016}
+\newcommand{\membertwoname}{Ngô Quang Thắng}
+\newcommand{\membertwoid}{23127473}
+\newcommand{\memberthreename}{Vũ Lê Trọng Văn}
+\newcommand{\memberthreeid}{20127095}
+\newcommand{\memberfourname}{Nguyễn Duy Khang}
+\newcommand{\memberfourid}{23127202}
 
 \pagestyle{fancy}
 \setlength{\headheight}{14.5pt}
@@ -85,6 +90,12 @@
 \hypersetup{pageanchor=false}
 \begin{titlepage}
     \centering
+    \begin{tikzpicture}[remember picture,overlay]
+        \draw[line width=1.1pt,color=labblue]
+            ([xshift=1.15cm,yshift=-1.15cm]current page.north west)
+            rectangle
+            ([xshift=-1.15cm,yshift=1.15cm]current page.south east);
+    \end{tikzpicture}
     {\large\bfseries ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH\par}
     \vspace{0.25cm}
     {\large\bfseries TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN\par}
@@ -99,16 +110,23 @@
     \vspace{0.7cm}
     {\color{labblue}\rule{0.82\textwidth}{1.2pt}\par}
     \vfill
-    \begin{tabular}{@{}ll@{}}
-        \textbf{Giảng viên:} & \lecturername \\
-        \textbf{Nhóm:} & \groupname \\
-        \textbf{Sinh viên:} & \memberone \\
-                            & \membertwo \\
-                            & \memberthree \\
-                            & \memberfour \\
+    {\Large\bfseries \groupname\par}
+    \vspace{0.50cm}
+    {\large\bfseries Sinh viên\par}
+    \vspace{0.22cm}
+    \begin{tabular}{@{}l@{\hspace{0.75cm}--\hspace{0.75cm}}r@{}}
+        \memberonename   & \memberoneid \\
+        \membertwoname   & \membertwoid \\
+        \memberthreename & \memberthreeid \\
+        \memberfourname  & \memberfourid \\
     \end{tabular}
+    \vspace{0.65cm}
+
+    {\large\bfseries Giảng viên\par}
+    \vspace{0.20cm}
+    {\normalsize \lecturername\par}
     \vfill
-    {Thành phố Hồ Chí Minh, tháng 8 năm 2026\par}
+    {Thành phố Hồ Chí Minh, tháng 9 năm 2026\par}
 \end{titlepage}
 
 \hypersetup{pageanchor=true}
