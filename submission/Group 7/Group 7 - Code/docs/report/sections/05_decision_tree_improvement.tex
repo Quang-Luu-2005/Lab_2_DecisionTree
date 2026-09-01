@@ -4,6 +4,14 @@
 
 Đề bài yêu cầu từ hai đến ba phương pháp cải tiến. Nghiên cứu đánh giá đúng ba chiến lược nguyên tử: pre-pruning, Cost-Complexity Pruning và Hierarchical Shrinkage. Cấu hình E4 là thí nghiệm kết hợp CCP + HS nhằm kiểm tra tính bổ sung giữa regularization cấu trúc và regularization dự đoán; E4 không được tính là phương pháp bắt buộc thứ tư.
 
+Quy ước ký hiệu trong chương này: $E$ là mã của một cấu hình thí nghiệm (experiment). Cụ thể,
+$E0$ là baseline, $E1$ là pre-pruning, $E2$ là Cost-Complexity Pruning, $E3$ là
+Hierarchical Shrinkage trên baseline và $E4$ là cấu hình kết hợp CCP + HS. Trong
+Hierarchical Shrinkage, $\lambda \geq 0$ là tham số điều chỉnh cường độ regularization:
+$\lambda=0$ không làm co dự đoán, còn $\lambda$ càng lớn thì ước lượng ở các nút ít mẫu
+càng được kéo mạnh hơn về phía nút cha. Với CCP, $\alpha$ là tham số phạt độ phức tạp
+của cây và số lượng lá.
+
 \subsection{Phương pháp 1 -- Pre-pruning}
 
 Pre-pruning dừng quá trình sinh cây trước khi các nhánh trở nên quá sâu hoặc quá ít mẫu. Nghiên cứu lựa chọn \texttt{max\_depth} hoặc \texttt{min\_samples\_leaf} bằng 3-fold CV trên train. Trên Covertype, cấu hình được chọn là \texttt{min\_samples\_leaf=5}. Cơ chế này giảm phương sai sớm nhưng có thể loại bỏ cấu trúc hữu ích trước khi cây học xong, gây underfitting.
