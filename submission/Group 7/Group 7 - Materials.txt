@@ -1,6 +1,7 @@
 GROUP 7 - OPTIONAL MATERIALS
 
-The presentation slides were used to prepare and record the presentation video.
+The presentation slides are included separately as "Group 7 - Slides.pdf" and
+were used to prepare and record the presentation video.
 All reproducibility materials required for evaluation are included in
 "Group 7 - Code" together with the datasets and execution instructions.
 
