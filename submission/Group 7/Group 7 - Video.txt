@@ -1,7 +1,6 @@
-PRESENTATION VIDEO LINK - GROUP 7
+GROUP 7 - PRESENTATION VIDEO
 
-Paste the shared presentation-video URL below before submission:
+Video link: PASTE_SHARED_VIDEO_LINK_HERE
 
-PASTE_SHARED_VIDEO_LINK_HERE
-
-Access requirement: verify that the lecturer can open the link without requesting permission.
+Before submission, replace the placeholder above with the shared presentation
+video URL and verify that lecturers can open it without requesting access.

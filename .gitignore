@@ -45,6 +45,11 @@ docs/report/artifacts/models/
 tmp/
 tmp_*/
 
+# Local submission assembly backups and generated verification outputs
+/submission_backup/
+/submission_repack_staging/
+/submission/Group 7/Group 7 - Code/generated_results/
+
 # LaTeX build artifacts
 *.aux
 *.bbl
