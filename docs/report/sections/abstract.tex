@@ -5,6 +5,4 @@ Nghiên cứu này dùng Covertype làm case study chính để xây dựng, ph�
 
 Decision Tree cơ sở trên Covertype đạt accuracy 93.89\%, error rate 6.11\% và macro-F1 90.34\%, nhưng có train accuracy 100\%, depth 41 và 23,956 lá. Nghiên cứu đánh giá ba chiến lược cải tiến: pre-pruning, Cost-Complexity Pruning (CCP) và Hierarchical Shrinkage (HS), cùng một thí nghiệm kết hợp CCP + HS. Cấu hình kết hợp đạt macro-F1 90.53\%, giảm train--test gap 17.6\% và giảm số lá 31.7\% so với baseline. Random Forest dẫn đầu Letter, SVM dẫn đầu Digits, còn Decision Tree dẫn đầu Covertype trong các cấu hình đã thử nghiệm. Kết quả cho thấy không có mô hình hoặc regularization strategy nào thắng trên mọi chế độ dữ liệu; giá trị rõ nhất của CCP + HS là trade-off giữa chất lượng dự đoán, generalization và complexity trên cây lớn.
 
-\noindent\textbf{Từ khóa:} Decision Tree, Hierarchical Shrinkage, Cost-Complexity Pruning, phân loại đa lớp, GPU, Covertype.
-
 \clearpage
