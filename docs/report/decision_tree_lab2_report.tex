@@ -41,7 +41,9 @@
 \newcommand{\printreportcontents}{%
     \begingroup
     \setlength{\parskip}{0pt}%
-    \small
+    \scriptsize
+    \setlength{\baselineskip}{8.8pt}%
+    \renewcommand{\addvspace}[1]{\vspace{0.12em}}%
     \tableofcontents
     \endgroup
 }
@@ -54,6 +56,31 @@
     #2
     \endgroup
 }
+\makeatletter
+\newcommand{\printcombinedfrontmatterlists}{%
+    \clearpage
+    \thispagestyle{plain}%
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\listfigurename}%
+    {\normalfont\LARGE\bfseries \listfigurename\par}%
+    \vspace{0.9em}%
+    \begingroup
+    \setlength{\parskip}{0pt}%
+    \small
+    \@starttoc{lof}%
+    \endgroup
+    \vspace{1.8em}%
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\listtablename}%
+    {\normalfont\LARGE\bfseries \listtablename\par}%
+    \vspace{0.9em}%
+    \begingroup
+    \setlength{\parskip}{0pt}%
+    \small
+    \@starttoc{lot}%
+    \endgroup
+}
+\makeatother
 \makeatletter
 \renewcommand{\@seccntformat}[1]{\csname the#1\endcsname\hspace{0.35em}}
 \makeatother
@@ -134,8 +161,7 @@
 \input{sections/group_introduction}
 \input{sections/abstract}
 \printreportcontents
-\printfrontmatterlist{\listfigurename}{\listoffigures}
-\printfrontmatterlist{\listtablename}{\listoftables}
+\printcombinedfrontmatterlists
 \clearpage
 \pagenumbering{arabic}
 
@@ -143,8 +169,6 @@
 \input{sections/02_datasets}
 \input{sections/03_methodology}
 \input{sections/04_results_discussion}
-% Cân hai trang mục lục: phần cải tiến bắt đầu ở trang mục lục thứ hai.
-\addtocontents{toc}{\protect\newpage}
 \input{sections/05_decision_tree_improvement}
 \input{sections/06_comparison_discussion}
 \input{sections/07_custom_tree_comparison}
