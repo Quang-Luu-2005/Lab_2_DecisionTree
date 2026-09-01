@@ -176,3 +176,22 @@ Các metric phải là số JSON hợp lệ; không dùng `NaN`/`Infinity`. Tên
 ```bash
 pytest -q
 ```
+
+## Bonus: custom tree và kiểm tra end-to-end
+
+Decision Tree thuần NumPy và phép so sánh công bằng với sklearn:
+
+```bash
+python scripts/compare_custom_tree.py
+```
+
+Kiểm tra toàn bộ đường đi dữ liệu cục bộ trên cả ba dataset:
+
+```bash
+python scripts/prepare_letter_recognition.py
+python scripts/run_letter_eda.py
+python scripts/run_end_to_end_check.py
+```
+
+Kết quả được ghi vào `results/custom_vs_sklearn_decision_tree.json` và
+`results/end_to_end_pipeline_validation.json`.

@@ -72,3 +72,25 @@ Report-ready artifacts are under `docs/report/artifacts/`. Final source files ar
 - `docs/report/decision_tree_lab2_report.tex`
 - `docs/slides/decision_tree_lab2_presentation.tex`
 
+## Bonus: custom Decision Tree from scratch
+
+The optional custom-tree tasks are implemented and reproducibly compared in:
+
+- `src/decision_tree_lab2/custom_tree.py`
+- `scripts/compare_custom_tree.py`
+- `tests/test_custom_tree.py`
+
+On Handwritten Digits, both models use the same stratified 80/20 split,
+`random_state=42`, Gini criterion, `max_depth=8` and `min_samples_leaf=1`.
+The custom implementation reaches 82.22% test accuracy and 82.10% macro-F1;
+scikit-learn reaches 80.83% and 80.72%, with 94.72% test prediction agreement.
+The small difference is expected because tied splits can be resolved differently.
+The detailed result is stored in `results/custom_vs_sklearn_decision_tree.json`.
+
+## End-to-end validation
+
+`scripts/run_end_to_end_check.py` validates the local data path for all three
+datasets: load, schema/preprocessing validation, shared split, fit, predict and
+metrics. The validation completed successfully for Letter Recognition (18,668
+samples), Handwritten Digits (1,797 samples) and Covertype (581,012 samples).
+The result is stored in `results/end_to_end_pipeline_validation.json`.
