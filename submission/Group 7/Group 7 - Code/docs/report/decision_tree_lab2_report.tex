@@ -38,15 +38,24 @@
 \renewcommand{\contentsname}{Mục lục}
 \renewcommand{\listfigurename}{Danh mục hình}
 \renewcommand{\listtablename}{Danh mục bảng}
+\makeatletter
 \newcommand{\printreportcontents}{%
+    \clearpage
     \begingroup
     \setlength{\parskip}{0pt}%
-    \scriptsize
-    \setlength{\baselineskip}{8.8pt}%
-    \renewcommand{\addvspace}[1]{\vspace{0.12em}}%
-    \tableofcontents
+    \fontsize{9.6pt}{9.9pt}\selectfont
+    \setlength{\baselineskip}{9.9pt}%
+    \renewcommand{\addvspace}[1]{\vspace{0.05em}}%
+    \thispagestyle{plain}%
+    \phantomsection
+    \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}%
+    \vspace*{0.2cm}%
+    {\parindent0pt\normalfont\huge\bfseries \contentsname\par}%
+    \vspace{0.15cm}%
+    \@starttoc{toc}%
     \endgroup
 }
+\makeatother
 \newcommand{\printfrontmatterlist}[2]{%
     \clearpage
     \phantomsection
@@ -60,27 +69,40 @@
 \newcommand{\printcombinedfrontmatterlists}{%
     \clearpage
     \thispagestyle{plain}%
+    \vspace*{0.6cm}%
     \phantomsection
     \addcontentsline{toc}{chapter}{\listfigurename}%
-    {\normalfont\LARGE\bfseries \listfigurename\par}%
-    \vspace{0.9em}%
+    {\normalfont\huge\bfseries \listfigurename\par}%
+    \vspace{1.0em}%
     \begingroup
-    \setlength{\parskip}{0pt}%
-    \small
+    \setlength{\parskip}{0.22em}%
+    \normalsize
     \@starttoc{lof}%
     \endgroup
-    \vspace{1.8em}%
+    \vfill
     \phantomsection
     \addcontentsline{toc}{chapter}{\listtablename}%
-    {\normalfont\LARGE\bfseries \listtablename\par}%
-    \vspace{0.9em}%
+    {\normalfont\huge\bfseries \listtablename\par}%
+    \vspace{1.0em}%
     \begingroup
-    \setlength{\parskip}{0pt}%
-    \small
+    \setlength{\parskip}{0.22em}%
+    \normalsize
     \@starttoc{lot}%
     \endgroup
+    \vfill
 }
 \makeatother
+\newcommand{\compactchapter}[1]{%
+    \clearpage
+    \refstepcounter{chapter}%
+    \thispagestyle{plain}%
+    \chaptermark{#1}%
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
+    \vspace*{0.6cm}%
+    {\parindent0pt\normalfont\huge\bfseries Chương \thechapter: #1\par}%
+    \vspace{1.0cm}%
+}
 \makeatletter
 \renewcommand{\@seccntformat}[1]{\csname the#1\endcsname\hspace{0.35em}}
 \makeatother
