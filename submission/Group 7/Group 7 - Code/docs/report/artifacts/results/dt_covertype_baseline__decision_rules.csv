@@ -1,0 +1,4 @@
+rule_id,predicted_class,train_support,leaf_purity,depth,conditions
+R1,2,264,1.0,6,"Elevation <= 3044.5 AND Elevation <= 2510.5 AND Horizontal_Distance_To_Hydrology > 15 AND Wilderness_Area_0 = 1 AND Horizontal_Distance_To_Fire_Points <= 5122 AND Horizontal_Distance_To_Hydrology <= 300.5"
+R2,5,71,1.0,6,"Elevation <= 3044.5 AND Elevation <= 2510.5 AND Horizontal_Distance_To_Hydrology > 15 AND Wilderness_Area_0 = 1 AND Horizontal_Distance_To_Fire_Points > 5122 AND Horizontal_Distance_To_Roadways > 621"
+R3,1,298,1.0,7,"Elevation > 3044.5 AND Elevation > 3322.5 AND Wilderness_Area_2 = 1 AND Soil_Type_31 = 0 AND Elevation > 3360.5 AND Horizontal_Distance_To_Fire_Points <= 403 AND Horizontal_Distance_To_Roadways > 2934.5"

@@ -1,0 +1,19 @@
+\chapter{Kết luận}
+
+\section{Trả lời các câu hỏi nghiên cứu}
+
+\textbf{RQ1 -- Decision Tree thay đổi theo chế độ dữ liệu như thế nào?} Cây đơn đạt kết quả mạnh nhất trên Covertype, nơi có nhiều mẫu và feature dạng bảng. Trên Letter và Digits, cây có train accuracy 100\% nhưng test accuracy lần lượt chỉ 86.77\% và 82.50\%, cho thấy phương sai cao rõ hơn khi dữ liệu ít hoặc ranh giới lớp không phù hợp với split theo trục.
+
+\textbf{RQ2 -- Decision Tree mạnh/yếu ra sao so với mô hình đối chứng?} Không có mô hình thắng mọi dataset. Random Forest dẫn đầu Letter, SVM--RBF dẫn đầu Digits và Decision Tree dẫn đầu Covertype trong cấu hình khảo sát. Decision Tree có ưu thế về tốc độ huấn luyện, giải thích theo path và không cần scaling; hạn chế là phương sai cao và complexity có thể tăng rất nhanh.
+
+\textbf{RQ3 -- Ba cải tiến tác động vào đâu?} Pre-pruning dừng cây sớm nhưng có nguy cơ underfit; CCP cắt topology và giảm trực tiếp số lá; HS giữ topology nhưng làm mượt prediction ở các nút sâu. Trên Covertype, E4 CCP + HS có macro-F1 cao nhất, giảm train--test gap khoảng 17.6\% và giảm number of leaves khoảng 31.7\% so với E0.
+
+\section{Bài học chính}
+
+Một cây tốt hơn không nhất thiết là cây có accuracy cao nhất. Với dữ liệu mất cân bằng và yêu cầu giải thích, lựa chọn cần cân bằng accuracy, error rate, macro-F1, lỗi theo lớp, train--test gap và complexity. E3 có accuracy cao nhất nhưng giữ nguyên 23,956 lá; E4 hy sinh 0.04 điểm phần trăm accuracy so với E3 để đạt macro-F1 cao hơn và một cấu trúc nhỏ hơn nhiều. Đây là lý do E4 được chọn làm cấu hình cuối cho Covertype.
+
+Kết quả robustness cũng quan trọng: HS/CCP không phải chiến lược tăng điểm phổ quát. Tác động rõ nhất xuất hiện khi baseline đủ sâu, dữ liệu đủ lớn và tham số được chọn bằng train-only validation.
+
+\section{Hướng phát triển}
+
+Nghiên cứu tiếp theo nên lặp thí nghiệm qua nhiều seed, dùng nested cross-validation, mở rộng không gian $\lambda$ và $\alpha$, đồng thời bổ sung kiểm định thống kê cho effect size nhỏ. Benchmark mô hình đối chứng cần tuning có kiểm soát và backend đồng nhất hơn nếu mục tiêu chuyển sang so sánh tốc độ. Với Decision Tree, các hướng tiếp theo có thể đo kích thước model, bộ nhớ, độ trễ dự đoán và mức ổn định của từng decision rule trước biến động dữ liệu.

@@ -1,0 +1,111 @@
+\chapter{Phân tích cây Decision Tree sinh ra}
+
+\section{Cây Covertype cơ sở}
+
+Hình~\ref{fig:covertype-tree} trình bày các tầng đầu của E0. Toàn cây không thể hiển thị trên một trang mà vẫn đọc được vì có depth 41 và 23,956 lá; việc chỉ vẽ các tầng đầu bảo toàn khả năng quan sát root split và các nhánh chính.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth]{dt_covertype_baseline__tree_top_levels.png}
+    \caption[Các tầng đầu của Decision Tree Covertype cơ sở]{Các tầng đầu của Decision Tree cơ sở trên Covertype. Toàn cây có depth 41 và 23,956 lá.}
+    \label{fig:covertype-tree}
+\end{figure}
+\clearpage
+
+\section{Root split và các luật quyết định tiêu biểu}
+
+Root split là \texttt{Elevation $\leq$ 3044.5}. Nút gốc chứa 464,809 mẫu train và có Gini 0.6231. Nhánh trái chứa 269,424 mẫu và tiếp tục tách theo \texttt{Elevation $\leq$ 2510.5}; nhánh phải chủ yếu đại diện cho các vùng cao hơn. Việc Elevation xuất hiện ở root phù hợp với trực giác miền: độ cao là yếu tố quan trọng liên quan tới loại lớp phủ rừng. Đây là diễn giải về mô hình, không phải khẳng định quan hệ nhân quả.
+
+Ba đường đi dưới đây được trích trực tiếp từ cây đã lưu. Chúng là các lá thuần trên tập train và được chọn vì có depth tương đối ngắn cùng số mẫu hỗ trợ đủ lớn:
+
+\begin{enumerate}[leftmargin=*,label=\textbf{Luật \arabic*:}]
+    \item dự đoán lớp 2, hỗ trợ 264 mẫu train:
+    \begin{itemize}
+        \item \texttt{Elevation} $\leq3044.5$ và $\leq2510.5$;
+        \item \nolinkurl{Horizontal_Distance_To_Hydrology} $>15$ và $\leq300.5$;
+        \item \nolinkurl{Wilderness_Area_0} $=1$; \nolinkurl{Horizontal_Distance_To_Fire_Points} $\leq5122$.
+    \end{itemize}
+
+    \item dự đoán lớp 5, hỗ trợ 71 mẫu train:
+    \begin{itemize}
+        \item \texttt{Elevation} $\leq3044.5$ và $\leq2510.5$;
+        \item \nolinkurl{Horizontal_Distance_To_Hydrology} $>15$; \nolinkurl{Wilderness_Area_0} $=1$;
+        \item \nolinkurl{Horizontal_Distance_To_Fire_Points} $>5122$;
+        \item \nolinkurl{Horizontal_Distance_To_Roadways} $>621$.
+    \end{itemize}
+
+    \item dự đoán lớp 1, hỗ trợ 298 mẫu train:
+    \begin{itemize}
+        \item \texttt{Elevation} $>3044.5$, $>3322.5$ và $>3360.5$;
+        \item \nolinkurl{Wilderness_Area_2} $=1$; \nolinkurl{Soil_Type_31} $=0$;
+        \item \nolinkurl{Horizontal_Distance_To_Fire_Points} $\leq403$; \nolinkurl{Horizontal_Distance_To_Roadways} $>2934.5$.
+    \end{itemize}
+\end{enumerate}
+
+Các luật cho thấy ưu điểm giải thích cục bộ: một dự đoán có thể được truy vết thành chuỗi điều kiện. Tuy nhiên, gần 24 nghìn lá làm việc mô tả toàn cục trở nên không thực tế; đây là động lực trực tiếp cho pruning.
+
+\section{Hiệu năng baseline và error rate}
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption[Decision Tree cơ sở trên ba bộ dữ liệu]{Kết quả Decision Tree cơ sở trên ba bộ dữ liệu.}
+    \label{tab:baseline-three-datasets}
+    \begin{tabular}{@{}lrrr@{}}
+        \toprule
+        \textbf{Bộ dữ liệu} & \textbf{Accuracy} & \textbf{Error rate} & \textbf{Macro-F1} \\
+        \midrule
+        Letter Recognition & 86.77\% & 13.23\% & 86.77\% \\
+        Handwritten Digits & 82.50\% & 17.50\% & 82.30\% \\
+        \textbf{Covertype} & \textbf{93.89\%} & \textbf{6.11\%} & \textbf{90.34\%} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Trên Covertype, E0 đạt train accuracy 100\% nhưng test accuracy 93.89\%, tạo train--test gap 6.11 điểm phần trăm. Khi đặt cạnh depth 41 và 23,956 lá, lỗi train bằng không là bằng chứng nhất quán với high variance: cây học rất chi tiết tập train nhưng không giữ được toàn bộ lợi thế đó trên test. Accuracy vẫn cao, vì vậy mục tiêu cải tiến không chỉ là tăng score mà còn phải giảm gap và complexity.
+
+\section{Confusion matrix và lỗi theo lớp}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.76\textwidth]{dt_covertype_scalability__confusion_matrix.png}
+    \caption[Confusion matrix của Decision Tree Covertype cơ sở]{Confusion matrix của Decision Tree cơ sở trên 116,203 mẫu test Covertype.}
+    \label{fig:covertype-confusion}
+\end{figure}
+\clearpage
+\thispagestyle{fancy}
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption[Recall theo lớp của Covertype]{Recall và số mẫu test của từng lớp Covertype.}
+    \label{tab:covertype-class-recall}
+    \begin{tabular}{@{}crrr@{}}
+        \toprule
+        \textbf{Lớp} & \textbf{Support} & \textbf{Recall} & \textbf{F1} \\
+        \midrule
+        1 & 42,368 & 93.80\% & 93.81\% \\
+        2 & 56,661 & 94.83\% & 94.81\% \\
+        3 & 7,151 & 93.08\% & 92.93\% \\
+        4 & 549 & 84.88\% & 84.19\% \\
+        5 & 1,899 & 84.47\% & 84.31\% \\
+        6 & 3,473 & 87.24\% & 87.81\% \\
+        7 & 4,102 & 94.34\% & 94.54\% \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Hai lớp lớn 1 và 2 đạt recall gần 94\%, trong khi lớp 4 và 5 chỉ khoảng 84--85\%. Lỗi lớn nhất tập trung giữa lớp 1--2, lớp 3--6 và các lớp có support nhỏ. Vì vậy, accuracy 93.89\% có thể che khuất chất lượng thấp hơn ở lớp thiểu số; macro-F1 90.34\% là chỉ số chọn cấu hình phù hợp hơn.
+
+\clearpage
+\thispagestyle{fancy}
+\section{Feature importance và giới hạn diễn giải}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.86\textwidth]{dt_covertype_scalability__feature_importance.png}
+    \caption[Feature importance của Decision Tree Covertype cơ sở]{Feature importance của Decision Tree cơ sở trên Covertype.}
+    \label{fig:covertype-feature-importance}
+\end{figure}
+
+Elevation chiếm importance lớn nhất (0.3395), theo sau bởi Horizontal Distance to Roadways (0.1502), Horizontal Distance to Fire Points (0.1412) và Horizontal Distance to Hydrology (0.0615). Feature importance cung cấp tóm tắt toàn cục về mức sử dụng feature; các path ở phần trước cung cấp giải thích cục bộ cho từng dự đoán. Hai góc nhìn bổ sung lẫn nhau nhưng không biến cây lớn thành một mô hình dễ đọc toàn cục.

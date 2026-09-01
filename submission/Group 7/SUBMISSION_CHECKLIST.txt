@@ -1,0 +1,37 @@
+GROUP 7 - LAB 2 DECISION TREE SUBMISSION CHECKLIST
+
+Current structure (not zipped):
+[x] Group 7 - Report.pdf
+[x] Group 7 - Code/
+[x] Group 7 - Slides.pdf (presentation deck for recording)
+[ ] Group 7 - Video.txt: waiting for the shared video link
+
+Required actions before creating Group 7.zip:
+[x] Fill lecturer names, member names and student IDs in the report source.
+[x] Rebuild the report PDF after filling the group information.
+[ ] Paste the presentation-video link into Group 7 - Video.txt.
+[ ] Verify the video link opens without requesting access.
+[x] Run the code/reproducibility checks one final time (26 tests passed; 3/3 datasets passed end-to-end on 01/09/2026).
+[x] Re-run the custom Decision Tree vs sklearn comparison.
+[x] Complete and visually verify the 30-slide presentation deck.
+[x] Prepare the presentation script and demo checklist in Group 7 - Code/docs/PRESENTATION_SCRIPT.md.
+[ ] Create Group 7.zip only after every item above is complete.
+[ ] Open the final ZIP and verify all required files are present and readable.
+
+Information still needed from the group:
+- Shared presentation-video URL.
+
+Information already verified from Trello:
+- Vũ Lê Trọng Văn - 20127095.
+- Lecturers: Bùi Duy Đăng; Bùi Tiến Lên; Võ Nhật Tân.
+
+Student information supplied by the group:
+- Lưu Huy Minh Quang - 23127016.
+- Ngô Quang Thắng - 23127473.
+- Vũ Lê Trọng Văn - 20127095.
+- Nguyễn Duy Khang - 23127202.
+
+Code-folder notes:
+- Contains source modules, scripts, notebooks, tests, documentation, result files and figures.
+- Excludes large raw/processed datasets and trained model binaries.
+- Datasets can be restored with scripts/download_datasets.py and docs/DATA_SOURCES.md.

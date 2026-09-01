@@ -1,0 +1,10 @@
+\chapter*{Tóm tắt}
+\addcontentsline{toc}{chapter}{Tóm tắt}
+
+Nghiên cứu này dùng Covertype làm case study chính để xây dựng, phân tích và cải tiến Decision Tree theo đầy đủ yêu cầu Lab. Letter Recognition và Handwritten Digits đóng vai trò robustness datasets; Random Forest, Support Vector Machine và K-Nearest Neighbors là các mô hình đối chứng mở rộng. Mọi thí nghiệm dùng phép chia 80/20 phân tầng với \texttt{random\_state=42}; lựa chọn tham số chỉ truy cập tập train. Bên cạnh accuracy và macro-F1, nghiên cứu báo cáo error rate, recall theo lớp, train--test gap, thời gian thực thi, depth và number of leaves.
+
+Decision Tree cơ sở trên Covertype đạt accuracy 93.89\%, error rate 6.11\% và macro-F1 90.34\%, nhưng có train accuracy 100\%, depth 41 và 23,956 lá. Nghiên cứu đánh giá ba chiến lược cải tiến: pre-pruning, Cost-Complexity Pruning (CCP) và Hierarchical Shrinkage (HS), cùng một thí nghiệm kết hợp CCP + HS. Cấu hình kết hợp đạt macro-F1 90.53\%, giảm train--test gap 17.6\% và giảm số lá 31.7\% so với baseline. Random Forest dẫn đầu Letter, SVM dẫn đầu Digits, còn Decision Tree dẫn đầu Covertype trong các cấu hình đã thử nghiệm. Kết quả cho thấy không có mô hình hoặc regularization strategy nào thắng trên mọi chế độ dữ liệu; giá trị rõ nhất của CCP + HS là trade-off giữa chất lượng dự đoán, generalization và complexity trên cây lớn.
+
+\noindent\textbf{Từ khóa:} Decision Tree, Hierarchical Shrinkage, Cost-Complexity Pruning, phân loại đa lớp, GPU, Covertype.
+
+\clearpage
