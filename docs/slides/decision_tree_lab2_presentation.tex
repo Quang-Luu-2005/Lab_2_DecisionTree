@@ -48,7 +48,7 @@
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.22\paperwidth,ht=2.8ex,dp=1.2ex,rightskip=4mm plus1fil]{date in head/foot}%
       \scriptsize\textcolor{darkgray}{%
-        \ifappendixslides Appendix A\insertframenumber/4\else\insertframenumber/35\fi}
+        \ifappendixslides Appendix A\insertframenumber/3\else\insertframenumber/35\fi}
     \end{beamercolorbox}%
   }
 }
@@ -414,7 +414,7 @@
     \centering
     Ba luật đều là lá thuần trên train, nhưng toàn cây có gần \textbf{24 nghìn luật}.
   \end{tcolorbox}
-  \note{[Sources] Rules extracted from the stored baseline model; full paths in Appendix A3.\\
+  \note{[Sources] Rules extracted from the stored baseline model; full paths in Appendix A2.\\
   Talk track (0:45): Chứng minh interpretability bằng rule thật, sau đó chỉ ra giới hạn toàn cục.}
 \end{frame}
 
@@ -1007,28 +1007,7 @@
 
 % A3 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Appendix: Backend và phần cứng theo thí nghiệm}
-  \small
-  \begin{tabularx}{\textwidth}{@{}L{3.0cm}L{3.0cm}Y@{}}
-    \toprule
-    \textbf{Thí nghiệm} & \textbf{Backend} & \textbf{Thiết bị ghi nhận} \\
-    \midrule
-    Decision Tree / HS & scikit-learn & CPU; P100 khả dụng nhưng không dùng compute \\
-    RF / SVM / KNN & RAPIDS cuML & Tesla T4 trong phiên Kaggle GPU x2 \\
-    \bottomrule
-  \end{tabularx}
-  \par\vspace{0.45cm}
-  \begin{itemize}
-    \item GPU x2 là cấu hình môi trường, không khẳng định hai GPU chạy song song.
-    \item Runtime không dùng để suy ra speedup CPU--GPU thuần túy.
-    \item RF Covertype chỉ đại diện cho configuration cuML đã thử nghiệm.
-  \end{itemize}
-  \note{[Sources] Notebook environment metadata and report methodology.}
-\end{frame}
-
-% A4 --------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Appendix: Phân công và tài liệu chính}
+  \frametitle{Appendix: Phân công nhóm}
   \scriptsize
   \begin{tabularx}{\textwidth}{@{}L{3.2cm}Y L{1.1cm}@{}}
     \toprule

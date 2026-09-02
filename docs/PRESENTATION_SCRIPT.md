@@ -20,7 +20,7 @@ Thời lượng mục tiêu: 12-15 phút, dùng `docs/slides/decision_tree_lab2_
 7. Slide 29-31 (1,5 phút): giới thiệu cơ chế của RF/SVM/KNN, so sánh model thắng theo dataset và báo cáo độ ổn định bằng CV.
 8. Slide 32-33 (1 phút): trình bày custom Decision Tree, đối chiếu sklearn và xác nhận pipeline end-to-end.
 9. Slide 34-35 (1 phút): nêu threats to validity và kết luận theo ba câu hỏi nghiên cứu.
-10. Appendix A1-A4: chỉ mở khi giảng viên hỏi về bảng benchmark đầy đủ, decision rules, hardware/backend hoặc đóng góp nhóm.
+10. Appendix A1-A3: chỉ mở khi giảng viên hỏi về bảng benchmark đầy đủ, decision rules hoặc đóng góp nhóm.
 
 ## Demo ngắn
 
