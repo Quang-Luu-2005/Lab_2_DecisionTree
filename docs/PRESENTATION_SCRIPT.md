@@ -6,7 +6,8 @@ Thời lượng mục tiêu: 12-15 phút, dùng `docs/slides/decision_tree_lab2_
 
 - Lưu Huy Minh Quang (23127016): trình bày chính, điều khiển slide và demo; phụ trách mở đầu, dữ liệu, baseline, cải tiến, custom DT, benchmark và kết luận.
 - Ngô Quang Thắng (23127473): nếu tham gia, trình bày Gini so với Entropy, depth sweep, pruning, decision rules và feature importance.
-- Vũ Lê Trọng Văn (20127095), Nguyễn Duy Khang (23127202): chưa có phần việc độc lập được xác minh; chỉ phân phần nói sau khi nhóm xác nhận thực tế tham gia video.
+- Vũ Lê Trọng Văn (20127095): chưa có phần việc độc lập được xác minh.
+- Nguyễn Duy Khang (23127202): quay, biên tập và hoàn thiện video thuyết trình.
 
 ## Mạch trình bày
 

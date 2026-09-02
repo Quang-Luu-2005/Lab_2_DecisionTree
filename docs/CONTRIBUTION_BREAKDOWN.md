@@ -29,18 +29,18 @@ Repository có 27 commit trên toàn bộ hai nhánh `main` và `Thang`. Ngô Qu
 - Không có merge commit trên `main` và không có Pull Request trong repository.
 - Ba commit `af0d0e1`, `a872072`, `976002f` không phải tổ tiên của `main`; các artifact tương ứng vẫn chỉ tồn tại trên branch `Thang`.
 
-Số card có thể ánh xạ trực tiếp tương ứng 85,2% / 14,8%, còn lịch sử tích hợp `main` tương ứng 100,0% / 0,0%. Để phản ánh cả khối lượng hoàn thiện bản nộp và phần việc Ngô Quang Thắng đã thực hiện trên branch riêng, nhóm thống nhất ghi nhận tỷ lệ đóng góp cuối là 90,0% / 10,0%.
+Số card có thể ánh xạ trực tiếp tương ứng 85,2% / 14,8%, còn lịch sử tích hợp `main` tương ứng 100,0% / 0,0%. Sau khi đối chiếu thêm phần quay và hoàn thiện video thuyết trình, nhóm thống nhất tỷ lệ đóng góp cuối là Quang 80,0%, Thắng 10,0%, Văn 0,0% và Khang 10,0%.
 
 ## Bảng tỷ lệ đóng góp
 
 | Thành viên | Mô tả công việc | Bằng chứng | Tỷ lệ thống nhất |
 |---|---|---|---:|
-| Lưu Huy Minh Quang (`Quang-Luu-2005`) | Khởi tạo và điều phối project; dữ liệu/EDA; baseline; benchmark; cross-dataset; cải tiến mô hình; tổng hợp kết quả; report/slide; custom DT; kiểm thử end-to-end; tích hợp `main` và đóng gói | 24 commit trên `main`; 23 card được ghi nhận | 90,0% |
+| Lưu Huy Minh Quang (`Quang-Luu-2005`) | Khởi tạo và điều phối project; dữ liệu/EDA; baseline; benchmark; cross-dataset; cải tiến mô hình; tổng hợp kết quả; report/slide; custom DT; kiểm thử end-to-end; tích hợp `main` và đóng gói | Đối chiếu GitHub và Trello | 80,0% |
 | Ngô Quang Thắng (`Ganth1811`) | Gini vs Entropy (09); depth sweep (10); pre/post-pruning (11); decision rules, feature importance và hình cây (14) trên branch `Thang` | 3 commit branch; chưa merge vào `main` | 10,0% |
 | Vũ Lê Trọng Văn | Chưa có task hoàn thành độc lập được xác minh | Không có | 0,0% |
-| Nguyễn Duy Khang | Chưa có task hoàn thành độc lập được xác minh | Không có | 0,0% |
+| Nguyễn Duy Khang | Quay, biên tập và hoàn thiện video thuyết trình | Xác nhận của nhóm | 10,0% |
 | **Tổng** |  |  | **100,0%** |
 
 ## Lưu ý sử dụng
 
-Bảng trên là bản có thể kiểm chứng từ GitHub/Trello và xác nhận của người thực hiện chính. Trước khi nộp, nhóm nên xác nhận lại xem có đóng góp offline, quay video, thuyết trình hoặc chỉnh sửa chưa được commit hay không; nếu có thì cần quy đổi và cập nhật tỷ lệ.
+Bảng trên là tỷ lệ cuối cùng được nhóm thống nhất sau khi đối chiếu GitHub, Trello và phần video thuyết trình.
