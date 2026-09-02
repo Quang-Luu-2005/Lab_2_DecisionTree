@@ -126,7 +126,7 @@
 
 % 3 ---------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Covertype là core Lab; Letter và Digits kiểm tra độ bền}
+  \frametitle{Nhóm chọn Covertype làm dataset chính}
   \chaptertag{1}{BỐI CẢNH VÀ ĐỘNG LỰC}
   \begin{columns}[T,onlytextwidth]
     \column{0.48\textwidth}
@@ -135,6 +135,7 @@
         \item Build và phân tích cây.
         \item Accuracy, Error rate, Macro-F1.
         \item Ba phương pháp cải tiến.
+        \item 581,012 mẫu, 54 features, 7 lớp.
       \end{itemize}
     \column{0.48\textwidth}
       \textbf{Extended study}
@@ -147,7 +148,7 @@
   \vspace{0.35cm}
   \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=2mm,bottom=2mm]
     \centering
-    Trọng tâm xuyên suốt vẫn là \textbf{Decision Tree cơ sở $\rightarrow$ phân tích $\rightarrow$ cải tiến}.
+    Nhóm chọn Covertype vì cây có thể phát triển sâu và phân bố lớp không đều, phù hợp để quan sát \textbf{overfitting $\rightarrow$ regularization}.
   \end{tcolorbox}
   \note{[Sources] Scope and objectives in report Chapter 1.\\
   Talk track (0:35): Nêu vai trò của ba dataset và lý do nhóm mở rộng phạm vi kiểm tra.}
@@ -221,6 +222,9 @@
     \centering
     Stop quá lỏng $\Rightarrow$ nhánh ít mẫu $\Rightarrow$ prediction cực đoan và phương sai cao.
   \end{tcolorbox}
+  \vspace{0.16cm}
+  \centering
+  \small Nhóm dùng quy trình này để fit E0 trên train; test chỉ được mở ở bước đánh giá cuối.
   \note{[Sources] Breiman et al., 1984; scikit-learn DecisionTreeClassifier documentation.\\
   Talk track (0:40): Đi qua pseudocode và chỉ ra vị trí xuất hiện overfitting.}
 \end{frame}
@@ -390,7 +394,7 @@
   \end{center}
   \vspace{-0.18cm}
   \centering
-  {\small Chỉ hiển thị các tầng đầu; toàn cây có \textbf{depth 41} và \textbf{23,956 leaves}.}
+  {\small Đây là cây kết quả E0; chỉ hiển thị các tầng đầu. Toàn cây có \textbf{depth 41} và \textbf{23,956 leaves}.}
   \note{[Sources] Covertype baseline model and exported top-level tree.\\
   Talk track (0:50): Đọc root split, số mẫu ở root và nhấn mạnh chỉ top levels được hiển thị để giữ khả năng đọc.}
 \end{frame}
@@ -434,6 +438,7 @@
   \end{tcolorbox}
   \vspace{0.35cm}
   \centering
+  \small Accuracy là tỷ lệ dự đoán đúng; Error rate $=1-\mathrm{Accuracy}$.\\
   Zero train error + depth 41 + 23,956 leaves là bằng chứng nhất quán với high variance.
   \note{[Sources] Covertype baseline JSON and holdout comparison.\\
   Talk track (0:45): Test accuracy cao không phủ nhận overfitting; phải đọc cùng gap và complexity.}
@@ -488,7 +493,7 @@
 
 % 14 --------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{Ba phương pháp nhắm vào ba điểm yếu khác nhau của baseline}
+  \frametitle{Mỗi phương pháp tác động vào một điểm yếu khác nhau}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
   \footnotesize
   {\renewcommand{\arraystretch}{1.03}%
@@ -505,7 +510,7 @@
   \end{tabularx}}
   \par\vspace{0.24cm}
   \centering
-  $E$ là mã experiment; E1, E2, E3 là ba phương pháp, còn \textbf{E4 là combined extension}.
+  $E$ là mã experiment; E1, E2, E3 là ba phương pháp. Các slide sau lần lượt đi từ \textbf{cơ chế $\rightarrow$ kết quả $\rightarrow$ trade-off}.
   \note{[Sources] Baseline analysis; Breiman et al. 1984; Agarwal et al. 2022.\\
   Talk track (0:30): Đây là điểm chuyển rõ ràng từ Decision Tree cơ bản sang cải tiến.}
 \end{frame}
@@ -527,11 +532,12 @@
       \begin{itemize}
         \item Giảm số split dựa trên rất ít mẫu.
         \item Giảm variance và chi phí dự đoán.
+        \item Cắt nhánh nhiễu có thể tăng test accuracy.
         \item Quá mạnh sẽ dừng trước khi học đủ cấu trúc $\Rightarrow$ underfit.
       \end{itemize}
   \end{columns}
-  \vspace{0.32cm}
-  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=2mm,bottom=2mm]
+  \vspace{0.18cm}
+  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=1.5mm,bottom=1.5mm]
     \centering
     Nhóm chọn giá trị bằng 3-fold CV trên train; với Covertype, CV chọn \texttt{min\_samples\_leaf=5}.
   \end{tcolorbox}
@@ -577,7 +583,7 @@
     $\displaystyle T_{\alpha}=\arg\min_{T\subseteq T_0}
     \left[R(T)+\alpha|\mathcal{L}(T)|\right]$
   \end{tcolorbox}
-  \vspace{0.28cm}
+  \vspace{0.16cm}
   \small
   \begin{columns}[T,onlytextwidth]
     \column{0.48\textwidth}
@@ -593,9 +599,11 @@
         \item $\alpha$ lớn hơn $\Rightarrow$ ưu tiên cây ít lá hơn.
       \end{itemize}
   \end{columns}
-  \vspace{0.10cm}
-  \centering
-  Khác pre-pruning, CCP nhìn thấy cây đã fit rồi mới quyết định nhánh nào nên loại.
+  \vspace{0.04cm}
+  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=1mm,bottom=1mm]
+    \centering
+    Cắt nhánh yếu giúp nút cha ổn định hơn; accuracy test có thể tăng nếu nhánh cũ học nhiễu.
+  \end{tcolorbox}
   \note{[Sources] Breiman et al., 1984; scikit-learn cost-complexity pruning documentation.\\
   Talk track (0:50): Giải thích từng ký hiệu và sự khác biệt giữa post-pruning với early stopping.}
 \end{frame}
@@ -625,7 +633,7 @@
   \end{center}
   \par\vspace{0.28cm}
   \centering
-  CCP loại complexity dư thừa mà không đánh đổi chất lượng test trong lần chạy này.
+  CCP loại complexity dư thừa; dự đoán ở nút cha ổn định hơn nên chất lượng test được giữ trong lần chạy này.
   \note{[Sources] CART pruning; scikit-learn CCP; Covertype E2 results.\\
   Talk track (0:45): CCP thấy cây đầy đủ rồi mới cắt subtree có đóng góp nhỏ.}
 \end{frame}
@@ -634,12 +642,12 @@
 \begin{frame}
   \frametitle{HS làm mềm dự đoán nhưng giữ nguyên topology}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
-  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=3mm,bottom=3mm]
+  \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=2mm,bottom=2mm]
     \centering
     $\displaystyle \hat p_{HS}(v)=\hat p_{HS}(pa(v))+
     \frac{n_v}{n_v+\lambda}\left[\hat p(v)-\hat p(pa(v))\right]$
   \end{tcolorbox}
-  \vspace{0.24cm}
+  \vspace{0.16cm}
   \small
   \begin{columns}[T,onlytextwidth]
     \column{0.49\textwidth}
@@ -652,7 +660,7 @@
       \begin{itemize}
         \item $\lambda=0$: không shrink.
         \item $n_v$ nhỏ hoặc $\lambda$ lớn: dự đoán bị kéo mạnh về nút cha.
-        \item Split, depth và số lá không thay đổi.
+        \item Lá ít mẫu bớt cực đoan $\Rightarrow$ có thể giảm lỗi test; topology không đổi.
       \end{itemize}
   \end{columns}
   \note{[Sources] Agarwal et al., Hierarchical Shrinkage, 2022; method description in report Chapter 5.\\
@@ -677,7 +685,8 @@
   \end{itemize}
   \vspace{0.18cm}
   \centering
-  Cải thiện đến từ xác suất dự đoán, không phải một cây nhỏ hơn.
+  Lá ít mẫu dự đoán quá cực đoan sẽ được kéo về nút cha, nên có thể giảm lỗi test.\\
+  \textbf{Cải thiện đến từ xác suất dự đoán, không phải một cây nhỏ hơn.}
   \note{[Sources] Agarwal et al., Hierarchical Shrinkage, 2022; E3 artifact.\\
   Talk track (0:50): Nhấn mạnh khác biệt cơ chế giữa HS và pruning.}
 \end{frame}
@@ -701,6 +710,7 @@
     \item Letter có $\alpha=0$: CV không tìm thấy lợi ích từ cắt topology.
     \item Digits E4 chọn $\lambda=0$ sau CCP: CV không ủng hộ shrink thêm cây đã prune.
     \item Covertype chọn cả $\alpha>0$ và $\lambda=10$, nên E4 thực sự kết hợp hai cơ chế.
+    \item Tham số được chọn trên train; test chỉ dùng để báo cáo cuối.
   \end{itemize}
   \note{[Sources] Improvement-selection JSON and 3-fold CV results.\\
   Talk track (0:45): Giải thích các giá trị 0 là negative result hợp lệ, không phải thiếu thí nghiệm.}
@@ -747,6 +757,7 @@
   \end{columns}
   \vspace{0.08cm}
   \centering
+  \textbf{Vì sao E4 hiệu quả:} CCP loại nhánh yếu, HS làm mềm prediction ở lá ít mẫu.\\
   \textbf{Cải tiến chính là performance--complexity trade-off, không phải accuracy đơn thuần.}
   \note{[Sources] Covertype E0 and E4 summary; test set n=116,203.\\
   Talk track (0:50): Hero slide giải thích vì sao E4 được chọn.}
