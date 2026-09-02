@@ -11,14 +11,16 @@ Thời lượng mục tiêu: 12-15 phút, dùng `docs/slides/decision_tree_lab2_
 
 ## Mạch trình bày
 
-1. Slide 1-3 (1 phút): nêu bài toán, nguy cơ overfitting của cây và vai trò ba dataset.
-2. Slide 4-8 (2 phút): giải thích Gini/Entropy, quy tắc split, protocol 80/20 và baseline Covertype.
-3. Slide 9-12 (2 phút): đọc decision path, feature importance, confusion matrix và hạn chế của cây sâu.
-4. Slide 13-18 (3 phút): trình bày pre-pruning, CCP, Hierarchical Shrinkage và lựa chọn tham số chỉ trên train/CV.
-5. Slide 19-21 (2 phút): so sánh E0-E4 và nhấn mạnh CCP + HS giảm số lá 31,7%, giảm train-test gap 17,6%, đồng thời tăng macro-F1 0,19 điểm phần trăm so với baseline.
-6. Slide 22-23 (2 phút): so sánh Decision Tree với RF, SVM, KNN trên ba dataset; không có mô hình thắng mọi dataset.
-7. Slide 24 (1 phút): chốt câu trả lời cho ba câu hỏi nghiên cứu và giới hạn của kết quả.
-8. Appendix A1-A6: chỉ mở khi giảng viên hỏi về bảng đầy đủ, tham số, rules, feature importance, hardware hoặc đóng góp nhóm.
+1. Slide 1-3 (1 phút): nêu bài toán, nguy cơ overfitting và phạm vi core/extended study.
+2. Slide 4-6 (1,5 phút): đặt CART trong công trình liên quan, giải thích Gini, mức giảm impurity và vòng lặp sinh cây.
+3. Slide 7-12 (2 phút): giới thiệu ba dataset, mất cân bằng lớp, protocol train-only validation và định nghĩa accuracy, confusion matrix, precision, recall, Macro-F1.
+4. Slide 13-17 (2 phút): đọc cây baseline, decision paths, ba metric chính, confusion matrix và feature importance.
+5. Slide 18-25 (3 phút): giải thích ký hiệu E0-E4; cơ chế, tham số và kết quả riêng của pre-pruning, CCP và Hierarchical Shrinkage.
+6. Slide 26-28 (1,5 phút): so sánh E0-E4, giải thích vì sao chọn E4 và kiểm tra robustness trên ba dataset.
+7. Slide 29-31 (1,5 phút): giới thiệu cơ chế của RF/SVM/KNN, so sánh model thắng theo dataset và báo cáo độ ổn định bằng CV.
+8. Slide 32-33 (1 phút): trình bày custom Decision Tree, đối chiếu sklearn và xác nhận pipeline end-to-end.
+9. Slide 34-35 (1 phút): nêu threats to validity và kết luận theo ba câu hỏi nghiên cứu.
+10. Appendix A1-A4: chỉ mở khi giảng viên hỏi về bảng benchmark đầy đủ, decision rules, hardware/backend hoặc đóng góp nhóm.
 
 ## Demo ngắn
 
