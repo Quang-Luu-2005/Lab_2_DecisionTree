@@ -568,7 +568,8 @@
   \vspace{0.35cm}
   \begin{tcolorbox}[riskbox,width=0.90\textwidth,top=2mm,bottom=2mm]
     \centering
-    Early stopping giảm variance nhưng đã loại cả cấu trúc hữu ích $\Rightarrow$ underfit.
+    Pre-pruning giảm gap và số lá so với E0, nhưng accuracy $-0.92$ pp và Macro-F1 $-1.49$ pp.\\
+    \textbf{Kết luận:} dừng sớm quá $\Rightarrow$ underfit.
   \end{tcolorbox}
   \note{[Sources] HS benchmark summary and train-only CV selection.\\
   Talk track (0:40): Pre-pruning giúp gap nhưng score giảm rõ, nên không phải cấu hình cuối.}
@@ -633,7 +634,9 @@
   \end{center}
   \par\vspace{0.28cm}
   \centering
-  CCP loại complexity dư thừa; dự đoán ở nút cha ổn định hơn nên chất lượng test được giữ trong lần chạy này.
+  \small
+  So với E0, accuracy $+0.03$ pp, Macro-F1 $+0.11$ pp và leaves $-31.7\%$.\\
+  So với E1, accuracy $+0.95$ pp và Macro-F1 $+1.60$ pp, nhưng gap cao hơn $0.97$ pp.
   \note{[Sources] CART pruning; scikit-learn CCP; Covertype E2 results.\\
   Talk track (0:45): CCP thấy cây đầy đủ rồi mới cắt subtree có đóng góp nhỏ.}
 \end{frame}
@@ -685,7 +688,8 @@
   \end{itemize}
   \vspace{0.18cm}
   \centering
-  Lá ít mẫu dự đoán quá cực đoan sẽ được kéo về nút cha, nên có thể giảm lỗi test.\\
+  \small
+  Lá ít mẫu được kéo về nút cha nên có thể giảm lỗi test; so với E2, score nhỉnh hơn nhưng nhiều hơn 7,595 leaves.\\
   \textbf{Cải thiện đến từ xác suất dự đoán, không phải một cây nhỏ hơn.}
   \note{[Sources] Agarwal et al., Hierarchical Shrinkage, 2022; E3 artifact.\\
   Talk track (0:50): Nhấn mạnh khác biệt cơ chế giữa HS và pruning.}
