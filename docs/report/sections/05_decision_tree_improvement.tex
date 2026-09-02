@@ -81,6 +81,24 @@ Trường hợp $\alpha=0$ ở Letter cho thấy CV không tìm thấy pruning c
 
 E1 giảm gap và số lá nhưng làm accuracy và macro-F1 giảm nhiều nhất, cho thấy early stopping đã regularize quá mạnh. E2 giảm 31.7\% số lá và vẫn tăng nhẹ hai metric test. E3 đạt accuracy cao nhất nhưng giữ nguyên 23,956 lá, đúng với cơ chế prediction regularization. E4 kết hợp được cấu trúc của E2 với dự đoán được shrink, đạt macro-F1 cao nhất trong các cấu hình nhóm đã thử.
 
+\subsection{Vì sao regularization có thể cải thiện accuracy trên test}
+
+Kết quả trên cần được hiểu theo hướng giảm overfitting, chứ không phải regularization luôn làm accuracy tăng. Baseline E0 đạt train accuracy 100\% nhưng chỉ đạt test accuracy 93.89\%, đồng thời có depth 41, 23,956 lá và train--test gap 6.11 điểm phần trăm. Điều này cho thấy cây đã học rất chi tiết tập train. Ở các nhánh cuối, một số split có thể chỉ phù hợp với vài mẫu hoặc với những kết hợp feature hiếm; các quy tắc đó làm lỗi train giảm nhưng không nhất thiết giữ được trên mẫu mới. Vì vậy, các lá ít mẫu có variance cao: chỉ cần thay đổi dữ liệu một chút, phân bố lớp và prediction của lá có thể thay đổi đáng kể.
+
+CCP có thể cải thiện accuracy test bằng cách loại bỏ những subtree mà phần giảm lỗi không đủ bù cho độ phức tạp tăng thêm. Khi một subtree yếu bị cắt, các mẫu trước đây đi vào những lá rất nhỏ được dự đoán ở nút cha, nơi có nhiều mẫu hơn và ước lượng lớp ổn định hơn. Nếu subtree ban đầu đang học nhiễu, prediction ở nút cha sẽ đúng hơn trên test. Trong kết quả của nhóm, E2 giảm số lá từ 23,956 xuống 16,361, giảm gap từ 6.11\% xuống 5.07\%, nhưng accuracy vẫn tăng nhẹ từ 93.89\% lên 93.92\% và macro-F1 tăng từ 90.34\% lên 90.45\%. Đây là dấu hiệu cho thấy một phần complexity của E0 không mang lại khả năng tổng quát hóa.
+
+HS tác động vào prediction thay vì topology. Nếu đặt
+\[
+w_v=\frac{n_v}{n_v+\lambda},
+\qquad
+\hat p_{HS}(v)=(1-w_v)\hat p_{HS}(pa(v))+w_v\hat p(v),
+\]
+thì nút có nhiều mẫu sẽ có $w_v$ gần 1 và vẫn giữ phần lớn thông tin riêng; ngược lại, nút ít mẫu sẽ có $w_v$ nhỏ và được kéo về phân bố lớp của nút cha. Cơ chế này làm giảm các xác suất quá cực đoan được tạo ra từ những lá có support nhỏ. Khi prediction của một lá bị chi phối bởi vài mẫu train bất thường, việc kết hợp thêm thông tin từ tổ tiên có thể đổi prediction sang lớp có cơ sở thống kê ổn định hơn trên test. Vì HS chỉ làm thay đổi xác suất, không cắt cây, accuracy chỉ tăng ở những mẫu mà việc làm mượt giúp sửa prediction; các mẫu đã được dự đoán đúng hoặc các lá có nhiều mẫu hầu như không bị ảnh hưởng. Điều này phù hợp với E3: accuracy tăng từ 93.89\% lên 93.97\%, macro-F1 tăng từ 90.34\% lên 90.48\%, trong khi depth và số lá vẫn là 41 và 23,956.
+
+E4 kết hợp hai tác động trên. CCP trước hết loại bỏ các nhánh có đóng góp thấp để giảm variance ở mức cấu trúc; HS sau đó làm mềm prediction tại những nút còn ít mẫu trên cây đã prune. Vì vậy, hai phương pháp bổ trợ cho nhau: CCP làm cây gọn hơn, còn HS điều chỉnh độ tin cậy của prediction. E4 đạt accuracy 93.93\%, macro-F1 90.53\%, gap 5.04\% và 16,361 lá. Accuracy của E4 thấp hơn E3 0.04 điểm phần trăm, nhưng macro-F1 cao hơn 0.05 điểm phần trăm và số lá giảm 31.7\% so với E0. Nhóm vì thế chọn E4 dựa trên trade-off giữa chất lượng dự đoán, khả năng tổng quát hóa và độ phức tạp, thay vì chỉ chọn accuracy cao nhất.
+
+Kết quả E1 cho thấy chiều ngược lại của bias--variance trade-off. Pre-pruning làm cây đơn giản hơn và giảm gap xuống 4.10\%, nhưng dừng quá sớm khiến cây mất cả những split hữu ích; accuracy giảm còn 92.97\% và macro-F1 còn 88.85\%. Do đó, nhóm không kết luận rằng CCP hoặc HS luôn làm accuracy tăng. Các tham số được chọn bằng 3-fold cross-validation chỉ trên train, và mức cải thiện được báo cáo là kết quả thực nghiệm của cấu hình và lần chia dữ liệu đã dùng; với một dataset hoặc một mức regularization khác, kết quả có thể thay đổi.
+
 \section{Vì sao chọn E4 thay vì E3}
 
 E3 cao hơn E4 chỉ 0.04 điểm phần trăm accuracy. Đổi lại, E4 có macro-F1 cao hơn 0.05 điểm phần trăm, ít hơn 7,595 lá và gap thấp hơn 0.66 điểm phần trăm. So với E0, E4 tăng 0.19 điểm phần trăm macro-F1, giảm 31.7\% số lá và giảm 17.6\% train--test gap. Vì Covertype mất cân bằng và mục tiêu không chỉ là tối đa accuracy, E4 tạo trade-off kiểu Pareto phù hợp hơn giữa chất lượng dự đoán, generalization, complexity và interpretability.
