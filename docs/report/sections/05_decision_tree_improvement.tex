@@ -79,9 +79,15 @@ Trường hợp $\alpha=0$ ở Letter cho thấy CV không tìm thấy pruning c
     \end{tabular*}
 \end{table}
 
-E1 giảm gap và số lá nhưng làm accuracy và macro-F1 giảm nhiều nhất, cho thấy early stopping đã regularize quá mạnh. E2 giảm 31.7\% số lá và vẫn tăng nhẹ hai metric test. E3 đạt accuracy cao nhất nhưng giữ nguyên 23,956 lá, đúng với cơ chế prediction regularization. E4 kết hợp được cấu trúc của E2 với dự đoán được shrink, đạt macro-F1 cao nhất trong các cấu hình nhóm đã thử.
+\textbf{So sánh theo trình tự trên Covertype.} \textbf{E1 so với baseline E0:} pre-pruning giảm train--test gap từ 6.11\% xuống 4.10\% và giảm số lá từ 23,956 xuống 16,637, nhưng accuracy giảm từ 93.89\% xuống 92.97\% và macro-F1 giảm từ 90.34\% xuống 88.85\%. Như vậy, E1 làm cây gọn hơn nhưng dừng quá sớm và loại cả những split còn hữu ích.
 
-\subsection{Vì sao regularization có thể cải thiện accuracy trên test}
+\textbf{E2 so với E0 và E1:} CCP đạt accuracy 93.92\% và macro-F1 90.45\%, lần lượt cao hơn E0 $0.03$ và $0.11$ điểm phần trăm; số lá còn 16,361 và gap còn 5.07\%. So với E1, E2 tăng accuracy $0.95$ điểm phần trăm, tăng macro-F1 $1.60$ điểm phần trăm và giảm thêm 276 lá, dù gap cao hơn E1 $0.97$ điểm phần trăm. Điều này cho thấy post-pruning chọn nhánh cần cắt linh hoạt hơn early stopping.
+
+\textbf{E3 so với E0 và E2:} HS đạt accuracy 93.97\% và macro-F1 90.48\%, cao hơn E0 lần lượt $0.08$ và $0.14$ điểm phần trăm; depth và số lá vẫn giữ ở 41 và 23,956. So với E2, E3 tăng accuracy $0.05$ điểm phần trăm và macro-F1 $0.03$ điểm phần trăm, nhưng dùng nhiều hơn 7,595 lá và gap cao hơn $0.63$ điểm phần trăm. Vì vậy, HS cải thiện chất lượng dự đoán mà không làm cây nhỏ hơn.
+
+\textbf{Kết luận:} E1 giảm complexity nhưng regularize quá mạnh; E2 cho trade-off tốt giữa pruning cấu trúc và chất lượng test; E3 đạt score cao hơn nhưng giữ nguyên topology. Các kết quả này giải thích vì sao nhóm tiếp tục thử E4 để kết hợp hai cơ chế bổ trợ.
+
+\subsection*{Vì sao regularization có thể cải thiện accuracy trên test}
 
 Kết quả trên cần được hiểu theo hướng giảm overfitting, chứ không phải regularization luôn làm accuracy tăng. Baseline E0 đạt train accuracy 100\% nhưng chỉ đạt test accuracy 93.89\%, đồng thời có depth 41, 23,956 lá và train--test gap 6.11 điểm phần trăm. Điều này cho thấy cây đã học rất chi tiết tập train. Ở các nhánh cuối, một số split có thể chỉ phù hợp với vài mẫu hoặc với những kết hợp feature hiếm; các quy tắc đó làm lỗi train giảm nhưng không nhất thiết giữ được trên mẫu mới. Vì vậy, các lá ít mẫu có variance cao: chỉ cần thay đổi dữ liệu một chút, phân bố lớp và prediction của lá có thể thay đổi đáng kể.
 
