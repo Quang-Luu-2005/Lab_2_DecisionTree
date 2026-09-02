@@ -103,7 +103,7 @@
     {\scriptsize Trường Đại học Khoa học Tự nhiên -- ĐHQG TP.HCM}
   \end{center}
   \note{[Sources] Lab 2 assignment and project report.\\
-  Talk track (0:15): Giới thiệu đề tài và thông điệp: hiểu cây cơ sở trước, sau đó mới đánh giá cải tiến.}
+  Talk track (0:15): Giới thiệu bài làm và thông điệp của nhóm: hiểu cây cơ sở trước, sau đó mới đánh giá cải tiến.}
 \end{frame}
 
 % 2 ---------------------------------------------------------------------------
@@ -118,7 +118,7 @@
   \begin{itemize}
     \item Mỗi path là một luật \textit{if--then} có thể truy vết.
     \item Khả năng diễn giải toàn cục giảm nhanh khi số lá tăng.
-    \item Mục tiêu là giữ score, giảm gap và làm cây gọn hơn.
+    \item Nhóm hướng tới việc giữ score, giảm gap và làm cây gọn hơn.
   \end{itemize}
   \note{[Sources] Breiman et al., Classification and Regression Trees, 1984.\\
   Talk track (0:35): Nêu tension giữa interpretability và complexity; đây là động lực cho toàn bộ bài.}
@@ -150,7 +150,7 @@
     Trọng tâm xuyên suốt vẫn là \textbf{Decision Tree cơ sở $\rightarrow$ phân tích $\rightarrow$ cải tiến}.
   \end{tcolorbox}
   \note{[Sources] Scope and objectives in report Chapter 1.\\
-  Talk track (0:35): Giải thích vì sao dùng ba dataset mà không lệch đề.}
+  Talk track (0:35): Nêu vai trò của ba dataset và lý do nhóm mở rộng phạm vi kiểm tra.}
 \end{frame}
 
 % 4 ---------------------------------------------------------------------------
@@ -171,7 +171,7 @@
   \end{tabularx}}
   \par\vspace{0.42cm}
   \begin{center}
-    Nghiên cứu dùng CART làm baseline và HS như prediction regularization.
+    Trong bài này, nhóm chúng em dùng CART làm baseline và HS như prediction regularization.
   \end{center}
   \note{[Sources] Quinlan 1986; Quinlan 1993; Breiman et al. 1984; Agarwal et al. 2022.\\
   Talk track (0:35): Đặt baseline và cải tiến vào đúng lịch sử phương pháp.}
@@ -533,7 +533,7 @@
   \vspace{0.32cm}
   \begin{tcolorbox}[focusbox,width=0.91\textwidth,top=2mm,bottom=2mm]
     \centering
-    Giá trị được chọn bằng 3-fold CV trên train; với Covertype, CV chọn \texttt{min\_samples\_leaf=5}.
+    Nhóm chọn giá trị bằng 3-fold CV trên train; với Covertype, CV chọn \texttt{min\_samples\_leaf=5}.
   \end{tcolorbox}
   \note{[Sources] Pre-pruning methodology and train-only selection in report Chapter 5.\\
   Talk track (0:45): Giải thích cách mỗi hyperparameter thay đổi điều kiện Stop trước khi đưa kết quả E1.}
@@ -881,7 +881,7 @@
   \end{columns}
   \vspace{0.15cm}
   \centering
-  \textbf{Mục tiêu:} minh bạch thuật toán; sklearn vẫn phù hợp hơn cho production nhờ code đã tối ưu.
+  \textbf{Qua phần này, nhóm muốn:} minh bạch thuật toán; sklearn vẫn phù hợp hơn cho production nhờ code đã tối ưu.
   \note{[Sources] CustomDecisionTreeClassifier source and report custom-tree section.\\
   Talk track (0:55): Đi qua candidate threshold, weighted Gini và điều kiện dừng trước khi so sánh kết quả.}
 \end{frame}
@@ -919,7 +919,7 @@
   \frametitle{Kết luận được giới hạn bởi seed, tuning và backend}
   \chaptertag{5}{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
   \begin{enumerate}
-    \item \textbf{Một holdout chính:} cần lặp nhiều seed cho effect size nhỏ.
+    \item \textbf{Một holdout chính:} nhóm cần lặp nhiều seed để kiểm tra effect size nhỏ.
     \item \textbf{Tuning chưa exhaustive:} RF/SVM/KNN chưa được tối ưu toàn diện.
     \item \textbf{CPU/GPU khác nhau:} runtime không phải speedup phần cứng thuần túy.
     \item \textbf{Gain nhỏ:} chưa có kiểm định thống kê nhiều lần lấy mẫu.

@@ -2,7 +2,7 @@
 
 \section{Cải tiến có khái quát qua ba bộ dữ liệu không?}
 
-Để kiểm tra robustness, Bảng~\ref{tab:robustness-e4} so sánh cùng một cấu hình kết hợp E4 với baseline. Letter có $\alpha=0$ nên E4 tương đương HS trên cây chưa prune; Digits chọn $\lambda=0$ sau CCP; Covertype dùng cả $\alpha>0$ và $\lambda=10$.
+Nhóm dùng Bảng~\ref{tab:robustness-e4} để so sánh cùng một cấu hình kết hợp E4 với baseline trên ba bộ dữ liệu. Letter có $\alpha=0$ nên E4 tương đương HS trên cây chưa prune; Digits chọn $\lambda=0$ sau CCP; Covertype dùng cả $\alpha>0$ và $\lambda=10$.
 
 \begin{table}[H]
     \centering
@@ -25,7 +25,7 @@ Kết quả không ủng hộ phát biểu ``HS luôn tăng score''. Lợi ích 
 
 \section{Benchmark mở rộng: Decision Tree so với ba họ mô hình}
 
-Decision Tree là mô hình nghiên cứu chính. Random Forest, SVM--RBF và KNN chỉ là reference baselines đại diện cho ensemble tree, kernel và instance-based learning \cite{breiman2001rf,cortes1995svm,cover1967knn}. Bảng~\ref{tab:best-models} tóm tắt mô hình tốt nhất trên từng dataset.
+Decision Tree là mô hình chính trong bài. Nhóm dùng Random Forest, SVM--RBF và KNN làm các reference baselines đại diện cho ensemble tree, kernel và instance-based learning \cite{breiman2001rf,cortes1995svm,cover1967knn}. Bảng~\ref{tab:best-models} tóm tắt mô hình tốt nhất trên từng dataset.
 
 \begin{table}[H]
     \centering
@@ -64,7 +64,7 @@ Các biện pháp kiểm soát gồm:
 
 Decision Tree và HS dùng scikit-learn trên CPU \cite{pedregosa2011sklearn}. Random Forest, SVM và KNN trong notebook benchmark dùng RAPIDS cuML trên GPU \cite{rapidsCuml}. Phiên benchmark được cấu hình Kaggle GPU x2 và metadata cuML ghi nhận Tesla T4; các notebook Decision Tree ghi nhận Tesla P100 khả dụng nhưng compute device vẫn là CPU.
 
-Do backend, implementation và thuật toán khác nhau, runtime chỉ phản ánh chi phí thực tế của từng pipeline. Nghiên cứu không diễn giải các số này như speedup CPU--GPU thuần túy và không khẳng định hai GPU được sử dụng song song.
+Do backend, implementation và thuật toán khác nhau, runtime chỉ phản ánh chi phí thực tế của từng pipeline. Vì vậy, nhóm không diễn giải các số này như speedup CPU--GPU thuần túy và không khẳng định hai GPU được sử dụng song song.
 
 \section{Threats to validity}
 

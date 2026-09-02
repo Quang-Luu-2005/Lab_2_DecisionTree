@@ -1,8 +1,8 @@
 \chapter{Mô tả dữ liệu}
 
-\section{Thiết kế phạm vi: một case study chính và hai robustness datasets}
+\section{Phạm vi dữ liệu: một case study chính và hai bộ kiểm tra độ bền}
 
-Covertype là bộ dữ liệu chính để thực hiện đầy đủ các yêu cầu của Lab. Letter Recognition và Handwritten Digits không thay thế case study chính; chúng được dùng để kiểm tra liệu kết luận có bền trước thay đổi về số lớp, số chiều và số mẫu hay không.
+Nhóm chọn Covertype làm bộ dữ liệu chính để xây dựng và phân tích Decision Tree. Letter Recognition và Handwritten Digits được dùng thêm để kiểm tra liệu kết luận có bền trước thay đổi về số lớp, số chiều và số mẫu hay không.
 
 \begin{table}[H]
     \centering
@@ -24,19 +24,19 @@ Covertype là bộ dữ liệu chính để thực hiện đầy đủ các yêu
 
 Letter Recognition của UCI mô tả 26 chữ cái in hoa bằng 16 thuộc tính hình học đã trích xuất, chẳng hạn kích thước hộp bao, vị trí và phân bố điểm ảnh \cite{slate1991letter}. Target là ký tự từ A đến Z; các feature nhận giá trị nguyên trong khoảng 0--15. Sau khi loại 1,332 dòng trùng hoàn toàn trước khi chia dữ liệu, bộ dữ liệu còn 18,668 mẫu.
 
-Bộ dữ liệu này phù hợp để kiểm tra khả năng phân loại nhiều lớp của một cây đơn. Ranh giới giữa các chữ cái có thể phức tạp, vì vậy kết quả cũng làm rõ lợi ích giảm phương sai của Random Forest và cấu trúc lân cận của KNN.
+Nhóm dùng bộ dữ liệu này để kiểm tra khả năng phân loại nhiều lớp của một cây đơn. Ranh giới giữa các chữ cái có thể phức tạp, vì vậy kết quả cũng giúp nhóm quan sát lợi ích giảm phương sai của Random Forest và cấu trúc lân cận của KNN.
 
 \section{Handwritten Digits}
 
 Handwritten Digits gồm 1,797 ảnh chữ số viết tay từ 0 đến 9. Mỗi ảnh $8\times8$ được biểu diễn bởi 64 mức cường độ điểm ảnh \cite{sklearnDigits}. Target là chữ số; dữ liệu có ít mẫu hơn Letter nhưng số chiều cao hơn và mang cấu trúc không gian của ảnh.
 
-Đây là robustness dataset cho chế độ dữ liệu nhỏ, nhiều chiều. Nó làm bộc lộ hạn chế của các split theo từng trục của Decision Tree và tạo điều kiện phù hợp cho SVM--RBF hoặc KNN.
+Nhóm dùng đây như bộ kiểm tra cho chế độ dữ liệu nhỏ, nhiều chiều. Dữ liệu giúp làm rõ hạn chế của các split theo từng trục của Decision Tree và sự phù hợp của SVM--RBF hoặc KNN.
 
 \section{Covertype -- case study chính}
 
 Covertype của UCI gồm 581,012 mẫu, 54 thuộc tính và 7 loại lớp phủ rừng \cite{blackard1998covertype}. Target \texttt{Cover\_Type} nhận giá trị từ 1 đến 7. Các feature kết hợp biến địa hình liên tục với biến nhị phân mô tả khu vực hoang dã và loại đất; dữ liệu không có giá trị thiếu trong bản materialized của project.
 
-Covertype phù hợp nhất với yêu cầu Lab vì có ba đặc điểm: quy mô đủ lớn để cây phát triển sâu, dữ liệu bảng phù hợp với luật feature--threshold, và phân bố lớp không đều khiến accuracy đơn thuần chưa đủ. Cây cơ sở đạt depth 41 với 23,956 lá, do đó ảnh hưởng của regularization có thể quan sát rõ cả về hiệu năng lẫn cấu trúc.
+Covertype phù hợp với hướng phân tích của nhóm vì có ba đặc điểm: quy mô đủ lớn để cây phát triển sâu, dữ liệu bảng phù hợp với luật feature--threshold, và phân bố lớp không đều khiến accuracy đơn thuần chưa đủ. Cây cơ sở đạt depth 41 với 23,956 lá, do đó ảnh hưởng của regularization có thể quan sát rõ cả về hiệu năng lẫn cấu trúc.
 
 \begin{figure}[H]
     \centering

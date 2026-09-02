@@ -4,26 +4,26 @@
 
 Decision Tree là mô hình học máy phổ biến nhờ khả năng diễn giải trực quan, không yêu cầu chuẩn hóa đặc trưng và có thể biểu diễn quan hệ phi tuyến bằng các luật \textit{if--then} \cite{breiman1984cart}. Tuy nhiên, phép chia tham lam có thể làm cây ghi nhớ tập huấn luyện, phát triển quá sâu và tạo nhiều lá chỉ chứa rất ít mẫu. Khi đó, mô hình vẫn giải thích được một dự đoán riêng lẻ nhưng khó diễn giải ở mức toàn cục và có nguy cơ phương sai cao.
 
-Vấn đề trung tâm của nghiên cứu là: \textit{làm thế nào xây dựng, phân tích và cải tiến một Decision Tree sao cho cây vẫn dự đoán tốt, tổng quát hóa tốt hơn và giữ được cấu trúc đủ gọn để diễn giải?}
+Trong quá trình thực hiện, nhóm tập trung vào câu hỏi: \textit{làm thế nào xây dựng, phân tích và cải tiến một Decision Tree sao cho cây vẫn dự đoán tốt, tổng quát hóa tốt hơn và giữ được cấu trúc đủ gọn để diễn giải?}
 
 \section{Phạm vi cốt lõi và phần mở rộng}
 
-Nghiên cứu được tổ chức thành hai tầng để bám sát yêu cầu Lab trước khi mở rộng:
+Nhóm triển khai bài làm theo hai tầng: phần chính trên Covertype và phần mở rộng trên hai bộ dữ liệu khác:
 
 \begin{itemize}
     \item \textbf{Core Lab:} dùng Covertype làm case study chính để xây dựng Decision Tree cơ sở, trực quan cây sinh ra, phân tích split và luật quyết định, đo accuracy, error rate, macro-F1, confusion matrix, overfitting và đánh giá ba phương pháp cải tiến.
     \item \textbf{Extended study:} dùng Letter Recognition và Handwritten Digits làm hai bộ dữ liệu kiểm tra độ bền của kết luận; Random Forest, SVM--RBF và KNN chỉ đóng vai trò mô hình đối chứng.
 \end{itemize}
 
-Mặc dù đề bài chỉ yêu cầu một bộ dữ liệu, Covertype được dùng để thực hiện đầy đủ mọi phân tích bắt buộc. Hai bộ dữ liệu còn lại giúp kiểm tra liệu kết luận về Decision Tree có giữ được trong các chế độ dữ liệu khác hay không, thay vì thay đổi trọng tâm của Lab.
+Nhóm chọn Covertype làm trọng tâm để thực hiện đầy đủ các phân tích về Decision Tree. Hai bộ dữ liệu còn lại được thêm vào để kiểm tra liệu kết luận có giữ được trong các chế độ dữ liệu khác hay không, nhưng trọng tâm của bài vẫn là Decision Tree trên Covertype.
 
 \section{Công trình liên quan}
 
-ID3 đặt nền móng cho việc sinh cây bằng information gain \cite{quinlan1986id3}; C4.5 mở rộng xử lý thuộc tính liên tục và dùng gain ratio \cite{quinlan1993c45}. Nghiên cứu này dùng CART với split nhị phân, Gini impurity và Cost-Complexity Pruning \cite{breiman1984cart}. Random Forest giảm phương sai bằng ensemble nhiều cây \cite{breiman2001rf}; SVM và KNN đại diện lần lượt cho phương pháp kernel và phương pháp dựa trên lân cận \cite{cortes1995svm,cover1967knn}. Hierarchical Shrinkage bổ sung một hướng regularization khác: giữ nguyên topology nhưng làm mượt ước lượng dự đoán ở các nút sâu \cite{agarwal2022hs}.
+ID3 đặt nền móng cho việc sinh cây bằng information gain \cite{quinlan1986id3}; C4.5 mở rộng xử lý thuộc tính liên tục và dùng gain ratio \cite{quinlan1993c45}. Trong bài, nhóm dùng CART với split nhị phân, Gini impurity và Cost-Complexity Pruning \cite{breiman1984cart}. Random Forest giảm phương sai bằng ensemble nhiều cây \cite{breiman2001rf}; SVM và KNN lần lượt đại diện cho phương pháp kernel và phương pháp dựa trên lân cận \cite{cortes1995svm,cover1967knn}. Nhóm bổ sung Hierarchical Shrinkage như một hướng regularization khác: giữ nguyên topology nhưng làm mượt ước lượng dự đoán ở các nút sâu \cite{agarwal2022hs}.
 
 \section{Mục tiêu nghiên cứu}
 
-Các mục tiêu cốt lõi được đặt trước các mục tiêu mở rộng:
+Nhóm đặt ra các mục tiêu chính và mục tiêu mở rộng như sau:
 
 \begin{enumerate}
     \item xây dựng và đánh giá một Decision Tree cơ sở có cấu hình tái lập;

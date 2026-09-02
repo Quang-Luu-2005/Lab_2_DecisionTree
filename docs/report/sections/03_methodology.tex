@@ -2,7 +2,7 @@
 
 \section{CART xây dựng cây như thế nào}
 
-Nghiên cứu dùng CART thông qua \texttt{DecisionTreeClassifier} của scikit-learn \cite{breiman1984cart,pedregosa2011sklearn}. Tại một nút chứa tập mẫu $S$, Gini impurity được tính bởi
+Nhóm dùng CART thông qua \texttt{DecisionTreeClassifier} của scikit-learn \cite{breiman1984cart,pedregosa2011sklearn}. Tại một nút chứa tập mẫu $S$, Gini impurity được tính bởi
 
 \begin{equation}
     Gini(S)=1-\sum_{k=1}^{K}p_k^2,
@@ -50,7 +50,7 @@ Các tham số không liệt kê dùng giá trị mặc định của scikit-lea
 
 \section{Protocol train, validation và test}
 
-Quy trình được cố định trước khi xem kết quả test:
+Nhóm cố định quy trình trước khi xem kết quả test:
 
 \begin{enumerate}
     \item làm sạch hoặc materialize dữ liệu;
@@ -60,7 +60,7 @@ Quy trình được cố định trước khi xem kết quả test:
     \item mở test đúng một lần để báo cáo kết quả cuối.
 \end{enumerate}
 
-Baseline Covertype còn được kiểm tra độc lập bằng 5-fold cross-validation để đánh giá độ ổn định. Mọi mô hình trong benchmark dùng cùng test set; scaler chỉ học từ train.
+Nhóm còn kiểm tra độc lập baseline Covertype bằng 5-fold cross-validation để đánh giá độ ổn định. Mọi mô hình trong benchmark dùng cùng test set; scaler chỉ học từ train.
 
 \section{Chỉ số đánh giá}
 
@@ -79,4 +79,4 @@ Với mỗi lớp $k$, $F1_k=2P_kR_k/(P_k+R_k)$ và
     \label{eq:macro-f1}
 \end{equation}
 
-Macro-F1 cho mỗi lớp trọng số ngang nhau nên phù hợp với Covertype mất cân bằng. Nghiên cứu đồng thời báo cáo confusion matrix, recall theo lớp, train--test gap, thời gian fit/predict, depth và number of leaves. Train--test gap được tính bằng train accuracy trừ test accuracy và được dùng như một tín hiệu thực nghiệm của high variance, không phải một kiểm định thống kê độc lập.
+Macro-F1 cho mỗi lớp trọng số ngang nhau nên phù hợp với Covertype mất cân bằng. Nhóm đồng thời báo cáo confusion matrix, recall theo lớp, train--test gap, thời gian fit/predict, depth và number of leaves. Train--test gap được tính bằng train accuracy trừ test accuracy và được dùng như một tín hiệu thực nghiệm của high variance, không phải một kiểm định thống kê độc lập.

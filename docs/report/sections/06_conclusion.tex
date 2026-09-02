@@ -13,10 +13,10 @@ Pre-pruning dừng cây sớm nhưng có nguy cơ underfit; CCP cắt topology v
 
 \section{Kết luận}
 
-Một cây tốt hơn không nhất thiết là cây có accuracy cao nhất. Với dữ liệu mất cân bằng và yêu cầu giải thích, lựa chọn cần cân bằng accuracy, error rate, macro-F1, lỗi theo lớp, train--test gap và complexity. E3 có accuracy cao nhất nhưng giữ nguyên 23,956 lá; E4 hy sinh 0.04 điểm phần trăm accuracy so với E3 để đạt macro-F1 cao hơn và một cấu trúc nhỏ hơn nhiều. Đây là lý do E4 được chọn làm cấu hình cuối cho Covertype.
+Một cây tốt hơn không nhất thiết là cây có accuracy cao nhất. Với dữ liệu mất cân bằng và mục tiêu giải thích, nhóm cân bằng accuracy, error rate, macro-F1, lỗi theo lớp, train--test gap và complexity khi chọn mô hình. E3 có accuracy cao nhất nhưng giữ nguyên 23,956 lá; E4 hy sinh 0.04 điểm phần trăm accuracy so với E3 để đạt macro-F1 cao hơn và một cấu trúc nhỏ hơn nhiều. Vì vậy, nhóm chọn E4 làm cấu hình cuối cho Covertype.
 
 Kết quả robustness cũng quan trọng: HS/CCP không phải chiến lược tăng điểm phổ quát. Tác động rõ nhất xuất hiện khi baseline đủ sâu, dữ liệu đủ lớn và tham số được chọn bằng train-only validation.
 
 \section{Hướng phát triển}
 
-Nghiên cứu tiếp theo nên lặp thí nghiệm qua nhiều seed, dùng nested cross-validation, mở rộng không gian $\lambda$ và $\alpha$, đồng thời bổ sung kiểm định thống kê cho effect size nhỏ. Benchmark mô hình đối chứng cần tuning có kiểm soát và backend đồng nhất hơn nếu mục tiêu chuyển sang so sánh tốc độ. Với Decision Tree, các hướng tiếp theo có thể đo kích thước model, bộ nhớ, độ trễ dự đoán và mức ổn định của từng decision rule trước biến động dữ liệu.
+Nếu tiếp tục phát triển, nhóm sẽ lặp thí nghiệm qua nhiều seed, dùng nested cross-validation, mở rộng không gian $\lambda$ và $\alpha$, đồng thời bổ sung kiểm định thống kê cho effect size nhỏ. Benchmark mô hình đối chứng cũng cần tuning có kiểm soát và backend đồng nhất hơn nếu nhóm muốn chuyển sang so sánh tốc độ. Với Decision Tree, nhóm có thể đo thêm kích thước model, bộ nhớ, độ trễ dự đoán và mức ổn định của từng decision rule trước biến động dữ liệu.

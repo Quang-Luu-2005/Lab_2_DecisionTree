@@ -2,7 +2,7 @@
 
 \section{Ba chiến lược cải tiến}
 
-Đề bài yêu cầu từ hai đến ba phương pháp cải tiến. Nghiên cứu đánh giá đúng ba chiến lược nguyên tử: pre-pruning, Cost-Complexity Pruning và Hierarchical Shrinkage. Cấu hình E4 là thí nghiệm kết hợp CCP + HS nhằm kiểm tra tính bổ sung giữa regularization cấu trúc và regularization dự đoán; E4 không được tính là phương pháp bắt buộc thứ tư.
+Nhóm đánh giá ba chiến lược cải tiến độc lập: pre-pruning, Cost-Complexity Pruning và Hierarchical Shrinkage. Bên cạnh đó, nhóm thực hiện E4 như một thí nghiệm kết hợp CCP + HS để xem regularization cấu trúc và regularization dự đoán bổ trợ cho nhau như thế nào.
 
 Quy ước ký hiệu trong chương này: $E$ là mã của một cấu hình thí nghiệm (experiment). Cụ thể,
 $E0$ là baseline, $E1$ là pre-pruning, $E2$ là Cost-Complexity Pruning, $E3$ là
@@ -14,7 +14,7 @@ của cây và số lượng lá.
 
 \subsection{Phương pháp 1 -- Pre-pruning}
 
-Pre-pruning dừng quá trình sinh cây trước khi các nhánh trở nên quá sâu hoặc quá ít mẫu. Nghiên cứu lựa chọn \texttt{max\_depth} hoặc \texttt{min\_samples\_leaf} bằng 3-fold CV trên train. Trên Covertype, cấu hình được chọn là \texttt{min\_samples\_leaf=5}. Cơ chế này giảm phương sai sớm nhưng có thể loại bỏ cấu trúc hữu ích trước khi cây học xong, gây underfitting.
+Pre-pruning dừng quá trình sinh cây trước khi các nhánh trở nên quá sâu hoặc quá ít mẫu. Nhóm lựa chọn \texttt{max\_depth} hoặc \texttt{min\_samples\_leaf} bằng 3-fold CV trên train. Trên Covertype, cấu hình được chọn là \texttt{min\_samples\_leaf=5}. Cơ chế này giảm phương sai sớm nhưng có thể loại bỏ cấu trúc hữu ích trước khi cây học xong, gây underfitting.
 
 \subsection{Phương pháp 2 -- Cost-Complexity Pruning}
 
@@ -79,7 +79,7 @@ Trường hợp $\alpha=0$ ở Letter cho thấy CV không tìm thấy pruning c
     \end{tabular*}
 \end{table}
 
-E1 giảm gap và số lá nhưng làm accuracy và macro-F1 giảm nhiều nhất, cho thấy early stopping đã regularize quá mạnh. E2 giảm 31.7\% số lá và vẫn tăng nhẹ hai metric test. E3 đạt accuracy cao nhất nhưng giữ nguyên 23,956 lá, đúng với cơ chế prediction regularization. E4 kết hợp được cấu trúc của E2 với dự đoán được shrink, đạt macro-F1 cao nhất.
+E1 giảm gap và số lá nhưng làm accuracy và macro-F1 giảm nhiều nhất, cho thấy early stopping đã regularize quá mạnh. E2 giảm 31.7\% số lá và vẫn tăng nhẹ hai metric test. E3 đạt accuracy cao nhất nhưng giữ nguyên 23,956 lá, đúng với cơ chế prediction regularization. E4 kết hợp được cấu trúc của E2 với dự đoán được shrink, đạt macro-F1 cao nhất trong các cấu hình nhóm đã thử.
 
 \section{Vì sao chọn E4 thay vì E3}
 
