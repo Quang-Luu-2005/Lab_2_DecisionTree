@@ -1,6 +1,3 @@
 GROUP 7 - PRESENTATION VIDEO
 
-Video link: PASTE_SHARED_VIDEO_LINK_HERE
-
-Before submission, replace the placeholder above with the shared presentation
-video URL and verify that lecturers can open it without requesting access.
+Video presentation/demo: https://youtu.be/YZ3zvdK0ma0
